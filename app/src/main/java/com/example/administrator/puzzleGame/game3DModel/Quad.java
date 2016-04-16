@@ -10,22 +10,30 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public class Quad extends ShaderBody implements Piece {
-    float[] vertices;
-    Vector2f pointA, pointB, pointC, pointD;
+    Vector2f[] points;
+    Vector2f[] texturePoints;
     int vCount;
     int isCheck;
     int num;
     int texId;
 
-    public Quad(int num, Vector2f pointA, Vector2f pointB, Vector2f pointC, Vector2f pointD, int texId) {
+    public Quad(int num, Vector2f[] points, int texId) {
         super(0);
-        vCount = 4;
+        vCount = 6;
         this.num = num;
-        this.pointA = pointA;
-        this.pointB = pointB;
-        this.pointC = pointC;
-        this.pointD = pointD;
+        this.points = points;
         this.texId = texId;
+
+        float scale = 1.0f / 3.0f;
+        float translate = 0.5f;
+        texturePoints = new Vector2f[4];
+        for (int i = 0; i < 4; i++) {
+            texturePoints[i] = points[i].multiK(scale).add(new Vector2f(translate, translate));
+            texturePoints[i].y = 1 - texturePoints[i].y;
+        }
+
+        initData();
+        initBuffer();
     }
 
     @Override
@@ -59,56 +67,27 @@ public class Quad extends ShaderBody implements Piece {
     }
 
     @Override
-    public void initVertexData() {
+    public void initData() {
         //顶点坐标数据的初始化================begin============================
         vertices = new float[]{
-                pointA.x, pointA.y, 0,
-                pointB.x, pointB.y, 0,
-                pointC.x, pointC.y, 0,
-                pointB.x, pointB.y, 0,
-                pointD.x, pointD.y, 0,
-                pointC.x, pointC.y, 0,
+                points[0].x * 2, points[0].y * 2, 0, points[1].x * 2, points[1].y * 2, 0, points[2].x * 2, points[2].y * 2, 0,
+                points[3].x * 2, points[3].y * 2, 0, points[2].x * 2, points[2].y * 2, 0, points[1].x * 2, points[1].y * 2, 0,
         };
 
 
         //法向量数据初始化
-        float[] normals = new float[vertices.length];
+        normals = new float[vertices.length];
         for (int i = 0; i < normals.length; i += 3) {
             normals[i] = 0;
             normals[i + 1] = 0;
             normals[i + 2] = 1;
         }
 
-        float texCoor[] = new float[]{
-                0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-                0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 1.0f,
-                0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f,
-                0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f
+        texCoors = new float[]{
+                texturePoints[0].x, texturePoints[0].y, texturePoints[1].x, texturePoints[1].y, texturePoints[2].x, texturePoints[2].y,
+                texturePoints[3].x, texturePoints[3].y, texturePoints[2].x, texturePoints[2].y, texturePoints[1].x, texturePoints[1].y
         };
 
-        //创建顶点坐标数据缓冲
-        //vertices.length*4是因为一个整数四个字节
-        ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.length * 4);
-        vbb.order(ByteOrder.nativeOrder());//设置字节顺序
-        mVertexBuffer = vbb.asFloatBuffer();//转换为Float型缓冲
-        mVertexBuffer.put(vertices);//向缓冲区中放入顶点坐标数据
-        mVertexBuffer.position(0);//设置缓冲区起始位置
-
-
-        //创建顶点法向量数据缓冲
-        ByteBuffer nbb = ByteBuffer.allocateDirect(normals.length * 4);//创建顶点法向量数据缓冲
-        nbb.order(ByteOrder.nativeOrder());//设置字节顺序为本地操作系统顺序
-        mNormalBuffer = nbb.asFloatBuffer();//转换为float型缓冲
-        mNormalBuffer.put(normals);//向缓冲区中放入顶点法向量数据
-        mNormalBuffer.position(0);//设置缓冲区起始位置
-
-
-        //创建顶点纹理坐标数据缓冲
-        ByteBuffer cbb = ByteBuffer.allocateDirect(texCoor.length * 4);
-        cbb.order(ByteOrder.nativeOrder());//设置字节顺序
-        mTexCoorBuffer = cbb.asFloatBuffer();//转换为Float型缓冲
-        mTexCoorBuffer.put(texCoor);//向缓冲区中放入顶点着色数据
-        mTexCoorBuffer.position(0);//设置缓冲区起始位置
     }
 
 

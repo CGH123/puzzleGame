@@ -51,23 +51,23 @@ public class BitmapUtil {
 
 
     private static Vector2f[] buildQuadrangle(Vector2f[] quadPositions, int row, int col) {
-        Vector2f[] v = new Vector2f[row * col];
+        Vector2f[] v = new Vector2f[(row+1) * (col+1)];
         Vector2f vDis01 = quadPositions[0].minus(quadPositions[1]);
         Vector2f vDis32 = quadPositions[3].minus(quadPositions[2]);
         Vector2f vDis03 = quadPositions[0].minus(quadPositions[3]);
         Vector2f vDis12 = quadPositions[1].minus(quadPositions[2]);
 
-        Vector2f vExtend = vDis01.add(vDis32).multiK(col)
-                .add(vDis03.add(vDis12).multiK(row))
+        Vector2f vExtend = (((vDis01.add(vDis32)).multiK(col))
+                .add((vDis03.add(vDis12)).multiK(row)))
                 .multiK(0.5f);
 
         Vector2f vCurrentRow = vExtend.multiK(-0.5f);
         Vector2f vCurrentCol;
 
         int index = 0;
-        for (int i = 0; i < row; i++) {
+        for (int i = 0; i <= row; i++) {
             vCurrentCol = vCurrentRow;
-            for (int j = 0; j < col; j++) {
+            for (int j = 0; j <= col; j++) {
                 v[index++] = vCurrentCol;
                 vCurrentCol = vCurrentCol.add(
                         ((i + j) & 1) == 1 ? vDis01 : vDis32

@@ -31,7 +31,8 @@ public class Game3DActivity extends Activity{
         mGLSurfaceView = (Game3DView) findViewById(R.id.game_3d_view);
         mGLSurfaceView.requestFocus();//获取焦点
         mGLSurfaceView.setFocusableInTouchMode(true);//设置为可触控
-        mGLSurfaceView.init(3, Game3DView.ObjectType.QUAD_PLANE);
+        mGLSurfaceView.init(4, Game3DView.ObjectType.QUAD_PLANE);
+       // mGLSurfaceView.init(4, Game3DView.ObjectType.CUBE);
     }
 
     @Override
