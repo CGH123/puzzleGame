@@ -25,6 +25,4 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
     compile 'com.squareup.picasso:picasso:2.5.0'
-    compile files('libs/naga-2_1-r42.jar')
-    compile files('libs/naga-debug-2_1-r42.jar')
 }

@@ -1,7 +1,7 @@
 package com.example.administrator.puzzleGame.game3DModel;
 
 
-import android.content.Context;
+import com.example.administrator.puzzleGame.constant.GameConstant;
 
 public class Cube extends BaseBody implements Object {
     CubeFace[] cubeFaces;
@@ -11,13 +11,13 @@ public class Cube extends BaseBody implements Object {
     int faceNum;
     int[] texIds;
 
-    public Cube(Context context, int cutNum, float size, int[] texIds) {
-        super.setBox(cutNum * size);
+    public Cube(int cutNum, float size, int[] texIds) {
+        super.setBox(cutNum * size, cutNum * size, cutNum * size);
         this.cutNum = cutNum;
         this.squareNum = cutNum * cutNum;
         this.faceNum = 6;
         this.UNIT_SIZE = size;
-
+        this.texIds = texIds;
 
         cubeFaces = new CubeFace[faceNum];
         for (int i = 0; i < cubeFaces.length; i++)
@@ -55,7 +55,6 @@ public class Cube extends BaseBody implements Object {
                 }
             }
         }
-        cubeFaces[resultNum / squareNum].squares[resultNum % squareNum].isCheck = 1;
         return resultNum;
     }
 
@@ -88,34 +87,34 @@ public class Cube extends BaseBody implements Object {
 
         //绘制前小面
         MatrixState.pushMatrix();
-        MatrixState.translate(0, 0, cutNum * UNIT_SIZE);
+        MatrixState.translate(0, 0, cutNum * UNIT_SIZE * GameConstant.SPACE_SCALE);
         cubeFaces[0].drawSelf();
         MatrixState.popMatrix();
 
         //绘制后小面
         MatrixState.pushMatrix();
-        MatrixState.translate(0, 0, -cutNum * UNIT_SIZE);
+        MatrixState.translate(0, 0, -cutNum * UNIT_SIZE * GameConstant.SPACE_SCALE);
         MatrixState.rotate(180, 0, 1, 0);
         cubeFaces[1].drawSelf();
         MatrixState.popMatrix();
 
         //绘制上大面
         MatrixState.pushMatrix();
-        MatrixState.translate(0, cutNum * UNIT_SIZE, 0);
+        MatrixState.translate(0, cutNum * UNIT_SIZE * GameConstant.SPACE_SCALE, 0);
         MatrixState.rotate(-90, 1, 0, 0);
         cubeFaces[2].drawSelf();
         MatrixState.popMatrix();
 
         //绘制下大面
         MatrixState.pushMatrix();
-        MatrixState.translate(0, -cutNum * UNIT_SIZE, 0);
+        MatrixState.translate(0, -cutNum * UNIT_SIZE * GameConstant.SPACE_SCALE, 0);
         MatrixState.rotate(90, 1, 0, 0);
         cubeFaces[3].drawSelf();
         MatrixState.popMatrix();
 
         //绘制左大面
         MatrixState.pushMatrix();
-        MatrixState.translate(cutNum * UNIT_SIZE, 0, 0);
+        MatrixState.translate(cutNum * UNIT_SIZE * GameConstant.SPACE_SCALE, 0, 0);
         MatrixState.rotate(-90, 1, 0, 0);
         MatrixState.rotate(90, 0, 1, 0);
         cubeFaces[4].drawSelf();
@@ -123,7 +122,7 @@ public class Cube extends BaseBody implements Object {
 
         //绘制右大面
         MatrixState.pushMatrix();
-        MatrixState.translate(-cutNum * UNIT_SIZE, 0, 0);
+        MatrixState.translate(-cutNum * UNIT_SIZE * GameConstant.SPACE_SCALE, 0, 0);
         MatrixState.rotate(90, 1, 0, 0);
         MatrixState.rotate(-90, 0, 1, 0);
         cubeFaces[5].drawSelf();
