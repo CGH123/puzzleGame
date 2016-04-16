@@ -276,9 +276,9 @@ public class Game3DView extends GLSurfaceView {
                     texIds[0] = TextureUtil.initTexture(src, true);//设置纹理ID
                     Vector2f[] quadPositions = new Vector2f[]{
                             new Vector2f(0, 0),
-                            new Vector2f(0, 1),
-                            new Vector2f(1, 0),
+                            new Vector2f(0.5f, 0),
                             new Vector2f(1, 1),
+                            new Vector2f(0, 1),
                     };
                     points = BitmapUtil.cutBitmapToQuads(src, quadPositions, cutNum, cutNum);
                     break;
