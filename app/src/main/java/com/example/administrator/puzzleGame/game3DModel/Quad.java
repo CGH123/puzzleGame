@@ -1,31 +1,37 @@
 package com.example.administrator.puzzleGame.game3DModel;
 
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-
-
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 import com.example.administrator.puzzleGame.util.VectorUtil;
 
-//纹理矩形单面
-public class Square extends ShaderBody implements Piece {
-    int vCount;
-    float size;
-    int faceNum;
-    int squareNum;
-    int isCheck;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
-    public Square(float size, int faceNum, int squareNum) {
+public class Quad extends ShaderBody implements Piece {
+    Vector2f[] points;
+    Vector2f[] texturePoints;
+    int vCount;
+    int isCheck;
+    int num;
+    int texId;
+
+    public Quad(int num, Vector2f[] points, int texId) {
         super(0);
-        //初始化顶点坐标与着色数据
-        this.size = size;
-        this.faceNum = faceNum;
-        this.squareNum = squareNum;
-        this.isCheck = 0;
+        vCount = 6;
+        this.num = num;
+        this.points = points;
+        this.texId = texId;
+
+        float scale = 1.0f / 3.0f;
+        float translate = 0.5f;
+        texturePoints = new Vector2f[4];
+        for (int i = 0; i < 4; i++) {
+            texturePoints[i] = points[i].multiK(scale).add(new Vector2f(translate, translate));
+            texturePoints[i].y = 1 - texturePoints[i].y;
+        }
+
         initData();
         initBuffer();
     }
@@ -60,26 +66,12 @@ public class Square extends ShaderBody implements Piece {
         return result;
     }
 
-
-    //初始化顶点坐标与着色数据的方法
     @Override
     public void initData() {
         //顶点坐标数据的初始化================begin============================
-        vCount = 12;
-        float UNIT_SIZE = size;
         vertices = new float[]{
-                0, 0, 0,
-                UNIT_SIZE, UNIT_SIZE, 0,
-                -UNIT_SIZE, UNIT_SIZE, 0,
-                0, 0, 0,
-                -UNIT_SIZE, UNIT_SIZE, 0,
-                -UNIT_SIZE, -UNIT_SIZE, 0,
-                0, 0, 0,
-                -UNIT_SIZE, -UNIT_SIZE, 0,
-                UNIT_SIZE, -UNIT_SIZE, 0,
-                0, 0, 0,
-                UNIT_SIZE, -UNIT_SIZE, 0,
-                UNIT_SIZE, UNIT_SIZE, 0,
+                points[0].x * 2, points[0].y * 2, 0, points[1].x * 2, points[1].y * 2, 0, points[2].x * 2, points[2].y * 2, 0,
+                points[3].x * 2, points[3].y * 2, 0, points[2].x * 2, points[2].y * 2, 0, points[1].x * 2, points[1].y * 2, 0,
         };
 
 
@@ -92,14 +84,14 @@ public class Square extends ShaderBody implements Piece {
         }
 
         texCoors = new float[]{
-                0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-                0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 1.0f,
-                0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f,
-                0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f
+                texturePoints[0].x, texturePoints[0].y, texturePoints[1].x, texturePoints[1].y, texturePoints[2].x, texturePoints[2].y,
+                texturePoints[3].x, texturePoints[3].y, texturePoints[2].x, texturePoints[2].y, texturePoints[1].x, texturePoints[1].y
         };
+
     }
 
 
+    @Override
     public void drawSelf(int texId) {
         setBody();
 
@@ -109,9 +101,9 @@ public class Square extends ShaderBody implements Piece {
         GLES20.glUniformMatrix4fv(muMVPMatrixHandle, 1, false, MatrixState.getFinalMatrix(), 0);
         //将位置、旋转变换矩阵传入shader程序
         GLES20.glUniformMatrix4fv(muMMatrixHandle, 1, false, MatrixState.getMMatrix(), 0);
-        //将摄像机位置传入shader程序   
+        //将摄像机位置传入shader程序
         GLES20.glUniform3fv(muCameraHandle, 1, MatrixState.cameraFB);
-        //将光源位置传入shader程序   
+        //将光源位置传入shader程序
         GLES20.glUniform3fv(muLightLocationHandle, 1, MatrixState.lightPositionFB);
         //将是否选择传入shader程序
         GLES20.glUniform1i(muIsCheck, isCheck);

@@ -7,8 +7,8 @@ public abstract class BaseBody implements Cloneable {
     Bound box;//仿射变换之前的包围盒
 
     //设置包围盒
-    public void setBox(float length) {
-        box = new Bound(length, length, length);
+    public void setBox(float x, float y, float z) {
+        box = new Bound(x, y, z);
     }
 
     //更新AABB包围盒
@@ -30,7 +30,6 @@ public abstract class BaseBody implements Cloneable {
     public float[] getMatrix() {
         return matrix;
     }
-
 
 
 }

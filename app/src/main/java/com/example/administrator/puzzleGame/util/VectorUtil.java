@@ -16,6 +16,13 @@ public class VectorUtil {
         return (float) Math.sqrt((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y));
     }
 
+    //两点距离
+    public static void swap (Vector2f v1, Vector2f v2) {
+        Vector2f temp = v2;
+        v2 = v1;
+        v1 = temp;
+    }
+
     //二维向量点乘
     public static float Product(Vector2f v1, Vector2f v2) {
         return v1.x * v2.x + v1.y * v2.y;

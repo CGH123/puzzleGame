@@ -1,7 +1,7 @@
 package com.example.administrator.puzzleGame.game3DModel;
 
 
-import com.example.administrator.puzzleGame.constant.Game3DConstant;
+import com.example.administrator.puzzleGame.constant.GameConstant;
 
 public class Camera {
     float distance;
@@ -19,8 +19,8 @@ public class Camera {
     float angelB;    //旋转角
     float angelC;   //计算up向量和摄像机位置向量构成三角形中的夹角
 
-    public Camera() {
-        distance = 70;
+    public Camera(float distance) {
+        this.distance = distance;
         distanceTotal = (float) Math.sqrt(1 + distance * distance);
         cx = 0f;    //摄像机位置x
         cy = 0f;   //摄像机位置y
@@ -36,7 +36,7 @@ public class Camera {
         angelC = (float) Math.atan(1 / distance);
     }
 
-    public void initCamera() {
+    public void setCamera() {
         cx = (float) (distance * Math.sin(angelA) * Math.cos(angelB));
         cy = (float) (distance * Math.sin(angelB));
         cz = (float) (distance * Math.cos(angelA) * Math.cos(angelB));
@@ -45,14 +45,14 @@ public class Camera {
         upz = (float) (distanceTotal * Math.cos(angelB + angelC) * Math.cos(angelA) - distance * Math.cos(angelB) * Math.cos(angelA));
 
         //调用此方法计算产生透视投影矩阵
-        MatrixState.setProjectFrustum(-Game3DConstant.RATIO, Game3DConstant.RATIO, -1, 1, 10, 400);
+        MatrixState.setProjectFrustum(-GameConstant.RATIO, GameConstant.RATIO, -1, 1, 10, 400);
         // 调用此方法产生摄像机9参数位置矩阵
         MatrixState.setCamera(cx, cy, cz, tx, ty, tz, upx, upy, upz);
     }
 
     public void rotateCamera(float distanceXMoveP1, float distanceYMoveP1){
-        angelA -= distanceXMoveP1 * Game3DConstant.CAMERASPEED;
-        angelB += distanceYMoveP1 * Game3DConstant.CAMERASPEED;
+        angelA -= distanceXMoveP1 * GameConstant.CAMERA_SPEED;
+        angelB += distanceYMoveP1 * GameConstant.CAMERA_SPEED;
         angelB = Math.max(angelB, (float) (-Math.PI / 2));
         angelB = Math.min(angelB, (float) (Math.PI / 2));
     }
