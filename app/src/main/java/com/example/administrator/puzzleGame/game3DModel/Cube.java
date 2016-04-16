@@ -3,7 +3,6 @@ package com.example.administrator.puzzleGame.game3DModel;
 
 import android.content.Context;
 
-
 public class Cube extends BaseBody implements Object {
     CubeFace[] cubeFaces;
     float UNIT_SIZE;
@@ -56,7 +55,7 @@ public class Cube extends BaseBody implements Object {
                 }
             }
         }
-//        cubeFaces[resultNum / squareNum].squares[resultNum % squareNum].isCheck = 1;
+        cubeFaces[resultNum / squareNum].squares[resultNum % squareNum].isCheck = 1;
         return resultNum;
     }
 

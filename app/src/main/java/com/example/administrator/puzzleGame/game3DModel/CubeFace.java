@@ -1,6 +1,8 @@
 package com.example.administrator.puzzleGame.game3DModel;
 
 
+import com.example.administrator.puzzleGame.constant.GameConstant;
+
 public class CubeFace extends BaseBody {
     Square[] squares;
     float UNIT_SIZE;
@@ -20,12 +22,11 @@ public class CubeFace extends BaseBody {
 
     public void drawSelf() {
         int count = 0;
-        float scale = 1.05f;
         MatrixState.pushMatrix();
         for (float i = UNIT_SIZE * (cutNum - 1); i >= -UNIT_SIZE * (cutNum - 1); i -= 2 * UNIT_SIZE)
             for (float j = UNIT_SIZE * (cutNum - 1); j >= -UNIT_SIZE * (cutNum - 1); j -= 2 * UNIT_SIZE) {
                 MatrixState.pushMatrix();
-                MatrixState.translate(i*scale, j*scale, 0);
+                MatrixState.translate(i * GameConstant.SPACE_SCALE, j * GameConstant.SPACE_SCALE, 0);
                 int squaresNum = cutNum * cutNum;
                 squares[count].drawSelf(texId[squares[count].faceNum * squaresNum + squares[count].squareNum]);
                 count++;

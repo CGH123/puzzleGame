@@ -17,14 +17,14 @@ import java.util.Random;
 
 import com.example.administrator.puzzleGame.game3DModel.*;
 import com.example.administrator.puzzleGame.game3DModel.Object;
-import com.example.administrator.puzzleGame.constant.Game3DConstant;
+import com.example.administrator.puzzleGame.constant.GameConstant;
 import com.example.administrator.puzzleGame.util.BitmapUtil;
 import com.example.administrator.puzzleGame.util.LogUtil;
 import com.example.administrator.puzzleGame.util.TextureUtil;
 import com.example.administrator.puzzleGame.util.VectorUtil;
 
 public class Game3DView extends GLSurfaceView {
-    public enum ObjectType{CUBE, SPHERE}
+    public enum ObjectType {CUBE, SPHERE, QUAD_PLANE}
 
     private static final String TAG = "Game3DView";
     private Camera camera;
@@ -42,6 +42,7 @@ public class Game3DView extends GLSurfaceView {
     private boolean hasLoad = false;//是否初始化完成
     private boolean isP1Lock = false;//判断单手指操作是否被锁定
 
+
     private Object object;
     private ObjectType objectType;
     private int cutNum;
@@ -55,12 +56,14 @@ public class Game3DView extends GLSurfaceView {
         setRenderer(mRenderer);                //设置渲染器
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);   //设置渲染模式为主动渲染
         //创建摄像机
-        camera = new Camera();
+        float cameraDistance = 70f;
+        camera = new Camera(cameraDistance);
         //初始化光源
         MatrixState.setLightLocation(0, 100, 0);
     }
 
-    public void init(int cutNum, ObjectType objectType){
+
+    public void init(int cutNum, ObjectType objectType) {
         this.objectType = objectType;
         this.cutNum = cutNum;
     }
@@ -162,19 +165,32 @@ public class Game3DView extends GLSurfaceView {
     }
 
     public class SceneRenderer implements Renderer {
-        int [] texIds;
+        int[] texIds;
+        Vector2f[] points;
+
         private void initTaskReal() {
             Random rand = new Random();
             int randTime = 200;
-            if (objectType == ObjectType.CUBE) {
-                object = new Cube(context, cutNum, 1.0f, texIds);
-                for (int i = 0; i < randTime; i++) {
-                    int randNum1 = rand.nextInt(6 * cutNum * cutNum);
-                    int randNum2 = rand.nextInt(6 * cutNum * cutNum);
-                    object.swapPiece(randNum1, randNum2);
-                }
-            } else if (objectType == ObjectType.SPHERE) {
-                //// TODO: 2016/4/15 球
+            int range = 0;
+            switch (objectType) {
+                case CUBE:
+                    object = new Cube(cutNum, 1.0f, texIds);
+                    range = 6 * cutNum * cutNum;
+                    break;
+                case SPHERE:
+                    //// TODO: 2016/4/15 球
+                    range = cutNum * cutNum;
+                    break;
+                case QUAD_PLANE:
+                    object = new QuadPlane(points, 1, cutNum, cutNum, texIds[0]);
+                    range = cutNum * cutNum;
+                    break;
+            }
+            //随机打乱初始开局
+            for (int i = 0; i < randTime; i++) {
+                int randNum1 = rand.nextInt(range);
+                int randNum2 = rand.nextInt(range);
+                object.swapPiece(randNum1, randNum2);
             }
         }
 
@@ -185,12 +201,12 @@ public class Game3DView extends GLSurfaceView {
             GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
 
             //调用此方法计算产生透视投影矩阵
-            MatrixState.setProjectFrustum(-Game3DConstant.RATIO, Game3DConstant.RATIO, -1, 1, 10, 400);
+            MatrixState.setProjectFrustum(-GameConstant.RATIO, GameConstant.RATIO, -1, 1, 10, 400);
             // 调用此方法产生摄像机9参数位置矩阵
             MatrixState.setCamera(0, 0, 70, 0, 0, 0, 0, 1, 0);
 
             //设置摄像头
-            camera.initCamera();
+            camera.setCamera();
 
             if (!hasLoad) {
                 initTaskReal();
@@ -208,9 +224,9 @@ public class Game3DView extends GLSurfaceView {
             //设置视窗大小及位置 
             GLES20.glViewport(0, 0, width, height);
             //计算GLSurfaceView的宽高比
-            Game3DConstant.RATIO = (float) width / height;
-            Game3DConstant.WIDTH = width;
-            Game3DConstant.HEIGHT = height;
+            GameConstant.RATIO = (float) width / height;
+            GameConstant.WIDTH = width;
+            GameConstant.HEIGHT = height;
 
         }
 
@@ -231,23 +247,41 @@ public class Game3DView extends GLSurfaceView {
             //初始化变换矩阵
             MatrixState.setInitStack();
 
-            int[] pictureIds = new int[]{
-                    R.mipmap.ic_launcher,
-                    R.mipmap.ic_launcher,
-                    R.mipmap.ic_launcher,
-                    R.mipmap.ic_launcher,
-                    R.mipmap.ic_launcher,
-                    R.mipmap.ic_launcher
-            };
             //初始化纹理
-            texIds = new int[pictureIds.length * cutNum * cutNum];
-            for (int i = 0; i < pictureIds.length; i++) {
-                Bitmap src = TextureUtil.loadTexture(context, pictureIds[i]);//设置纹理图片
-                Bitmap[] bitmaps = BitmapUtil.cutBitmap(src, cutNum, cutNum);
-                src.recycle();
-                for (int j = 0; j < bitmaps.length; j++) {
-                    texIds[i * cutNum * cutNum + j] = TextureUtil.initTexture(bitmaps[j], true);//设置纹理ID
-                }
+            switch (objectType) {
+                case CUBE:
+                    int[] pictureIds = new int[]{
+                            R.mipmap.ic_launcher,
+                            R.mipmap.ic_launcher,
+                            R.mipmap.ic_launcher,
+                            R.mipmap.ic_launcher,
+                            R.mipmap.ic_launcher,
+                            R.mipmap.ic_launcher
+                    };
+                    texIds = new int[pictureIds.length * cutNum * cutNum];
+                    for (int i = 0; i < pictureIds.length; i++) {
+                        Bitmap src = TextureUtil.loadTexture(context, pictureIds[i]);//设置纹理图片
+                        Bitmap[] bitmaps = BitmapUtil.cutBitmap(src, cutNum, cutNum);
+                        src.recycle();
+                        for (int j = 0; j < bitmaps.length; j++) {
+                            texIds[i * cutNum * cutNum + j] = TextureUtil.initTexture(bitmaps[j], true);//设置纹理ID
+                        }
+                    }
+                    break;
+                case SPHERE:
+                    break;
+                case QUAD_PLANE:
+                    Bitmap src = TextureUtil.loadTexture(context, R.mipmap.ic_launcher);//设置纹理图片
+                    texIds = new int[1];
+                    texIds[0] = TextureUtil.initTexture(src, true);//设置纹理ID
+                    Vector2f[] quadPositions = new Vector2f[]{
+                            new Vector2f(0, 0),
+                            new Vector2f(0.5f, 0),
+                            new Vector2f(1, 1),
+                            new Vector2f(0, 1),
+                    };
+                    points = BitmapUtil.cutBitmapToQuads(src, quadPositions, cutNum, cutNum);
+                    break;
             }
         }
     }
