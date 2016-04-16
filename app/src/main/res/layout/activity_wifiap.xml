@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/wifiap_ly_wifistatus"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/ab_solid_dark_holo" >
+
+        <TextView
+            android:id="@+id/wifiap_tv_wifistatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:textSize="18sp" >
+        </TextView>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/wifiap_lv_wifi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/wifiap_footer"
+        android:layout_below="@id/wifiap_ly_wifistatus" />
+
+    <LinearLayout
+        android:id="@+id/wifiap_lv_create_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_notification" />
+
+        <TextView
+            android:id="@+id/wifiap_tv_createap_ssid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/wifiap_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_unlogin_bar"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="4dip"
+        android:paddingLeft="5dip"
+        android:paddingRight="5dip"
+        android:paddingTop="4dip" >
+
+        <Button
+            android:id="@+id/wifiap_btn_back"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_bottombar"
+            android:text="@string/btn_back"
+            android:textColor="@drawable/profile_bottom_text_color"
+            android:textSize="14sp" />
+
+
+
+        <Button
+            android:id="@+id/wifiap_btn_next"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_bottombar"
+            android:text="@string/btn_next"
+            android:textColor="@drawable/profile_bottom_text_color"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+</RelativeLayout>

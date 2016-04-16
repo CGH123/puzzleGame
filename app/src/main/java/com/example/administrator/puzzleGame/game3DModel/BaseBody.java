@@ -1,0 +1,36 @@
+package com.example.administrator.puzzleGame.game3DModel;
+
+
+//物体基类
+public abstract class BaseBody implements Cloneable {
+    float[] matrix = new float[16];//仿射变换的矩阵
+    Bound box;//仿射变换之前的包围盒
+
+    //设置包围盒
+    public void setBox(float length) {
+        box = new Bound(length, length, length);
+    }
+
+    //更新AABB包围盒
+    public Bound getCurrBox() {
+        return box;
+    }
+
+    public void setBody() {
+        //复制变换矩阵
+        copyMatrix();
+    }
+
+    //复制变换矩阵
+    private void copyMatrix() {
+        System.arraycopy(MatrixState.getMMatrix(), 0, matrix, 0, 16);
+    }
+
+    //得到变换矩阵
+    public float[] getMatrix() {
+        return matrix;
+    }
+
+
+
+}
