@@ -17,7 +17,7 @@ import com.example.administrator.puzzleGame.sqlServer.GameDB;
  * Created by Administrator on 2016/3/24.
  */
 public class bg_musicActivity extends Activity {
-    private  RadioGroup ra; 
+    private  RadioGroup ra;
     private Button bt;
     private RadioButton bt1,bt2,bt3,bt4,bt5,bt6,bt7,bt8,bt9,bt10,bt11;
     private Intent intentSer = new Intent("com.angel.Android.MUSIC");
