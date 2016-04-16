@@ -12,36 +12,22 @@ import android.opengl.Matrix;
 import com.example.administrator.puzzleGame.util.VectorUtil;
 
 //纹理矩形单面
-public class Square extends BaseBody implements Piece{
-    int mProgram;//自定义渲染管线着色器程序id
-    int maPositionHandle; //顶点位置属性引用
-    int maTexCoorHandle; //顶点纹理坐标属性引用
-    int maNormalHandle; //顶点法向量属性引用
-    int muMMatrixHandle;
-    int muMVPMatrixHandle;//总变换矩阵引用
-    int muIsCheck;
-    int muCameraHandle; //摄像机位置属性引用
-    int muLightLocationHandle;//光源位置属性引用
-
-    FloatBuffer mVertexBuffer;//顶点坐标数据缓冲
-    FloatBuffer mTexCoorBuffer;//顶点纹理坐标数据缓冲
-    FloatBuffer mNormalBuffer;//顶点法向量数据缓冲
-
+public class Square extends ShaderBody implements Piece {
+    float[] vertices;
     int vCount;
     float size;
     int faceNum;
     int squareNum;
-    float[] vertices;
     int isCheck;
 
     public Square(float size, int faceNum, int squareNum) {
+        super(0);
         //初始化顶点坐标与着色数据
         this.size = size;
         this.faceNum = faceNum;
         this.squareNum = squareNum;
         this.isCheck = 0;
         initVertexData();
-        initShader(ShaderManager.getShaderProgram(0));
     }
 
     @Override
@@ -97,7 +83,7 @@ public class Square extends BaseBody implements Piece{
         };
 
 
-        //法向量数据初始化 
+        //法向量数据初始化
         float[] normals = new float[vertices.length];
         for (int i = 0; i < normals.length; i += 3) {
             normals[i] = 0;
@@ -105,13 +91,12 @@ public class Square extends BaseBody implements Piece{
             normals[i + 2] = 1;
         }
 
-        float texCoor[] = new float[]
-                {
-                        0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-                        0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 1.0f,
-                        0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f,
-                        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f
-                };
+        float texCoor[] = new float[]{
+                0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+                0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 1.0f,
+                0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f,
+                0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f
+        };
 
         //创建顶点坐标数据缓冲
         //vertices.length*4是因为一个整数四个字节
@@ -139,28 +124,6 @@ public class Square extends BaseBody implements Piece{
 
     }
 
-    //自定义初始化着色器的initShader方法
-    @Override
-    public void initShader(int Program) {
-        //基于顶点着色器与片元着色器创建程序
-        mProgram = Program;
-        //获取程序中顶点位置属性引用id
-        maPositionHandle = GLES20.glGetAttribLocation(mProgram, "aPosition");
-        //获取程序中顶点纹理坐标属性引用id
-        maTexCoorHandle = GLES20.glGetAttribLocation(mProgram, "aTexCoor");
-        //获取程序中顶点法向量属性引用id
-        maNormalHandle = GLES20.glGetAttribLocation(mProgram, "aNormal");
-        //获取程序中总变换矩阵引用id
-        muMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
-        //获取位置、旋转变换矩阵引用id
-        muMMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMMatrix");
-        //获取程序中摄像机位置引用id
-        muCameraHandle = GLES20.glGetUniformLocation(mProgram, "uCamera");
-        //获取程序中光源位置引用id
-        muLightLocationHandle = GLES20.glGetUniformLocation(mProgram, "uLightLocation");
-        //获取程序中光源位置引用id
-        muLightLocationHandle = GLES20.glGetUniformLocation(mProgram, "uIsCheck");
-    }
 
     public void drawSelf(int texId) {
         setBody();
@@ -179,37 +142,34 @@ public class Square extends BaseBody implements Piece{
         GLES20.glUniform1i(muIsCheck, isCheck);
 
         //传送顶点位置数据
-        GLES20.glVertexAttribPointer
-                (
-                        maPositionHandle,
-                        3,
-                        GLES20.GL_FLOAT,
-                        false,
-                        3 * 4,
-                        mVertexBuffer
-                );
+        GLES20.glVertexAttribPointer(
+                maPositionHandle,
+                3,
+                GLES20.GL_FLOAT,
+                false,
+                3 * 4,
+                mVertexBuffer
+        );
 
         //传送顶点纹理坐标数据
-        GLES20.glVertexAttribPointer
-                (
-                        maTexCoorHandle,
-                        2,
-                        GLES20.GL_FLOAT,
-                        false,
-                        2 * 4,
-                        mTexCoorBuffer
-                );
+        GLES20.glVertexAttribPointer(
+                maTexCoorHandle,
+                2,
+                GLES20.GL_FLOAT,
+                false,
+                2 * 4,
+                mTexCoorBuffer
+        );
 
         //传送顶点法向量数据
-        GLES20.glVertexAttribPointer
-                (
-                        maNormalHandle,
-                        4,
-                        GLES20.GL_FLOAT,
-                        false,
-                        3 * 4,
-                        mNormalBuffer
-                );
+        GLES20.glVertexAttribPointer(
+                maNormalHandle,
+                4,
+                GLES20.GL_FLOAT,
+                false,
+                3 * 4,
+                mNormalBuffer
+        );
 
 
         //启用顶点位置数据
@@ -222,7 +182,7 @@ public class Square extends BaseBody implements Piece{
         //绑定纹理
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texId);
-        
+
 
         //绘制纹理矩形
         MatrixState.pushMatrix();

@@ -8,7 +8,7 @@ import java.nio.FloatBuffer;
 import android.opengl.Matrix;
 import android.opengl.GLU;
 
-import com.example.administrator.puzzleGame.constant.Game3DConstant;
+import com.example.administrator.puzzleGame.constant.GameConstant;
 
 //存储系统矩阵状态的类
 public class MatrixState {
@@ -150,7 +150,7 @@ public class MatrixState {
     //三维坐标转二维坐标
     public static float[] getProject(float[] point) {
         float[] win = new float[3];
-        int[] mView = {0, 0, Game3DConstant.WIDTH, Game3DConstant.HEIGHT};
+        int[] mView = {0, 0, GameConstant.WIDTH, GameConstant.HEIGHT};
         Matrix.multiplyMM(mMVPMatrix, 0, mVMatrix, 0, currMatrix, 0);
 
         GLU.gluProject(point[0], point[1], point[2],
@@ -162,9 +162,9 @@ public class MatrixState {
     //二维坐标转三维坐标 
     public static float[] getUnProject(float x, float y) {
 
-        float w = Game3DConstant.WIDTH;// 屏幕宽度
-        float h = Game3DConstant.HEIGHT;// 屏幕高度
-        float left = Game3DConstant.RATIO;//视角left值
+        float w = GameConstant.WIDTH;// 屏幕宽度
+        float h = GameConstant.HEIGHT;// 屏幕高度
+        float left = GameConstant.RATIO;//视角left值
         float top = 1;//视角top值
         float near = 10;//视角near值
         float far = 400;//视角far值
