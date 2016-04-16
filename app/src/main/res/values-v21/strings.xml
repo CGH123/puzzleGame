@@ -40,4 +40,23 @@
     <string name="connect_bluetooth">蓝牙模式</string>
 
 
+    <string name="gameroom_toast_logout">再按一次退出程序</string>
+    <string name="gameroom_create">创建房间</string>
+    <string name="gameroom_ready">准    备</string>
+    <string name="gameroom_order">就    绪</string>
+    <string name="gameroom_start">开    始</string>
+    <string name="gameroom_sequence">顺序：</string>
+    <string name="gameroom_emptyplayer">好像没有找到其他玩家在线喔，刷新试试吧</string>
+    <string name="gameroom_haveplayer">当前房间的玩家人数：</string>
+    <string name="gameroom_tip">(提示：游戏顺序是根据准备先后确定)</string>
+
+    <string name="lv_refresh_head_load_more">加载更多</string>
+    <string name="lv_refresh_end_load_more">更    多</string>
+    <string name="lv_refresh_end_click_load_more">点击加载</string>
+    <string name="lv_refresh_release_refresh">松开刷新</string>
+    <string name="lv_refresh_pull_to_refresh">下拉刷新</string>
+    <string name="lv_refresh_doing_head_refresh">正在刷新&#8230;</string>
+    <string name="lv_refresh_doing_end_refresh">加载中&#8230;</string>
+    <string name="lv_refresh_refresh_lasttime">最近更新&#160;&#058;&#160;</string>
+
 </resources>
