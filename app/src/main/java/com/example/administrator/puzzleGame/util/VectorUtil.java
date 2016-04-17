@@ -41,7 +41,7 @@ public class VectorUtil {
         if (v2.x == 0 && v2.y == 0)
             return 0;
         else {
-            return Product(v1, v2) / (v1.mod * v2.mod);
+            return Product(v1, v2) / (v1.module() * v2.module());
         }
     }
 

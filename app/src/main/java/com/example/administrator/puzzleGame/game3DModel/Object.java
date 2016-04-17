@@ -34,6 +34,12 @@ public interface Object{
      */
     void hintPiece(int pieceNum);
 
+
+    /**
+     * 得到拼图块数目
+     */
+    int getPiecesSize();
+
     /**
      *  绘制
      */

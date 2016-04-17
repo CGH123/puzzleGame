@@ -40,18 +40,24 @@ public class BitmapUtil {
      * 将bitmap按任意四边形分割成col*row数量的不规则bitmaps，并返回纹理映射的坐标
      *
      * @param src           源bitmap
-     * @param quadPositions 四边形坐标
-     * @param col           行
-     * @param row           列
+     * @param quadPositions 四边形坐标,按逆时针传入
+     * @param colLength     行
+     * @param rowLength     列
      * @return 不规则bitmaps得纹理映射坐标
      */
-    public static Vector2f[] cutBitmapToQuads(Bitmap src, Vector2f[] quadPositions, int row, int col) {
-        return buildQuadrangle(quadPositions, row, col);
+    public static Vector2f[] cutBitmapToQuads(Bitmap src, Vector2f[] quadPositions, float rowLength, float colLength) {
+        return buildQuadrangle(quadPositions, rowLength, colLength);
     }
 
 
-    private static Vector2f[] buildQuadrangle(Vector2f[] quadPositions, int row, int col) {
-        Vector2f[] v = new Vector2f[(row+1) * (col+1)];
+    private static Vector2f[] buildQuadrangle(Vector2f[] quadPositions, float rowLength, float colLength) {
+        float xLength = quadPositions[1].x - quadPositions[0].x + quadPositions[2].x - quadPositions[3].x;
+        float yLength = quadPositions[3].y - quadPositions[0].y + quadPositions[2].y - quadPositions[1].y;
+        int row = (int) (4 * colLength / yLength);
+        int col = (int) (4 * rowLength / xLength);
+
+
+        Vector2f[] v = new Vector2f[(row + 1) * (col + 1) + 1];
         Vector2f vDis01 = quadPositions[0].minus(quadPositions[1]);
         Vector2f vDis32 = quadPositions[3].minus(quadPositions[2]);
         Vector2f vDis03 = quadPositions[0].minus(quadPositions[3]);
@@ -77,6 +83,7 @@ public class BitmapUtil {
                     (i & 1) == 1 ? vDis03 : vDis12
             );
         }
+        v[v.length - 1] = new Vector2f(row, col);
         return v;
     }
 
