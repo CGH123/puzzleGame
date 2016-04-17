@@ -41,7 +41,8 @@ public class Game3DView extends GLSurfaceView {
 
     private boolean hasLoad = false;//是否初始化完成
     private boolean isP1Lock = false;//判断单手指操作是否被锁定
-
+    private boolean isP1Move = false;//判断单手指操作是否被锁定
+    private boolean canMoveCamera = false;
 
     private Object object;
     private ObjectType objectType;
@@ -63,9 +64,10 @@ public class Game3DView extends GLSurfaceView {
     }
 
 
-    public void init(int cutNum, ObjectType objectType) {
+    public void init(int cutNum, ObjectType objectType, Boolean canMoveCamera) {
         this.objectType = objectType;
         this.cutNum = cutNum;
+        this.canMoveCamera = canMoveCamera;
     }
 
     //触摸事件回调方法
@@ -80,29 +82,12 @@ public class Game3DView extends GLSurfaceView {
                 mode = 1;//设置为单点模式
 
                 //选择点为空，移动相机
-                if (!object.isPickUpObject(e.getX(0), e.getY(0))) {
+                if (!object.isPickUpObject(e.getX(0), e.getY(0)) && canMoveCamera) {
                     modeP1 = 1;
                 }
                 //拾取方块
-                else {
+                else if (object.isPickUpObject(e.getX(0), e.getY(0))) {
                     modeP1 = 2;
-                    int pieceNum = object.pickUpPiece(e.getX(0), e.getY(0));
-                    LogUtil.d(TAG, "pick:" + pieceNum);
-                    if (firstPickNum == -1) {
-                        firstPickNum = pieceNum;
-                        object.hintPiece(firstPickNum);
-                    } else if (firstPickNum == pieceNum) {
-                        object.hintPiece(firstPickNum);
-                        firstPickNum = -1;
-                    } else {
-                        object.swapPiece(firstPickNum, pieceNum);
-                        object.hintPiece(firstPickNum);
-                        firstPickNum = -1;
-                        if (object.isCompleted()) {
-                            // TODO: 2016/4/15 获胜UI
-                            LogUtil.d(TAG, "win!");
-                        }
-                    }
                 }
 
                 break;
@@ -119,11 +104,13 @@ public class Game3DView extends GLSurfaceView {
             case MotionEvent.ACTION_MOVE:
                 if (mode == 1 && !isP1Lock) {
                     //摄像机移动与拾取
-                    if (modeP1 == 1) {
+                    if (modeP1 == 1 && canMoveCamera) {
                         float distanceXMoveP1 = locationXBeginP1 - locationXEndP1; //记录单指Move触发时X轴移动的距离
                         float distanceYMoveP1 = locationYBeginP1 - locationYEndP1;    //记录单指Move触发时Y轴移动的距离
                         //设置摄像机绕原点旋转
                         camera.rotateCamera(distanceXMoveP1, distanceYMoveP1);
+                    } else if (modeP1 == 2) {
+                        isP1Move = true;
                     }
                 }
                 if (mode == 3) {
@@ -134,9 +121,9 @@ public class Game3DView extends GLSurfaceView {
 
                     if (lengthP01MoveP3 > 10f && lengthP02MoveP3 > 10f && lengthP12MoveP3 > 10f) {
 
-                        float scale1 = lengthP01MoveP3 / (Vector2fP01DownP3.mod);
-                        float scale2 = lengthP02MoveP3 / (Vector2fP02DownP3.mod);
-                        float scale3 = lengthP12MoveP3 / (Vector2fP12DownP3.mod);
+                        float scale1 = lengthP01MoveP3 / (Vector2fP01DownP3.module());
+                        float scale2 = lengthP02MoveP3 / (Vector2fP02DownP3.module());
+                        float scale3 = lengthP12MoveP3 / (Vector2fP12DownP3.module());
 
                         Vector2fP01DownP3 = new Vector2f(e.getX(0) - e.getX(1), e.getY(0) - e.getY(1));
                         Vector2fP02DownP3 = new Vector2f(e.getX(0) - e.getX(2), e.getY(0) - e.getY(2));
@@ -152,9 +139,31 @@ public class Game3DView extends GLSurfaceView {
                 mode -= 1;//设置为单点模式
                 break;
             case MotionEvent.ACTION_UP:
+                if (modeP1 == 2 && !isP1Move) {
+                    int pieceNum = object.pickUpPiece(locationXBeginP1, locationYBeginP1);
+                    LogUtil.d(TAG, "pick:" + pieceNum);
+                    if (pieceNum != -1) {
+                        if (firstPickNum == -1) {
+                            firstPickNum = pieceNum;
+                            object.hintPiece(firstPickNum);
+                        } else if (firstPickNum == pieceNum) {
+                            object.hintPiece(firstPickNum);
+                            firstPickNum = -1;
+                        } else {
+                            object.swapPiece(firstPickNum, pieceNum);
+                            object.hintPiece(firstPickNum);
+                            firstPickNum = -1;
+                            if (object.isCompleted()) {
+                                // TODO: 2016/4/15 获胜UI
+                                LogUtil.d(TAG, "win!");
+                            }
+                        }
+                    }
+                }
                 mode = 0;
                 modeP1 = 1;
                 isP1Lock = false;
+                isP1Move = false;
                 break;
         }
 
@@ -169,24 +178,21 @@ public class Game3DView extends GLSurfaceView {
         Vector2f[] points;
 
         private void initTaskReal() {
-            Random rand = new Random();
-            int randTime = 200;
-            int range = 0;
             switch (objectType) {
                 case CUBE:
                     object = new Cube(cutNum, 1.0f, texIds);
-                    range = 6 * cutNum * cutNum;
                     break;
                 case SPHERE:
                     //// TODO: 2016/4/15 球
-                    range = cutNum * cutNum;
                     break;
                 case QUAD_PLANE:
-                    object = new QuadPlane(points, 1, cutNum, cutNum, texIds[0]);
-                    range = cutNum * cutNum;
+                    object = new QuadPlane(points, cutNum, texIds[0]);
                     break;
             }
             //随机打乱初始开局
+            Random rand = new Random();
+            int randTime = 0;
+            int range = object.getPiecesSize();
             for (int i = 0; i < randTime; i++) {
                 int randNum1 = rand.nextInt(range);
                 int randNum2 = rand.nextInt(range);
@@ -275,7 +281,7 @@ public class Game3DView extends GLSurfaceView {
                     texIds = new int[1];
                     texIds[0] = TextureUtil.initTexture(src, true);//设置纹理ID
                     Vector2f[] quadPositions = new Vector2f[]{
-                            new Vector2f(0, 0),
+                            new Vector2f(0, 0.5f),
                             new Vector2f(0.5f, 0),
                             new Vector2f(1, 1),
                             new Vector2f(0, 1),

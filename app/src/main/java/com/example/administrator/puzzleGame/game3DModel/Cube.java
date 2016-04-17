@@ -38,7 +38,12 @@ public class Cube extends BaseBody implements Object {
 
     @Override
     public void hintPiece(int pieceNum) {
-        cubeFaces[pieceNum / squareNum].squares[pieceNum % squareNum].isCheck = 1 - cubeFaces[pieceNum / squareNum].squares[pieceNum % squareNum].isCheck;
+        cubeFaces[pieceNum / squareNum].cubePieces[pieceNum % squareNum].isCheck = 1 - cubeFaces[pieceNum / squareNum].cubePieces[pieceNum % squareNum].isCheck;
+    }
+
+    @Override
+    public int getPiecesSize() {
+        return 6 * cutNum * cutNum;
     }
 
     @Override
@@ -47,7 +52,7 @@ public class Cube extends BaseBody implements Object {
         int resultNum = 0;
         for (int i = 0; i < faceNum; i++) {
             for (int j = 0; j < squareNum; j++) {
-                float time = cubeFaces[i].squares[j].pickUpTime(x, y);
+                float time = cubeFaces[i].cubePieces[j].pickUpTime(x, y);
                 if (Float.isInfinite(time)) continue;
                 if (time < minTime) {
                     minTime = time;
@@ -60,21 +65,21 @@ public class Cube extends BaseBody implements Object {
 
     @Override
     public void swapPiece(int baseNum1, int baseNum2) {
-        Square square1 = cubeFaces[baseNum1 / squareNum].squares[baseNum1 % squareNum];
-        Square square2 = cubeFaces[baseNum2 / squareNum].squares[baseNum2 % squareNum];
+        CubePiece cubePiece1 = cubeFaces[baseNum1 / squareNum].cubePieces[baseNum1 % squareNum];
+        CubePiece cubePiece2 = cubeFaces[baseNum2 / squareNum].cubePieces[baseNum2 % squareNum];
 
-        int tempFace = square1.faceNum, tempSquare = square1.squareNum;
-        square1.faceNum = square2.faceNum;
-        square2.faceNum = tempFace;
-        square1.squareNum = square2.squareNum;
-        square2.squareNum = tempSquare;
+        int tempFace = cubePiece1.faceNum, tempSquare = cubePiece1.squareNum;
+        cubePiece1.faceNum = cubePiece2.faceNum;
+        cubePiece2.faceNum = tempFace;
+        cubePiece1.squareNum = cubePiece2.squareNum;
+        cubePiece2.squareNum = tempSquare;
     }
 
     @Override
     public Boolean isCompleted() {
         for (int i = 0; i < faceNum; i++) {
             for (int j = 0; j < squareNum; j++) {
-                if (cubeFaces[i].squares[j].squareNum != j)
+                if (cubeFaces[i].cubePieces[j].squareNum != j)
                     return false;
             }
         }

@@ -4,7 +4,7 @@ package com.example.administrator.puzzleGame.game3DModel;
 import com.example.administrator.puzzleGame.constant.GameConstant;
 
 public class CubeFace extends BaseBody {
-    Square[] squares;
+    CubePiece[] cubePieces;
     float UNIT_SIZE;
     int cutNum;
     int faceNum;
@@ -15,9 +15,9 @@ public class CubeFace extends BaseBody {
         this.UNIT_SIZE = size;
         this.faceNum = faceNum;
         this.texId = texId;
-        squares = new Square[cutNum * cutNum];
-        for (int i = 0; i < squares.length; i++)
-            squares[i] = new Square(size, faceNum, i);
+        cubePieces = new CubePiece[cutNum * cutNum];
+        for (int i = 0; i < cubePieces.length; i++)
+            cubePieces[i] = new CubePiece(size, faceNum, i);
     }
 
     public void drawSelf() {
@@ -28,7 +28,7 @@ public class CubeFace extends BaseBody {
                 MatrixState.pushMatrix();
                 MatrixState.translate(i * GameConstant.SPACE_SCALE, j * GameConstant.SPACE_SCALE, 0);
                 int squaresNum = cutNum * cutNum;
-                squares[count].drawSelf(texId[squares[count].faceNum * squaresNum + squares[count].squareNum]);
+                cubePieces[count].drawSelf(texId[cubePieces[count].faceNum * squaresNum + cubePieces[count].squareNum]);
                 count++;
                 MatrixState.popMatrix();
             }
