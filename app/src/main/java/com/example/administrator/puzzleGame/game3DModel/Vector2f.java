@@ -4,12 +4,15 @@ public class Vector2f
 {
 	public float x;
 	public float y;
-	public float mod;
 	public Vector2f(float X,float Y)
 	{
 		x=X;
 		y=Y;
-		mod=(float) Math.sqrt(x*x+y*y);
+	}
+	public Vector2f(Vector2f v)
+	{
+		x=v.x;
+		y=v.y;
 	}
 	//加法
 	public Vector2f add(Vector2f v){
@@ -27,9 +30,12 @@ public class Vector2f
 	public Vector2f multiK(float k){
 		return new Vector2f(this.x*k,this.y*k);
 	}
+	public float module() {
+		return (float) Math.sqrt(x * x + y * y);
+	}
 	//规格化
 	public void normalize(){
-		x /= mod;
-		y /= mod;
+		x /= module();
+		y /= module();
 	}
 }

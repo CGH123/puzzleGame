@@ -6,10 +6,11 @@ import android.content.res.Resources;
 import com.example.administrator.puzzleGame.util.ShaderUtil;
 
 public class ShaderManager {
-    final static int shaderCount = 1;
     final static String[][] shaderName = {
-            {"vertexTexture.sh", "fragTexture.sh"}
+            {"vertexTexture.sh", "fragTexture.sh"},
+            {"vertexColor.sh", "fragColor.sh"}
     };
+    final static int shaderCount = shaderName.length;
     static String[] mVertexShader = new String[shaderCount];
     static String[] mFragmentShader = new String[shaderCount];
     static int[] program = new int[shaderCount];
