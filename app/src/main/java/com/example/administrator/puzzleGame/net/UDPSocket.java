@@ -9,12 +9,11 @@ import java.net.InetAddress;
 import java.net.SocketException;
 
 
-
 /**
  * 用于UDP进行泛洪寻找玩家
  * Created by HUI on 2016-04-16.
  */
-public class UDPSocket implements Runnable{
+public class UDPSocket implements Runnable {
 
     private static UDPSocket instance;
     private String TAG = "UDPSocket";
@@ -23,11 +22,11 @@ public class UDPSocket implements Runnable{
     public static boolean STATE = false;
     public static boolean Thread_Flag = true;
 
-    UDPSocket(){
-        try{
+    UDPSocket() {
+        try {
             UDPSocket = new DatagramSocket(NetConstant.UDP_PORT);
-        }catch (SocketException e){
-            LogUtil.d(TAG,"UDPSocket new failed");
+        } catch (SocketException e) {
+            LogUtil.d(TAG, "UDPSocket new failed");
         }
 
     }
@@ -41,43 +40,43 @@ public class UDPSocket implements Runnable{
 
     @Override
     public void run() {
-        while(Thread_Flag){
-            try{
+        while (Thread_Flag) {
+            try {
                 byte data[] = new byte[1024];
-                DatagramPacket dataPacket = new DatagramPacket(data,data.length);
+                DatagramPacket dataPacket = new DatagramPacket(data, data.length);
                 UDPSocket.receive(dataPacket);
-                String result = new String(dataPacket.getData(),dataPacket.getOffset(),dataPacket.getLength());
-                LogUtil.d(TAG,result);
-                if(result.equals("hello"))
+                String result = new String(dataPacket.getData(), dataPacket.getOffset(), dataPacket.getLength());
+                LogUtil.d(TAG, result);
+                if (result.equals("hello"))
                     STATE = true;
                 Thread.sleep(500);
-            }catch (IOException e){
-                LogUtil.d(TAG,e.toString());
-            }catch (Exception e){
-                LogUtil.d(TAG,e.toString());
+            } catch (IOException e) {
+                LogUtil.d(TAG, e.toString());
+            } catch (Exception e) {
+                LogUtil.d(TAG, e.toString());
             }
 
         }
     }
 
-    public void sendBroad(){
+    public void sendBroad() {
         new Thread(new sendBroadcast()).start();
     }
 
-    protected class sendBroadcast implements Runnable{
+    protected class sendBroadcast implements Runnable {
 
         private boolean SEND_Flag = true;
 
         @Override
         public void run() {
-            if(SEND_Flag){
-                try{
+            if (SEND_Flag) {
+                try {
                     InetAddress broadcastAddr = InetAddress.getByName(BROADCASTIP);
                     byte[] data = new String("hello").getBytes();
-                    DatagramPacket dataPacket = new DatagramPacket (data , data.length , broadcastAddr , NetConstant.UDP_PORT);
+                    DatagramPacket dataPacket = new DatagramPacket(data, data.length, broadcastAddr, NetConstant.UDP_PORT);
                     UDPSocket.send(dataPacket);
-                }catch (IOException e){
-                    LogUtil.d(TAG,e.toString());
+                } catch (IOException e) {
+                    LogUtil.d(TAG, e.toString());
                 }
 
             }

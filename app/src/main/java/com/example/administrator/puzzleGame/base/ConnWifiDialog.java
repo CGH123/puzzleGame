@@ -22,8 +22,8 @@ import com.example.administrator.puzzleGame.util.WifiUtils.WifiCipherType;
 
 /**
  * WIFI的消息提醒对话框
- * @author GuoJun
  *
+ * @author GuoJun
  */
 public class ConnWifiDialog extends BaseDialog {
 
@@ -60,8 +60,7 @@ public class ConnWifiDialog extends BaseDialog {
                 String pwd = getWifiPwd();
                 if (TextUtils.isEmpty(pwd)) {
                     return;
-                }
-                else {
+                } else {
 
                     ConnWifiDialog.this.setButton1Text(mContext
                             .getString(R.string.wifiap_btn_connecting));
@@ -72,11 +71,9 @@ public class ConnWifiDialog extends BaseDialog {
                     String capString = mScanResult.capabilities;
                     if (capString.toUpperCase().contains("WPA")) {
                         type = WifiCipherType.WIFICIPHER_WPA;
-                    }
-                    else if (capString.toUpperCase().contains("WEP")) {
+                    } else if (capString.toUpperCase().contains("WEP")) {
                         type = WifiCipherType.WIFICIPHER_WEP;
-                    }
-                    else {
+                    } else {
                         type = WifiCipherType.WIFICIPHER_NOPASS;
                     }
 
@@ -88,8 +85,7 @@ public class ConnWifiDialog extends BaseDialog {
                     if (connFlag) {
                         clearInput();
                         ConnWifiDialog.this.cancel();
-                    }
-                    else {
+                    } else {
                         mHandler.sendEmptyMessage(WifiApConst.WiFiConnectError);
                     }
                 }
@@ -125,8 +121,7 @@ public class ConnWifiDialog extends BaseDialog {
                 if (TextUtils.isEmpty(s)) {
                     mCkShowPwd.setEnabled(false);
                     ConnWifiDialog.this.setButton1Clickable(false);
-                }
-                else {
+                } else {
                     mCkShowPwd.setEnabled(true);
                     ConnWifiDialog.this.setButton1Clickable(true);
 
@@ -143,8 +138,7 @@ public class ConnWifiDialog extends BaseDialog {
                     Editable etable = mEtConnectPwd.getText();
                     Selection.setSelection(etable, etable.length());
 
-                }
-                else {
+                } else {
                     // 文本以密码形式显示
                     mEtConnectPwd.setInputType(InputType.TYPE_CLASS_TEXT
                             | InputType.TYPE_TEXT_VARIATION_PASSWORD);

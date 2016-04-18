@@ -9,16 +9,17 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DBopenHelper extends SQLiteOpenHelper {
 
-    public DBopenHelper(Context context){
-        super(context,"puzzle.db",null,1);
+    public DBopenHelper(Context context) {
+        super(context, "puzzle.db", null, 1);
     }
+
     @Override
-    public void onCreate(SQLiteDatabase db){
+    public void onCreate(SQLiteDatabase db) {
         // TODO Auto-generated method stub
-      // db.execSQL("DROP TABLE person");
+        // db.execSQL("DROP TABLE person");
         db.execSQL("CREATE TABLE person(user varchar(20) primary key,pwd varchar(20))");
         // db.execSQL("DROP TABLE file");
-       // db.execSQL("CREATE TABLE file(name varchar(20) primary key,content varchar(300),user varchar(20))");
+        // db.execSQL("CREATE TABLE file(name varchar(20) primary key,content varchar(300),user varchar(20))");
     }
 
     /**

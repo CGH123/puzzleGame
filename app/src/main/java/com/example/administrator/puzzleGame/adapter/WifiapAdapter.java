@@ -28,6 +28,7 @@ public class WifiapAdapter extends BaseAdapter {
         public ImageView rssi;
         public TextView ssid;
     }
+
     private boolean isWifiConnected;
     private Context mContext;
     private List<ScanResult> mDatas;
@@ -54,14 +55,12 @@ public class WifiapAdapter extends BaseAdapter {
         String desc = "";
         if (ap.SSID.startsWith(WifiApConst.WIFI_AP_HEADER)) {
             desc = "专用网络，可以直接连接";
-        }
-        else {
+        } else {
             String descOri = ap.capabilities;
             if (descOri.toUpperCase(Locale.getDefault()).contains("WPA-PSK")
                     || descOri.toUpperCase(Locale.getDefault()).contains("WPA2-PSK")) {
                 desc = "受到密码保护";
-            }
-            else {
+            } else {
                 desc = "未受保护的网络";
             }
         }
@@ -87,22 +86,17 @@ public class WifiapAdapter extends BaseAdapter {
         int imgId;
         if (isWifiConnected) {
             imgId = R.drawable.ic_connected;
-        }
-        else {
+        } else {
             int rssi = Math.abs(ap.level);
             if (rssi > 100) {
                 imgId = R.drawable.ic_small_wifi_rssi_0;
-            }
-            else if (rssi > 80) {
+            } else if (rssi > 80) {
                 imgId = R.drawable.ic_small_wifi_rssi_1;
-            }
-            else if (rssi > 70) {
+            } else if (rssi > 70) {
                 imgId = R.drawable.ic_small_wifi_rssi_2;
-            }
-            else if (rssi > 60) {
+            } else if (rssi > 60) {
                 imgId = R.drawable.ic_small_wifi_rssi_3;
-            }
-            else {
+            } else {
                 imgId = R.drawable.ic_small_wifi_rssi_4;
             }
         }
@@ -122,8 +116,7 @@ public class WifiapAdapter extends BaseAdapter {
             viewHolder.ssid = ((TextView) convertView.findViewById(R.id.wifiap_item_tv_ssid));
             viewHolder.desc = ((TextView) convertView.findViewById(R.id.wifiap_item_tv_desc));
             convertView.setTag(viewHolder);
-        }
-        else {
+        } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 

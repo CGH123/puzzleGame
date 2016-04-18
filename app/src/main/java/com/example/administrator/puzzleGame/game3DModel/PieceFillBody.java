@@ -1,6 +1,5 @@
 package com.example.administrator.puzzleGame.game3DModel;
 
-
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
@@ -8,67 +7,49 @@ import com.example.administrator.puzzleGame.util.VectorUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 
-public class QuadPieceFill extends ShaderBody implements Piece {
-    Vector2f[] points;
-    Vector2f[] texturePoints;
+public class PieceFillBody extends BaseBody implements PieceFill {
+    int mProgram;//自定义渲染管线着色器程序id
+    int maPositionHandle; //顶点位置属性引用
+    int maTexCoorHandle; //顶点纹理坐标属性引用
+    int maNormalHandle; //顶点法向量属性引用
+    int muMMatrixHandle;
+    int muMVPMatrixHandle;//总变换矩阵引用
+    int muIsCheck;
+    int muCameraHandle; //摄像机位置属性引用
+    int muLightLocationHandle;//光源位置属性引用
+
+
+    FloatBuffer mVertexBuffer;//顶点坐标数据缓冲
+    FloatBuffer mTexCoorBuffer;//顶点纹理坐标数据缓冲
+    FloatBuffer mNormalBuffer;//顶点法向量数据缓冲
+
+    float[] vertices;
+    float[] textures;
+    float[] normals;
+
     int vCount;
-    int isCheck;
-    int num;
     int texId;
-    Boolean isOutPlane;
+    int num = 0;
+    int isCheck = 0;
+    Boolean cantChoose = true;
 
-    public QuadPieceFill(int num, Vector2f[] points, int texId, Boolean isOutPlane) {
-        vCount = 6;
-        this.num = num;
-        this.points = points;
-        this.texId = texId;
-        this.isOutPlane = isOutPlane;
-        float scale = 1.0f / 3.0f;
-        float translate = 0.5f;
-        texturePoints = new Vector2f[4];
-        for (int i = 0; i < 4; i++) {
-            texturePoints[i] = points[i].multiK(scale).add(new Vector2f(translate, translate));
-            texturePoints[i].y = 1 - texturePoints[i].y;
-        }
-
+    public PieceFillBody(PieceBody.PieceFillData pieceFillData){
+        this.num = pieceFillData.num;
+        this.texId = pieceFillData.texId;
+        this.cantChoose = pieceFillData.cantChoose;
+        this.vertices = pieceFillData.vertices;
+        this.normals = pieceFillData.normals;
+        this.textures = pieceFillData.textures;
+        this.vCount = pieceFillData.vertices.length / 3;
         initShader(ShaderManager.getShaderProgram(0));
-        initData();
         initBuffer();
     }
 
-    @Override
-    public float pickUpTime(float x, float y) {
-        float[] AB = MatrixState.getUnProject(x, y);
-        float result = Float.POSITIVE_INFINITY;
-        for (int i = 0; i < vertices.length; i += 9) {
-            float[][] triangle = new float[3][3];
-            for (int j = 0; j < 3; j++) {
-                float[] coordinate = new float[4];
-                //求变换前的点
-                Matrix.multiplyMV(
-                        coordinate, 0,
-                        super.getMatrix(), 0,
-                        new float[]{vertices[i + j * 3], vertices[i + j * 3 + 1], vertices[i + j * 3 + 2], 1}, 0
-                );
-                triangle[j][0] = coordinate[0];
-                triangle[j][1] = coordinate[1];
-                triangle[j][2] = coordinate[2];
-            }
 
-            float t = VectorUtil.IntersectTriangle(
-                    new float[]{AB[0], AB[1], AB[2]},
-                    new float[]{AB[3], AB[4], AB[5]},
-                    triangle[0], triangle[1], triangle[2]
-            );
-            if (t != -1)
-                result = Math.min(result, t);
-        }
-        return result;
-    }
 
-    @Override
-    public void initBuffer(){
+    public void initBuffer() {
         //创建顶点坐标数据缓冲
         //vertices.length*4是因为一个整数四个字节
         ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.length * 4);
@@ -87,15 +68,14 @@ public class QuadPieceFill extends ShaderBody implements Piece {
 
 
         //创建顶点纹理坐标数据缓冲
-        ByteBuffer cbb = ByteBuffer.allocateDirect(texCoors.length * 4);
+        ByteBuffer cbb = ByteBuffer.allocateDirect(textures.length * 4);
         cbb.order(ByteOrder.nativeOrder());//设置字节顺序
         mTexCoorBuffer = cbb.asFloatBuffer();//转换为Float型缓冲
-        mTexCoorBuffer.put(texCoors);//向缓冲区中放入顶点着色数据
+        mTexCoorBuffer.put(textures);//向缓冲区中放入顶点着色数据
         mTexCoorBuffer.position(0);//设置缓冲区起始位置
     }
 
     //自定义初始化着色器的initShader方法
-    @Override
     public void initShader(int Program) {
         //基于顶点着色器与片元着色器创建程序
         mProgram = Program;
@@ -117,33 +97,9 @@ public class QuadPieceFill extends ShaderBody implements Piece {
         muLightLocationHandle = GLES20.glGetUniformLocation(mProgram, "uIsCheck");
     }
 
-    @Override
-    public void initData() {
-        //顶点坐标数据的初始化================begin============================
-        vertices = new float[]{
-                points[0].x * 2, points[0].y * 2, 0, points[1].x * 2, points[1].y * 2, 0, points[2].x * 2, points[2].y * 2, 0,
-                points[3].x * 2, points[3].y * 2, 0, points[2].x * 2, points[2].y * 2, 0, points[1].x * 2, points[1].y * 2, 0,
-        };
-
-
-        //法向量数据初始化
-        normals = new float[vertices.length];
-        for (int i = 0; i < normals.length; i += 3) {
-            normals[i] = 0;
-            normals[i + 1] = 0;
-            normals[i + 2] = 1;
-        }
-
-        texCoors = new float[]{
-                texturePoints[0].x, texturePoints[0].y, texturePoints[1].x, texturePoints[1].y, texturePoints[2].x, texturePoints[2].y,
-                texturePoints[3].x, texturePoints[3].y, texturePoints[2].x, texturePoints[2].y, texturePoints[1].x, texturePoints[1].y
-        };
-
-    }
-
 
     @Override
-    public void drawSelf(int texId) {
+    public void drawSelf() {
         setBody();
 
         //制定使用某套shader程序
@@ -207,4 +163,65 @@ public class QuadPieceFill extends ShaderBody implements Piece {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vCount);
         MatrixState.popMatrix();
     }
+
+
+    @Override
+    public Boolean isEqualNum(int num) {
+        return this.num == num;
+    }
+
+    @Override
+    public void hint() {
+        isCheck = 1 - isCheck;
+    }
+
+
+    @Override
+    public float pickUpTime(float x, float y) {
+        float[] AB = MatrixState.getUnProject(x, y);
+        float result = Float.POSITIVE_INFINITY;
+        if (!this.cantChoose) return result;
+        for (int i = 0; i < vertices.length; i += 9) {
+            float[][] triangle = new float[3][3];
+            for (int j = 0; j < 3; j++) {
+                float[] coordinate = new float[4];
+                //求变换前的点
+                Matrix.multiplyMV(
+                        coordinate, 0,
+                        super.getMatrix(), 0,
+                        new float[]{vertices[i + j * 3], vertices[i + j * 3 + 1], vertices[i + j * 3 + 2], 1}, 0
+                );
+                triangle[j][0] = coordinate[0];
+                triangle[j][1] = coordinate[1];
+                triangle[j][2] = coordinate[2];
+            }
+
+            float t = VectorUtil.IntersectTriangle(
+                    new float[]{AB[0], AB[1], AB[2]},
+                    new float[]{AB[3], AB[4], AB[5]},
+                    triangle[0], triangle[1], triangle[2]
+            );
+            if (t != -1)
+                result = Math.min(result, t);
+        }
+        return result;
+    }
+
+
+    @Override
+    public void swap(PieceFillBody pieceFillBody) {
+        int temp = this.num;
+        this.num = pieceFillBody.num;
+        pieceFillBody.num = temp;
+
+        int length = this.textures.length;
+        float[] tempTextures = new float[length];
+        System.arraycopy(this.textures, 0, tempTextures, 0, length);
+        System.arraycopy(pieceFillBody.textures, 0, this.textures, 0, length);
+        System.arraycopy(tempTextures, 0, pieceFillBody.textures, 0, length);
+
+        initBuffer();
+        pieceFillBody.initBuffer();
+    }
+
 }

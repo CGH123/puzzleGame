@@ -161,7 +161,7 @@ public class Bound {
     }
 
     public float pickUpTime(float locationX, float locationY) {
-        float[] AB = MatrixState.getUnProject(locationX,locationY);
+        float[] AB = MatrixState.getUnProject(locationX, locationY);
         //射线AB
         Vector3f start = new Vector3f(AB[0], AB[1], AB[2]);//起点
         Vector3f end = new Vector3f(AB[3], AB[4], AB[5]);//终点

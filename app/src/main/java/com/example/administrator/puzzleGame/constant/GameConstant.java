@@ -1,8 +1,6 @@
 package com.example.administrator.puzzleGame.constant;
 
-/**
- * Created by Administrator on 2016/4/15.
- */
+
 public class GameConstant {
     //计算GLSurfaceView的宽高比
     public static float RATIO;
@@ -11,7 +9,7 @@ public class GameConstant {
     //计算GLSurfaceView的高
     public static int HEIGHT;
     //摄像机旋转速度移动阀值
-    public static final float CAMERA_SPEED=0.01F;
-    //摄像机旋转速度移动阀值
-    public static final float SPACE_SCALE=1.05F;
+    public static final float CAMERA_SPEED = 0.01F;
+
+    public static final float[] LINE_COLOR = {0.9f, 0.9f, 0.9f, 0.9f};
 }

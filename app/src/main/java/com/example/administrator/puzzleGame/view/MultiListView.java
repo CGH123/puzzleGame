@@ -27,8 +27,8 @@ import android.widget.TextView;
 
 /**
  * 可下拉刷新的listView
- * @author copy from other
  *
+ * @author copy from other
  */
 public class MultiListView extends ListView implements OnScrollListener {
 
@@ -46,19 +46,29 @@ public class MultiListView extends ListView implements OnScrollListener {
         public void onRefresh();
     }
 
-    /** 显示格式化日期模板 */
+    /**
+     * 显示格式化日期模板
+     */
     private final static String DATE_FORMAT_STR = "yyyy年MM月dd日 HH:mm";
     private final static int DONE = 3;
-    /** 自动完成刷新 */
+    /**
+     * 自动完成刷新
+     */
     private final static int ENDINT_AUTO_LOAD_DONE = 3;
-    /** 加载中 */
+    /**
+     * 加载中
+     */
     private final static int ENDINT_LOADING = 1;
-    /** 手动完成刷新 */
+    /**
+     * 手动完成刷新
+     */
     private final static int ENDINT_MANUAL_LOAD_DONE = 2;
 
     private final static int LOADING = 4;
     private final static int PULL_TO_REFRESH = 1;
-    /** 实际的padding的距离与界面上偏移距离的比例 */
+    /**
+     * 实际的padding的距离与界面上偏移距离的比例
+     */
     private final static int RATIO = 3;
 
     private final static int REFRESHING = 2;
@@ -68,18 +78,26 @@ public class MultiListView extends ListView implements OnScrollListener {
     // ================================= 功能设置Flag
     // ================================
 
-    /** headView动画 */
+    /**
+     * headView动画
+     */
     private RotateAnimation mArrowAnim;
 
     private ImageView mArrowImageView;
 
-    /** headView反转动画 */
+    /**
+     * headView反转动画
+     */
     private RotateAnimation mArrowReverseAnim;
 
-    /** 可以加载更多？ */
+    /**
+     * 可以加载更多？
+     */
     private boolean mCanLoadMore = false;
 
-    /** 可以下拉刷新？ */
+    /**
+     * 可以下拉刷新？
+     */
     private boolean mCanRefresh = false;
 
     private int mCount;
@@ -92,7 +110,7 @@ public class MultiListView extends ListView implements OnScrollListener {
 
     /**
      * 0:完成/等待刷新 ;
-     * <p>
+     * <p/>
      * 1:加载中
      */
     private int mEndState;
@@ -101,13 +119,13 @@ public class MultiListView extends ListView implements OnScrollListener {
 
     /**
      * 0:RELEASE_TO_REFRESH;
-     * <p>
+     * <p/>
      * 1:PULL_To_REFRESH;
-     * <p>
+     * <p/>
      * 2:REFRESHING;
-     * <p>
+     * <p/>
      * 3:DONE;
-     * <p>
+     * <p/>
      * 4:LOADING
      */
     private int mHeadState;
@@ -117,13 +135,19 @@ public class MultiListView extends ListView implements OnScrollListener {
 
     private int mHeadViewHeight;
     private LayoutInflater mInflater;
-    /** 可以自动加载更多吗？（注意，先判断是否有加载更多，如果没有，这个flag也没有意义） */
+    /**
+     * 可以自动加载更多吗？（注意，先判断是否有加载更多，如果没有，这个flag也没有意义）
+     */
     private boolean mIsAutoLoadMore = true;
     private boolean mIsBack;
-    /** 下拉刷新后是否显示第一条Item */
+    /**
+     * 下拉刷新后是否显示第一条Item
+     */
     private boolean mIsMoveToFirstItemAfterRefresh = false;
 
-    /** 用于保证startY的值在一个完整的touch事件中只被记录一次 */
+    /**
+     * 用于保证startY的值在一个完整的touch事件中只被记录一次
+     */
     private boolean mIsRecored;
     private int mLastItemIndex;
     private TextView mLastUpdatedTextView;
@@ -136,6 +160,7 @@ public class MultiListView extends ListView implements OnScrollListener {
     private int mStartY;
 
     private TextView mTipsTextView;
+
     public MultiListView(Context pContext) {
         super(pContext);
         init(pContext);
@@ -145,10 +170,12 @@ public class MultiListView extends ListView implements OnScrollListener {
         super(pContext, pAttrs);
         init(pContext);
     }
+
     public MultiListView(Context pContext, AttributeSet pAttrs, int pDefStyle) {
         super(pContext, pAttrs, pDefStyle);
         init(pContext);
     }
+
     /**
      * 添加加载更多FootView
      */
@@ -169,8 +196,7 @@ public class MultiListView extends ListView implements OnScrollListener {
                             mEndState = ENDINT_LOADING;
                             onLoadMore();
                         }
-                    }
-                    else if (mEndState != ENDINT_LOADING) {
+                    } else if (mEndState != ENDINT_LOADING) {
                         // 当不能下拉刷新时，FootView不正在加载时，才可以点击加载更多。
                         mEndState = ENDINT_LOADING;
                         onLoadMore();
@@ -183,15 +209,13 @@ public class MultiListView extends ListView implements OnScrollListener {
 
         if (mIsAutoLoadMore) {
             mEndState = ENDINT_AUTO_LOAD_DONE;
-        }
-        else {
+        } else {
             mEndState = ENDINT_MANUAL_LOAD_DONE;
         }
     }
 
     /**
      * 添加下拉刷新的HeadView
-     * 
      */
     private void addHeadView() {
         mHeadView = (LinearLayout) mInflater.inflate(R.layout.listview_multilistview_head, null);
@@ -213,9 +237,9 @@ public class MultiListView extends ListView implements OnScrollListener {
 
         mHeadState = DONE;
     }
+
     /**
      * 改变加载更多状态
-     * 
      */
     private void changeEndViewByState() {
         if (mCanLoadMore) {
@@ -293,8 +317,7 @@ public class MultiListView extends ListView implements OnScrollListener {
                     mArrowImageView.startAnimation(mArrowReverseAnim);
                     // 下拉刷新
                     mTipsTextView.setText(R.string.lv_refresh_pull_to_refresh);
-                }
-                else {
+                } else {
                     // 下拉刷新
                     mTipsTextView.setText(R.string.lv_refresh_pull_to_refresh);
                 }
@@ -329,7 +352,7 @@ public class MultiListView extends ListView implements OnScrollListener {
 
     /**
      * 初始化操作
-     * 
+     *
      * @param pContext
      */
     private void init(Context pContext) {
@@ -345,9 +368,8 @@ public class MultiListView extends ListView implements OnScrollListener {
 
     /**
      * 实例化下拉刷新的箭头的动画效果
-     * 
-     * @param pAnimDuration
-     *            动画运行时长
+     *
+     * @param pAnimDuration 动画运行时长
      */
     private void initPullImageAnimation(final int pAnimDuration) {
 
@@ -355,8 +377,7 @@ public class MultiListView extends ListView implements OnScrollListener {
 
         if (pAnimDuration > 0) {
             _Duration = pAnimDuration;
-        }
-        else {
+        } else {
             _Duration = 250;
         }
 
@@ -393,7 +414,7 @@ public class MultiListView extends ListView implements OnScrollListener {
 
     /**
      * 测量HeadView宽高(此方法仅适用于LinearLayout)
-     * 
+     *
      * @param pChild
      */
     private void measureView(View pChild) {
@@ -408,8 +429,7 @@ public class MultiListView extends ListView implements OnScrollListener {
         int childHeightSpec;
         if (lpHeight > 0) {
             childHeightSpec = MeasureSpec.makeMeasureSpec(lpHeight, MeasureSpec.EXACTLY);
-        }
-        else {
+        } else {
             childHeightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         }
         pChild.measure(childWidthSpec, childHeightSpec);
@@ -431,13 +451,11 @@ public class MultiListView extends ListView implements OnScrollListener {
 
     /**
      * 加载更多完成
-     * 
      */
     public void onLoadMoreComplete() {
         if (mIsAutoLoadMore) {
             mEndState = ENDINT_AUTO_LOAD_DONE;
-        }
-        else {
+        } else {
             mEndState = ENDINT_MANUAL_LOAD_DONE;
         }
         changeEndViewByState();
@@ -472,7 +490,7 @@ public class MultiListView extends ListView implements OnScrollListener {
      */
     @Override
     public void onScroll(AbsListView pView, int pFirstVisibleItem, int pVisibleItemCount,
-            int pTotalItemCount) {
+                         int pTotalItemCount) {
         mFirstItemIndex = pFirstVisibleItem;
         mLastItemIndex = pFirstVisibleItem + pVisibleItemCount - 2;
         mCount = pTotalItemCount - 2;
@@ -493,23 +511,20 @@ public class MultiListView extends ListView implements OnScrollListener {
                                 onLoadMore();
                                 changeEndViewByState();
                             }
-                        }
-                        else {
+                        } else {
                             // 没有下拉刷新，直接进行加载更多。FootView显示 : 更 多 ---> 加载中...
                             mEndState = ENDINT_LOADING;
                             onLoadMore();
                             changeEndViewByState();
                         }
-                    }
-                    else {
+                    } else {
                         // 不是自动加载更多，FootView显示 : 点击加载 ---> 加载中...
                         mEndState = ENDINT_MANUAL_LOAD_DONE;
                         changeEndViewByState();
                     }
                 }
             }
-        }
-        else if (mEndRootView != null && mEndRootView.getVisibility() == VISIBLE) {
+        } else if (mEndRootView != null && mEndRootView.getVisibility() == VISIBLE) {
             // 突然关闭加载更多功能之后，我们要移除FootView。
             System.out.println("this.removeFooterView(endRootView);...");
             mEndRootView.setVisibility(View.GONE);
@@ -518,7 +533,7 @@ public class MultiListView extends ListView implements OnScrollListener {
     }
 
     @Override
-	public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(MotionEvent event) {
         if (mCanRefresh) {
             if (mCanLoadMore && mEndState == ENDINT_LOADING) {
                 // 如果开启了加载更多功能，并且当前正在加载更多，默认不允许下拉刷新，必须加载完毕后才能使用。
@@ -596,8 +611,7 @@ public class MultiListView extends ListView implements OnScrollListener {
                                 mHeadState = RELEASE_TO_REFRESH;
                                 mIsBack = true;
                                 changeHeaderViewByState();
-                            }
-                            else if (tempY - mStartY <= 0) {
+                            } else if (tempY - mStartY <= 0) {
                                 mHeadState = DONE;
                                 changeHeaderViewByState();
                             }
@@ -630,7 +644,7 @@ public class MultiListView extends ListView implements OnScrollListener {
 
     /**
      * 刷新时间
-     * 
+     *
      * @param adapter
      */
     public void setAdapter(BaseAdapter adapter) {

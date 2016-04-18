@@ -48,11 +48,12 @@ public class Vector3f {
         );
     }
 
-    public void normalize() {
+    public Vector3f normalize() {
         float mod = module();
         x /= mod;
         y /= mod;
         z /= mod;
+        return this;
     }
 
     public float module() {

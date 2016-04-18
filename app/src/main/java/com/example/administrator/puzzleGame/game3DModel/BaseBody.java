@@ -2,7 +2,7 @@ package com.example.administrator.puzzleGame.game3DModel;
 
 
 //物体基类
-public abstract class BaseBody implements Cloneable {
+public abstract class BaseBody implements Draw{
     float[] matrix = new float[16];//仿射变换的矩阵
     Bound box;//仿射变换之前的包围盒
 
@@ -16,8 +16,8 @@ public abstract class BaseBody implements Cloneable {
         return box;
     }
 
+    //复制变换矩阵
     public void setBody() {
-        //复制变换矩阵
         copyMatrix();
     }
 
@@ -30,6 +30,5 @@ public abstract class BaseBody implements Cloneable {
     public float[] getMatrix() {
         return matrix;
     }
-
 
 }
