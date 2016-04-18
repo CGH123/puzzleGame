@@ -4,6 +4,7 @@ package com.example.administrator.puzzleGame.util;
  * 调试的日志操作
  * Created by HUI on 2016-04-04.
  */
+
 import android.util.Log;
 
 public class LogUtil {
@@ -25,7 +26,7 @@ public class LogUtil {
             Log.i(tag, msg);
     }
 
-    public static void setLogStatus(boolean flag){
+    public static void setLogStatus(boolean flag) {
         isShow = flag;
     }
 

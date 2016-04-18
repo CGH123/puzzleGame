@@ -19,16 +19,19 @@ public class Diffcult_choiceActivity extends AppCompatActivity {
 
         setContentView(R.layout.difficult_choice);
     }
-    public void easy_game(View view){
-        GameDB.Diffcult_choice=0;
+
+    public void easy_game(View view) {
+        GameDB.Diffcult_choice = 0;
         Toast.makeText(this, "当前游戏难度为： 简单模式", Toast.LENGTH_SHORT).show();
     }
-    public void normal_game(View view){
-        GameDB.Diffcult_choice=1;
-        Toast.makeText(this,"当前游戏难度为： 正常模式",Toast.LENGTH_SHORT).show();
+
+    public void normal_game(View view) {
+        GameDB.Diffcult_choice = 1;
+        Toast.makeText(this, "当前游戏难度为： 正常模式", Toast.LENGTH_SHORT).show();
     }
-    public void hard_game(View view){
-        GameDB.Diffcult_choice=2;
-    Toast.makeText(this,"当前游戏模式为困难模式",Toast.LENGTH_SHORT).show();
+
+    public void hard_game(View view) {
+        GameDB.Diffcult_choice = 2;
+        Toast.makeText(this, "当前游戏模式为困难模式", Toast.LENGTH_SHORT).show();
     }
 }

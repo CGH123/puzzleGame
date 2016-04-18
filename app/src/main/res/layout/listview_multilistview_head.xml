@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- ListView的头部 -->
+<?xml version="1.0" encoding="utf-8"?><!-- ListView的头部 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" 
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:layout_gravity="center_vertical">
 
@@ -22,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true" 
+            android:layout_centerVertical="true"
             android:layout_marginLeft="30dp">
 
             <!-- 箭头 -->
@@ -54,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center_horizontal"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <!-- 提示 -->
 

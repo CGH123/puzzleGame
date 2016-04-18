@@ -51,11 +51,10 @@ public class WifiUtils {
      *
      * @param SSID
      * @param Password
-     * @param Type
-     * <br>
-     *            没密码： {@linkplain WifiCipherType#WIFICIPHER_NOPASS}<br>
-     *            WEP加密: {@linkplain WifiCipherType#WIFICIPHER_WEP}<br>
-     *            WPA加密： {@linkplain WifiCipherType#WIFICIPHER_WPA}<br>
+     * @param Type     <br>
+     *                 没密码： {@linkplain WifiCipherType#WIFICIPHER_NOPASS}<br>
+     *                 WEP加密: {@linkplain WifiCipherType#WIFICIPHER_WEP}<br>
+     *                 WPA加密： {@linkplain WifiCipherType#WIFICIPHER_WPA}<br>
      * @return true:连接成功；false:连接失败
      */
     public static boolean connectWifi(String SSID, String Password, WifiCipherType Type) {
@@ -68,8 +67,7 @@ public class WifiUtils {
                 // 避免程序不停循环
                 Thread.currentThread();
                 Thread.sleep(500);
-            }
-            catch (InterruptedException ie) {
+            } catch (InterruptedException ie) {
             }
         }
 
@@ -143,8 +141,7 @@ public class WifiUtils {
             config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
             config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
 
-        }
-        else {
+        } else {
             return null;
         }
         return config;
@@ -168,7 +165,6 @@ public class WifiUtils {
     public static int checkState() {
         return mWifiManager.getWifiState();
     }
-
 
 
     // 得到配置好的网络
@@ -248,7 +244,7 @@ public class WifiUtils {
     // 添加一个网络并连接
     public static void addNetwork(WifiConfiguration wcg) {
         int wcgID = mWifiManager.addNetwork(wcg);
-        boolean b =  mWifiManager.enableNetwork(wcgID, true);
+        boolean b = mWifiManager.enableNetwork(wcgID, true);
         System.out.println("a--" + wcgID);
         System.out.println("b--" + b);
     }
@@ -304,8 +300,7 @@ public class WifiUtils {
             localField2.setAccessible(false);
             String str = (String) localObject3;
             return str;
-        }
-        catch (Exception localException) {
+        } catch (Exception localException) {
         }
         return null;
     }
@@ -316,10 +311,8 @@ public class WifiUtils {
             method.setAccessible(true);
             return (Boolean) method.invoke(mWifiManager);
 
-        }
-        catch (NoSuchMethodException e) {
-        }
-        catch (Exception e) {
+        } catch (NoSuchMethodException e) {
+        } catch (Exception e) {
         }
 
         return false;
@@ -336,14 +329,10 @@ public class WifiUtils {
                 Method method2 = mWifiManager.getClass().getMethod("setWifiApEnabled",
                         WifiConfiguration.class, boolean.class);
                 method2.invoke(mWifiManager, config, false);
-            }
-            catch (NoSuchMethodException e) {
-            }
-            catch (IllegalArgumentException e) {
-            }
-            catch (IllegalAccessException e) {
-            }
-            catch (InvocationTargetException e) {
+            } catch (NoSuchMethodException e) {
+            } catch (IllegalArgumentException e) {
+            } catch (IllegalAccessException e) {
+            } catch (InvocationTargetException e) {
             }
         }
     }

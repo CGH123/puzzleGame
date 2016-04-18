@@ -1,6 +1,7 @@
 package com.example.administrator.puzzleGame.base;
 
 import com.example.administrator.puzzleGame.util.LogUtil;
+
 import android.app.Application;
 import android.content.Context;
 import android.media.AudioManager;
@@ -18,21 +19,25 @@ public class BaseApplication extends Application {
     private static BaseApplication instance;
     public static boolean isDebugmode = false;
 
-    /** 静音、震动默认开关 **/
+    /**
+     * 静音、震动默认开关
+     **/
     private static boolean isSlient = false;
     private static boolean isVibrate = true;
     private static boolean isPrintLog = false;
 
     private static SoundPool notiMediaplayer;
-    /** 新消息提醒 **/
+    /**
+     * 新消息提醒
+     **/
     private static int notiSoundPoolID;
     private static Vibrator notiVibrator;
 
 
     /**
-     * <p>
+     * <p/>
      * 获取BaseApplication实例
-     * <p>
+     * <p/>
      * 单例模式，返回唯一实例
      *
      * @return instance
@@ -50,7 +55,6 @@ public class BaseApplication extends Application {
     public static boolean getVibrateFlag() {
         return isVibrate;
     }
-
 
 
     /**

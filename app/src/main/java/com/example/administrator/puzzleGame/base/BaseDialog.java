@@ -17,25 +17,29 @@ import android.widget.TextView;
 
 /**
  * 对话框基类
- * @author GuoJun
  *
+ * @author GuoJun
  */
 public class BaseDialog extends Dialog implements View.OnClickListener {
 
     private static BaseDialog mBaseDialog;// 当前的对话框
+
     public static BaseDialog getDialog(Context context, int titleId, CharSequence message) {
         return getDialog(context, titleId, message, null, null, null, null, null, null);
     }
+
     public static BaseDialog getDialog(Context context, int titleId, CharSequence message,
                                        CharSequence button1, OnClickListener listener1) {
         return getDialog(context, titleId, message, button1, listener1, null, null, null, null);
     }
+
     public static BaseDialog getDialog(Context context, int titleId, CharSequence message,
                                        CharSequence button1, OnClickListener listener1, CharSequence button2,
                                        OnClickListener listener2) {
         return getDialog(context, titleId, message, button1, listener1, button2, listener2, null,
                 null);
     }
+
     public static BaseDialog getDialog(Context context, int titleId, CharSequence message,
                                        CharSequence button1, OnClickListener listener1, CharSequence button2,
                                        OnClickListener listener2, CharSequence button3,
@@ -54,6 +58,7 @@ public class BaseDialog extends Dialog implements View.OnClickListener {
         mBaseDialog.setCanceledOnTouchOutside(true);
         return mBaseDialog;
     }
+
     private Button mBtnButton1;// 底部按钮1
     private Button mBtnButton2;// 底部按钮2
     private Button mBtnButton3;// 底部按钮3
@@ -94,8 +99,7 @@ public class BaseDialog extends Dialog implements View.OnClickListener {
                 || (button3 != null && listener3 != null)) {
             mLayoutBottom.setVisibility(View.VISIBLE);
             return true;
-        }
-        else {
+        } else {
             mLayoutBottom.setVisibility(View.GONE);
             return false;
         }
@@ -157,8 +161,7 @@ public class BaseDialog extends Dialog implements View.OnClickListener {
             mBtnButton1.setVisibility(View.VISIBLE);
             mBtnButton1.setText(text);
             mOnClickListener1 = listener;
-        }
-        else {
+        } else {
             mBtnButton1.setVisibility(View.GONE);
         }
     }
@@ -181,8 +184,7 @@ public class BaseDialog extends Dialog implements View.OnClickListener {
             mBtnButton2.setVisibility(View.VISIBLE);
             mBtnButton2.setText(text);
             mOnClickListener2 = listener;
-        }
-        else {
+        } else {
             mBtnButton2.setVisibility(View.GONE);
         }
     }
@@ -205,8 +207,7 @@ public class BaseDialog extends Dialog implements View.OnClickListener {
             mBtnButton3.setVisibility(View.VISIBLE);
             mBtnButton3.setText(text);
             mOnClickListener3 = listener;
-        }
-        else {
+        } else {
             mBtnButton3.setVisibility(View.GONE);
         }
     }
@@ -258,8 +259,7 @@ public class BaseDialog extends Dialog implements View.OnClickListener {
         if (text != null) {
             mLayoutContent.setVisibility(View.VISIBLE);
             mHtvMessage.setText(text);
-        }
-        else {
+        } else {
 
             mLayoutContent.setVisibility(View.GONE);
         }
@@ -270,8 +270,7 @@ public class BaseDialog extends Dialog implements View.OnClickListener {
         if (text != null) {
             mLayoutTitle.setVisibility(View.VISIBLE);
             mHtvTitle.setText(text);
-        }
-        else {
+        } else {
             mLayoutTitle.setVisibility(View.GONE);
         }
     }
@@ -284,8 +283,7 @@ public class BaseDialog extends Dialog implements View.OnClickListener {
         if (mContext.getString(titleId) == null && message == null) {
             mLayoutTop.setVisibility(View.GONE);
             return false;
-        }
-        else {
+        } else {
             mLayoutTop.setVisibility(View.VISIBLE);
             return true;
         }

@@ -8,19 +8,24 @@ import android.net.wifi.WifiManager;
 
 /**
  * WIFI搜索
- * @author GuoJun
  *
+ * @author GuoJun
  */
 public class WifiapBroadcast extends BroadcastReceiver {
 
     public static abstract interface NetWorkChangeListener {
 
-        /** Wifi连接成功 **/
+        /**
+         * Wifi连接成功
+         **/
         public abstract void WifiConnected();
-        
-        /** Wifi状态改变 **/
+
+        /**
+         * Wifi状态改变
+         **/
         public abstract void wifiStatusChange();
     }
+
     private NetWorkChangeListener mListener;
 
     private NetworkInfo mNetworkInfo;
@@ -30,7 +35,7 @@ public class WifiapBroadcast extends BroadcastReceiver {
     }
 
     @Override
-	public void onReceive(Context paramContext, Intent paramIntent) {
+    public void onReceive(Context paramContext, Intent paramIntent) {
 
         // wifi开关
         if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(paramIntent.getAction())) {

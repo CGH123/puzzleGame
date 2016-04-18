@@ -14,7 +14,7 @@ import com.example.administrator.puzzleGame.net.UDPSocket;
  * 用于创建服务器和客户端
  * Created by HUI on 2016-04-14.
  */
-public class GameRoomActivity extends Activity implements View.OnClickListener{
+public class GameRoomActivity extends Activity implements View.OnClickListener {
 
     private Button create_room;
     private Button ready_room;
@@ -22,25 +22,25 @@ public class GameRoomActivity extends Activity implements View.OnClickListener{
     private TextView show_detail;
     private UDPSocket udpSocket;
     private String str;
-    private int count=0;
+    private int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gameroom_test);
-        udpSocket =UDPSocket.getInstance();
+        udpSocket = UDPSocket.getInstance();
         initView();
         initEnvent();
     }
 
-    private void initView(){
-        create_room = (Button)findViewById(R.id.button1);
-        ready_room = (Button)findViewById(R.id.button2);
-        start_room = (Button)findViewById(R.id.button3);
-        show_detail = (TextView)findViewById(R.id.label);
+    private void initView() {
+        create_room = (Button) findViewById(R.id.button1);
+        ready_room = (Button) findViewById(R.id.button2);
+        start_room = (Button) findViewById(R.id.button3);
+        show_detail = (TextView) findViewById(R.id.label);
     }
 
-    private void initEnvent(){
+    private void initEnvent() {
         create_room.setOnClickListener(this);
         ready_room.setOnClickListener(this);
         start_room.setOnClickListener(this);
@@ -48,17 +48,17 @@ public class GameRoomActivity extends Activity implements View.OnClickListener{
     }
 
 
-    protected void onRefresh(){
+    protected void onRefresh() {
         DownTask task = new DownTask();
         task.execute();
     }
 
-    class DownTask extends AsyncTask<Void,Void,Boolean>{
+    class DownTask extends AsyncTask<Void, Void, Boolean> {
 
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            if(UDPSocket.STATE == true)
+            if (UDPSocket.STATE == true)
                 return true;
             else return false;
         }
@@ -66,13 +66,12 @@ public class GameRoomActivity extends Activity implements View.OnClickListener{
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            if(aBoolean== true){
-                str+=++count+"\n";
+            if (aBoolean == true) {
+                str += ++count + "\n";
                 show_detail.setText(str);
                 UDPSocket.Thread_Flag = false;
-            }
-            else{
-                str+="error"+"\n";
+            } else {
+                str += "error" + "\n";
                 show_detail.setText(str);
                 UDPSocket.Thread_Flag = false;
             }
@@ -82,7 +81,7 @@ public class GameRoomActivity extends Activity implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.button1:
                 //创建UDP广播
                 udpSocket.sendBroad();

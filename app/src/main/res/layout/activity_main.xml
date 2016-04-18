@@ -3,6 +3,7 @@
     android:layout_height="match_parent"
 
     android:background="@drawable/bg">
+
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="50dp"
@@ -11,8 +12,8 @@
         android:background="#8B0000"
         android:gravity="center"
         android:textColor="#FFFFFF"
-        android:layout_alignParentTop="true"
-        />
+        android:layout_alignParentTop="true" />
+
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -21,8 +22,8 @@
         android:text="Puzzle game"
         android:gravity="center"
         android:textColor="#8B0000"
-        android:layout_alignParentTop="true"
-        />
+        android:layout_alignParentTop="true" />
+
     <com.example.administrator.puzzleGame.game2DModel.ClearEditText
         android:id="@+id/et_u"
         android:layout_marginTop="170dp"
@@ -34,8 +35,7 @@
         android:singleLine="true"
         android:drawableRight="@drawable/delete_selector"
         android:hint="请输入用户名"
-        android:layout_height="100px"
-        >
+        android:layout_height="100px">
 
     </com.example.administrator.puzzleGame.game2DModel.ClearEditText>
 
@@ -52,9 +52,7 @@
         android:layout_width="600px"
         android:layout_height="100px"
         android:layout_below="@id/et_u"
-        android:background="@drawable/bg_edittext2"
-        >
-    </com.example.administrator.puzzleGame.game2DModel.ClearEditText>
+        android:background="@drawable/bg_edittext2"></com.example.administrator.puzzleGame.game2DModel.ClearEditText>
 
     <Button
         android:id="@+id/login"
@@ -68,9 +66,9 @@
         android:layout_below="@+id/et_p"
         android:layout_marginTop="25dp"
         android:text="登录"
-        android:onClick="log_in"
-        />
+        android:onClick="log_in" />
     />
+
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

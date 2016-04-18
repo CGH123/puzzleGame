@@ -34,8 +34,8 @@ import com.example.administrator.puzzleGame.util.WifiUtils;
 /**
  * Created by HUI on 2016-04-04.
  */
-public class WifiapActivity extends Activity  implements View.OnClickListener,
-        OnScrollListener, AdapterView.OnItemClickListener,WifiapBroadcast.NetWorkChangeListener {
+public class WifiapActivity extends Activity implements View.OnClickListener,
+        OnScrollListener, AdapterView.OnItemClickListener, WifiapBroadcast.NetWorkChangeListener {
 
     private static final String TAG = "WifiapActivity";
     private static ApHandler mHandler;
@@ -70,7 +70,7 @@ public class WifiapActivity extends Activity  implements View.OnClickListener,
 
     }
 
-    protected void initViews(){
+    protected void initViews() {
         mLlApInfo = (LinearLayout) findViewById(R.id.wifiap_lv_create_ok);
         mTvStatusInfo = (TextView) findViewById(R.id.wifiap_tv_wifistatus);
         mTvApSSID = (TextView) findViewById(R.id.wifiap_tv_createap_ssid);
@@ -79,9 +79,9 @@ public class WifiapActivity extends Activity  implements View.OnClickListener,
         mBtnNext = (Button) findViewById(R.id.wifiap_btn_next);
     }
 
-    protected void initEvent(){
+    protected void initEvent() {
         mWifiList = new ArrayList<ScanResult>();
-        WifiUtils temp=new WifiUtils(this);
+        WifiUtils temp = new WifiUtils(this);
         temp.startScan();
         List<ScanResult> scanResults = temp.getScanResults();
         mWifiList.addAll(scanResults);
@@ -97,7 +97,9 @@ public class WifiapActivity extends Activity  implements View.OnClickListener,
         mBtnNext.setOnClickListener(this);
     }
 
-    /** 初始化控件设置 **/
+    /**
+     * 初始化控件设置
+     **/
     protected void initAction() {
 
         if (!WifiUtils.isWifiConnect() && !WifiUtils.isWifiApEnabled()) { // 无开启热点无连接WIFI
@@ -119,13 +121,15 @@ public class WifiapActivity extends Activity  implements View.OnClickListener,
     }
 
     //进入游戏界面
-    private void doLogin(){
-        Intent intent=new Intent();
-        intent.setClass(WifiapActivity.this,GameRoomActivity.class);
+    private void doLogin() {
+        Intent intent = new Intent();
+        intent.setClass(WifiapActivity.this, GameRoomActivity.class);
         startActivity(intent);
     }
 
-    /** 动态注册广播 */
+    /**
+     * 动态注册广播
+     */
     public void initBroadcast() {
         mWifiapBroadcast = new WifiapBroadcast(this);
         IntentFilter filter = new IntentFilter();
@@ -149,8 +153,7 @@ public class WifiapActivity extends Activity  implements View.OnClickListener,
                 mTvStatusInfo.setText(getString(R.string.wifiap_toast_connectap_error_1));
                 mHandler.sendEmptyMessage(WifiApConst.WiFiConnectError);
             }
-        }
-        else if (!WifiUtils.isWifiConnect() || !ap.BSSID.equals(WifiUtils.getBSSID())) {
+        } else if (!WifiUtils.isWifiConnect() || !ap.BSSID.equals(WifiUtils.getBSSID())) {
             mConnWifiDialog.setTitle(ap.SSID);
             mConnWifiDialog.setScanResult(ap);
             mConnWifiDialog.show();
@@ -194,8 +197,7 @@ public class WifiapActivity extends Activity  implements View.OnClickListener,
                     return;
                 try {
                     Thread.sleep(2000); // 扫描间隔
-                }
-                catch (InterruptedException e) {
+                } catch (InterruptedException e) {
                 }
                 handler.sendEmptyMessage(WifiApConst.ApScanResult);
             }
@@ -206,8 +208,7 @@ public class WifiapActivity extends Activity  implements View.OnClickListener,
                 this.thread = new Thread(this);
                 this.running = true;
                 this.thread.start();
-            }
-            finally {
+            } finally {
             }
         }
 
@@ -215,8 +216,7 @@ public class WifiapActivity extends Activity  implements View.OnClickListener,
             try {
                 this.running = false;
                 this.thread = null;
-            }
-            finally {
+            } finally {
             }
         }
     }
@@ -250,8 +250,7 @@ public class WifiapActivity extends Activity  implements View.OnClickListener,
                 case WifiApConst.NetworkChanged: // Wifi状态变化
                     if (WifiUtils.isWifiEnabled()) {
                         mTvStatusInfo.setText(getString(R.string.wifiap_text_wifi_1_0));
-                    }
-                    else {
+                    } else {
                         mTvStatusInfo.setText(getString(R.string.wifiap_text_wifi_0));
                         showShortToast(R.string.wifiap_text_wifi_disconnect);
                     }
@@ -261,7 +260,6 @@ public class WifiapActivity extends Activity  implements View.OnClickListener,
             }
         }
     }
-
 
 
     public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -300,7 +298,6 @@ public class WifiapActivity extends Activity  implements View.OnClickListener,
     }
 
 
-
     @Override
     public void onClick(View v) {
 
@@ -326,14 +323,16 @@ public class WifiapActivity extends Activity  implements View.OnClickListener,
     }
 
 
-
-
-    /** 短暂显示Toast提示(来自res) **/
+    /**
+     * 短暂显示Toast提示(来自res)
+     **/
     protected void showShortToast(int resId) {
         Toast.makeText(this, getString(resId), Toast.LENGTH_SHORT).show();
     }
 
-    /** 短暂显示Toast提示(来自String) **/
+    /**
+     * 短暂显示Toast提示(来自String)
+     **/
     protected void showShortToast(String text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }

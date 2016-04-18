@@ -2,119 +2,119 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-       >
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:textSize="20sp"
-        android:text="选择背景音乐"
-        android:background="#8B0000"
-        android:gravity="center"
-        android:textColor="#FFFFFF"
-        android:layout_alignParentTop="true"
-        />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#8B0000"
-        android:text="返回"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:onClick="back"
-        android:layout_alignBottom="@+id/textView1"
-        />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:textSize="20sp"
+            android:text="选择背景音乐"
+            android:background="#8B0000"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:layout_alignParentTop="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#8B0000"
+            android:text="返回"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:onClick="back"
+            android:layout_alignBottom="@+id/textView1" />
     </RelativeLayout>
+
     <RadioGroup
         android:id="@+id/radioBt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20px"
-        >
+        android:layout_marginTop="20px">
+
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radio0"
             android:textSize="16sp"
-            android:text="纯音乐 - 天空之城"
-            />
+            android:text="纯音乐 - 天空之城" />
+
         <RadioButton
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radio1"
-            android:text="纯音乐 - 卡农"
-            />
+            android:text="纯音乐 - 卡农" />
+
         <RadioButton
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radio2"
-            android:text="love is you"
-            />
+            android:text="love is you" />
+
         <RadioButton
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radio3"
-            android:text="the dream of boxing champion"
-            />
+            android:text="the dream of boxing champion" />
+
         <RadioButton
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radio4"
-            android:text="夜色"
-            />
+            android:text="夜色" />
+
         <RadioButton
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radio5"
-            android:text="Contra"
-            />
+            android:text="Contra" />
+
         <RadioButton
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radio6"
-            android:text="Naruto"
-            />
+            android:text="Naruto" />
+
         <RadioButton
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radio7"
-            android:text="classcial bg"
-            />
+            android:text="classcial bg" />
+
         <RadioButton
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radio8"
-            android:text="月光"
-            />
+            android:text="月光" />
+
         <RadioButton
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radio9"
-            android:text="钢琴曲 - Always With Me"
-            />
+            android:text="钢琴曲 - Always With Me" />
+
         <RadioButton
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radio10"
-            android:text="纯音乐 - 晨雾"
-            />
+            android:text="纯音乐 - 晨雾" />
     </RadioGroup>
+
     <Button
         android:id="@+id/sureSel"
         android:layout_width="600px"
@@ -126,6 +126,5 @@
         android:background="@drawable/login_edittext_bg"
         android:layout_marginTop="25dp"
         android:text="选择"
-        android:onClick="sureSelect"
-        />
+        android:onClick="sureSelect" />
 </LinearLayout>
