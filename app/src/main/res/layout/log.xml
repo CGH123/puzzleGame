@@ -13,8 +13,8 @@
         android:background="#8B0000"
         android:gravity="center"
         android:textColor="#FFFFFF"
-        android:layout_alignParentTop="true"
-        />
+        android:layout_alignParentTop="true" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,8 +23,8 @@
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:onClick="back"
-        android:layout_alignBottom="@+id/textView1"
-        />
+        android:layout_alignBottom="@+id/textView1" />
+
     <com.example.administrator.puzzleGame.game2DModel.ClearEditText
         android:id="@+id/et_user"
         android:layout_marginTop="150dp"
@@ -36,8 +36,7 @@
         android:singleLine="true"
         android:drawableRight="@drawable/delete_selector"
         android:hint="请输入用户名"
-        android:layout_height="100px"
-        >
+        android:layout_height="100px">
 
     </com.example.administrator.puzzleGame.game2DModel.ClearEditText>
 
@@ -54,9 +53,7 @@
         android:layout_width="600px"
         android:layout_height="100px"
         android:layout_below="@id/et_user"
-        android:background="@drawable/bg_edittext2"
-        >
-    </com.example.administrator.puzzleGame.game2DModel.ClearEditText>
+        android:background="@drawable/bg_edittext2"></com.example.administrator.puzzleGame.game2DModel.ClearEditText>
 
     <Button
         android:id="@+id/register"
@@ -70,6 +67,5 @@
         android:layout_below="@+id/et_pwd"
         android:layout_marginTop="25dp"
         android:text="注册"
-        android:onClick="log_save"
-        />
+        android:onClick="log_save" />
 </RelativeLayout>

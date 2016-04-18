@@ -32,8 +32,8 @@ public class bef_gameActivity extends AppCompatActivity {
     /*
     用来测试专用的入口
      */
-    public void test_entry(View view){
-        Intent intent=new Intent(bef_gameActivity.this, ConnectModeActivtiy.class);
+    public void test_entry(View view) {
+        Intent intent = new Intent(bef_gameActivity.this, ConnectModeActivtiy.class);
         startActivity(intent);
     }
 
@@ -41,29 +41,33 @@ public class bef_gameActivity extends AppCompatActivity {
     /*
     新游戏
      */
-  public void b_newgame_(View view){
-      Intent intent = new Intent(bef_gameActivity.this,GamePlayActivity.class);
-      startActivity(intent);
-  }
-    public void bgMusicSel(View view){
-        Intent intent=new Intent(bef_gameActivity.this,bg_musicActivity.class);
+    public void b_newgame_(View view) {
+        Intent intent = new Intent(bef_gameActivity.this, GamePlayActivity.class);
         startActivity(intent);
     }
-    public void to_pic_chose(View view){
+
+    public void bgMusicSel(View view) {
+        Intent intent = new Intent(bef_gameActivity.this, bg_musicActivity.class);
+        startActivity(intent);
+    }
+
+    public void to_pic_chose(View view) {
 //        Intent intent= new Intent(bef_gameActivity.this,Pic_choseActivity.class);
 //        startActivity(intent);
     }
+
     /*
     难度选择
      */
-    public void Diffcult_choice(View view){
-        Intent intent = new Intent(bef_gameActivity.this,Diffcult_choiceActivity.class);
+    public void Diffcult_choice(View view) {
+        Intent intent = new Intent(bef_gameActivity.this, Diffcult_choiceActivity.class);
         startActivity(intent);
 
     }
+
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-           exitBy2Click();
+            exitBy2Click();
            /* new AlertDialog.Builder(bef_gameActivity.this).setTitle("系统提示").setMessage("是否退出游戏")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -79,6 +83,7 @@ public class bef_gameActivity extends AppCompatActivity {
         }
         return true;
     }
+
     /**
      * 双击退出函数
      */

@@ -50,14 +50,14 @@ public class Camera {
         MatrixState.setCamera(cx, cy, cz, tx, ty, tz, upx, upy, upz);
     }
 
-    public void rotateCamera(float distanceXMoveP1, float distanceYMoveP1){
+    public void rotateCamera(float distanceXMoveP1, float distanceYMoveP1) {
         angelA -= distanceXMoveP1 * GameConstant.CAMERA_SPEED;
         angelB += distanceYMoveP1 * GameConstant.CAMERA_SPEED;
         angelB = Math.max(angelB, (float) (-Math.PI / 2));
         angelB = Math.min(angelB, (float) (Math.PI / 2));
     }
 
-    public void scaleCamera(float scale1, float scale2, float scale3){
+    public void scaleCamera(float scale1, float scale2, float scale3) {
         distance /= (scale1 + scale2 + scale3) / 3;
         distanceTotal = (float) Math.sqrt(1 + distance * distance);
         angelC = (float) Math.atan(1 / distance);

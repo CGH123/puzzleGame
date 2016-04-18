@@ -1,13 +1,13 @@
 package com.example.administrator.puzzleGame.game3DModel;
 
 
-public interface Piece extends Draw {
+public interface PieceFill extends Draw {
     /**
      * 交换两块拼图位置
      *
      * @param body 拼图块2
      */
-    void swap(PieceBody body);
+    void swap(PieceFillBody body);
 
     /**
      * @param x 屏幕坐标X
@@ -26,4 +26,5 @@ public interface Piece extends Draw {
      * 高亮拼图块
      */
     void hint();
+
 }

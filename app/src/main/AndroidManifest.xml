@@ -39,10 +39,11 @@
         <activity android:name="com.example.administrator.puzzleGame.activity.WifiapActivity"></activity>
         <activity android:name="com.example.administrator.puzzleGame.activity.GameRoomActivity"></activity>
         <activity android:name="com.example.administrator.puzzleGame.activity.Game3DActivity"></activity>
+
         <service android:name="com.example.administrator.puzzleGame.game2DModel.bg_music">
             <intent-filter>
-                <action android:name="com.angel.Android.MUSIC"/>
-                <category android:name="android.intent.category.default"/>
+                <action android:name="com.angel.Android.MUSIC" />
+                <category android:name="android.intent.category.default" />
             </intent-filter>
         </service>
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for

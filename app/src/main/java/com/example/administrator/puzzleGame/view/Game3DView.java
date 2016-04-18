@@ -16,7 +16,6 @@ import com.example.administrator.puzzleGame.R;
 import java.util.Random;
 
 import com.example.administrator.puzzleGame.game3DModel.*;
-import com.example.administrator.puzzleGame.game3DModel.Object;
 import com.example.administrator.puzzleGame.constant.GameConstant;
 import com.example.administrator.puzzleGame.util.BitmapUtil;
 import com.example.administrator.puzzleGame.util.LogUtil;
@@ -44,7 +43,7 @@ public class Game3DView extends GLSurfaceView {
     private boolean isP1Move = false;//判断单手指操作是否被锁定
     private boolean canMoveCamera = false;
 
-    private Object object;
+    private Whole object;
     private ObjectType objectType;
     private int cutNum;
     private int firstPickNum = -1;
@@ -180,18 +179,18 @@ public class Game3DView extends GLSurfaceView {
         private void initTaskReal() {
             switch (objectType) {
                 case CUBE:
-                    object = new Cube(cutNum, 1.0f, texIds);
+                    object = new Cube(cutNum, points, texIds);
                     break;
                 case SPHERE:
-                    //// TODO: 2016/4/15 球
+                    object = new Sphere(cutNum, 2, 1.6f, texIds[0]);
                     break;
                 case QUAD_PLANE:
-                    object = new QuadPlane(points, cutNum, texIds[0]);
+                    object = new Quad(cutNum, points, texIds[0]);
                     break;
             }
             //随机打乱初始开局
             Random rand = new Random();
-            int randTime = 0;
+            int randTime = 200;
             int range = object.getPiecesSize();
             for (int i = 0; i < randTime; i++) {
                 int randNum1 = rand.nextInt(range);
@@ -253,6 +252,8 @@ public class Game3DView extends GLSurfaceView {
             //初始化变换矩阵
             MatrixState.setInitStack();
 
+            Bitmap src;
+            Vector2f[] quadPositions;
             //初始化纹理
             switch (objectType) {
                 case CUBE:
@@ -264,29 +265,39 @@ public class Game3DView extends GLSurfaceView {
                             R.mipmap.ic_launcher,
                             R.mipmap.ic_launcher
                     };
-                    texIds = new int[pictureIds.length * cutNum * cutNum];
-                    for (int i = 0; i < pictureIds.length; i++) {
-                        Bitmap src = TextureUtil.loadTexture(context, pictureIds[i]);//设置纹理图片
-                        Bitmap[] bitmaps = BitmapUtil.cutBitmap(src, cutNum, cutNum);
-                        src.recycle();
-                        for (int j = 0; j < bitmaps.length; j++) {
-                            texIds[i * cutNum * cutNum + j] = TextureUtil.initTexture(bitmaps[j], true);//设置纹理ID
-                        }
-                    }
-                    break;
-                case SPHERE:
-                    break;
-                case QUAD_PLANE:
-                    Bitmap src = TextureUtil.loadTexture(context, R.mipmap.ic_launcher);//设置纹理图片
-                    texIds = new int[1];
-                    texIds[0] = TextureUtil.initTexture(src, true);//设置纹理ID
-                    Vector2f[] quadPositions = new Vector2f[]{
-                            new Vector2f(0, 0.5f),
-                            new Vector2f(0.5f, 0),
+                    texIds = new int[pictureIds.length];
+                    quadPositions = new Vector2f[]{
+                            new Vector2f(0, 0),
+                            new Vector2f(1, 0),
                             new Vector2f(1, 1),
                             new Vector2f(0, 1),
                     };
-                    points = BitmapUtil.cutBitmapToQuads(src, quadPositions, cutNum, cutNum);
+                    for (int i = 0; i < pictureIds.length; i++) {
+                        src = TextureUtil.loadTexture(context, pictureIds[i]);//设置纹理图片
+                        texIds[i] = TextureUtil.initTexture(src, true);//设置纹理ID
+                        src.recycle();
+                    }
+                    points = BitmapUtil.cutBitmapToCubes(quadPositions, cutNum, cutNum);
+
+                    break;
+                case SPHERE:
+                    src = TextureUtil.loadTexture(context, R.mipmap.android_robot);//设置纹理图片
+                    texIds = new int[1];
+                    texIds[0] = TextureUtil.initTexture(src, true);//设置纹理ID
+                    src.recycle();
+                    break;
+                case QUAD_PLANE:
+                    src = TextureUtil.loadTexture(context, R.mipmap.ic_launcher);//设置纹理图片
+                    texIds = new int[1];
+                    texIds[0] = TextureUtil.initTexture(src, true);//设置纹理ID
+                    quadPositions = new Vector2f[]{
+                            new Vector2f(0.0f, 0.0f),
+                            new Vector2f(1.0f, 0.0f),
+                            new Vector2f(1.0f, 1.0f),
+                            new Vector2f(0.8f, 0.2f),
+                    };
+                    points = BitmapUtil.cutBitmapToQuads(quadPositions, cutNum, cutNum);
+                    src.recycle();
                     break;
             }
         }

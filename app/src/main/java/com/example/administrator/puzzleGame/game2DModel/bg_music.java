@@ -21,8 +21,7 @@ public class bg_music extends Service {
         super.onStart(intent, startId);
         if (mediaPlayer == null) {
             // R.raw.mmp是资源文件，MP3格式的
-            switch(GameDB.musicSelect)
-                {
+            switch (GameDB.musicSelect) {
                 /*
                 case 0:mediaPlayer = MediaPlayer.create(this, R.raw.tiankongzhicheng);break;
                 case 1:mediaPlayer = MediaPlayer.create(this, R.raw.kanong);break;
