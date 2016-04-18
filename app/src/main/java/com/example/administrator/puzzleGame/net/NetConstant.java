@@ -14,7 +14,7 @@ public class NetConstant {
     public static final int MAXIN = 1024;
 
     /**
-     * 用于ByteBufferd的最大输入 待定 
+     * 用于ByteBufferd的最大输入 待定
      */
     public static final int MAXOUT = 1024;
 
