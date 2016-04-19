@@ -10,6 +10,8 @@ public class GameConstant {
     public static int HEIGHT;
     //摄像机旋转速度移动阀值
     public static final float CAMERA_SPEED = 0.01F;
-
+    //物体倍数
+    public static final float SCALE = 10;
+    //分割线颜色
     public static final float[] LINE_COLOR = {0.9f, 0.9f, 0.9f, 0.9f};
 }

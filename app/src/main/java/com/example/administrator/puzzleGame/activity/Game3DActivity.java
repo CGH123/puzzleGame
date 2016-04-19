@@ -35,7 +35,7 @@ public class Game3DActivity extends Activity {
         //初始化游戏设置
         //mGLSurfaceView.init(5, Game3DView.ObjectType.QUAD_PLANE, false);
         //mGLSurfaceView.init(5, Game3DView.ObjectType.CUBE, true);
-        mGLSurfaceView.init(5, Game3DView.ObjectType.SPHERE, true);
+        mGLSurfaceView.init(8, Game3DView.ObjectType.SPHERE, true);
     }
 
     @Override
