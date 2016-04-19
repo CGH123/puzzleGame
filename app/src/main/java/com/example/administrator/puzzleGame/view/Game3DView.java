@@ -26,6 +26,7 @@ public class Game3DView extends GLSurfaceView {
     public enum ObjectType {CUBE, SPHERE, QUAD_PLANE}
 
     private static final String TAG = "Game3DView";
+
     private Camera camera;
     private Context context;
 
@@ -43,10 +44,13 @@ public class Game3DView extends GLSurfaceView {
     private boolean isP1Move = false;//判断单手指操作是否被锁定
     private boolean canMoveCamera = false;
 
-    private Whole object;
     private ObjectType objectType;
     private int cutNum;
     private int firstPickNum = -1;
+
+    private Whole object;
+    private Sky sky;
+    private Mountain mountain;
 
     public Game3DView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -174,9 +178,15 @@ public class Game3DView extends GLSurfaceView {
 
     public class SceneRenderer implements Renderer {
         int[] texIds;
+        int skyTexId;
+        int mountainTexId;
+        int rockTexId;
         Vector2f[] points;
 
         private void initTaskReal() {
+            sky = new Sky(skyTexId);
+            mountain = new Mountain(TextureUtil.loadTexture(context, R.mipmap.land), mountainTexId, rockTexId);
+
             switch (objectType) {
                 case CUBE:
                     object = new Cube(cutNum, points, texIds);
@@ -207,9 +217,6 @@ public class Game3DView extends GLSurfaceView {
 
             //调用此方法计算产生透视投影矩阵
             MatrixState.setProjectFrustum(-GameConstant.RATIO, GameConstant.RATIO, -1, 1, 10, 400);
-            // 调用此方法产生摄像机9参数位置矩阵
-            MatrixState.setCamera(0, 0, 70, 0, 0, 0, 0, 1, 0);
-
             //设置摄像头
             camera.setCamera();
 
@@ -219,8 +226,21 @@ public class Game3DView extends GLSurfaceView {
             } else {
                 //绘制
                 MatrixState.pushMatrix();    //进栈
+                MatrixState.scale(10, 10, 10);
                 object.drawSelf();
                 MatrixState.popMatrix();//出栈
+
+                MatrixState.pushMatrix();
+                MatrixState.rotate(180, 1, 0, 0);
+                MatrixState.translate(0, 2, 0);
+                sky.drawSelf();
+                MatrixState.popMatrix();
+
+                MatrixState.pushMatrix();
+                MatrixState.translate(0, -2, 0);
+                sky.drawSelf();
+                MatrixState.popMatrix();
+
             }
         }
 
@@ -242,8 +262,6 @@ public class Game3DView extends GLSurfaceView {
 
             //打开深度检测
             GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-            //打开背面剪裁   
-            GLES20.glEnable(GLES20.GL_CULL_FACE);
 
             //初始化shader
             ShaderManager.loadCodeFromFile(context.getResources());
@@ -255,6 +273,13 @@ public class Game3DView extends GLSurfaceView {
             Bitmap src;
             Vector2f[] quadPositions;
             //初始化纹理
+            src = TextureUtil.loadTexture(context, R.mipmap.sky);
+            skyTexId = TextureUtil.initTexture(src, false);
+            src = TextureUtil.loadTexture(context, R.mipmap.grass);
+            mountainTexId = TextureUtil.initTexture(src, true);
+            src = TextureUtil.loadTexture(context, R.mipmap.rock);
+            rockTexId = TextureUtil.initTexture(src, true);
+
             switch (objectType) {
                 case CUBE:
                     int[] pictureIds = new int[]{
@@ -274,8 +299,7 @@ public class Game3DView extends GLSurfaceView {
                     };
                     for (int i = 0; i < pictureIds.length; i++) {
                         src = TextureUtil.loadTexture(context, pictureIds[i]);//设置纹理图片
-                        texIds[i] = TextureUtil.initTexture(src, true);//设置纹理ID
-                        src.recycle();
+                        texIds[i] = TextureUtil.initTexture(src);//设置纹理ID
                     }
                     points = BitmapUtil.cutBitmapToCubes(quadPositions, cutNum, cutNum);
 
@@ -283,13 +307,12 @@ public class Game3DView extends GLSurfaceView {
                 case SPHERE:
                     src = TextureUtil.loadTexture(context, R.mipmap.android_robot);//设置纹理图片
                     texIds = new int[1];
-                    texIds[0] = TextureUtil.initTexture(src, true);//设置纹理ID
-                    src.recycle();
+                    texIds[0] = TextureUtil.initTexture(src);//设置纹理ID
                     break;
                 case QUAD_PLANE:
                     src = TextureUtil.loadTexture(context, R.mipmap.ic_launcher);//设置纹理图片
                     texIds = new int[1];
-                    texIds[0] = TextureUtil.initTexture(src, true);//设置纹理ID
+                    texIds[0] = TextureUtil.initTexture(src);//设置纹理ID
                     quadPositions = new Vector2f[]{
                             new Vector2f(0.0f, 0.0f),
                             new Vector2f(1.0f, 0.0f),
@@ -297,7 +320,6 @@ public class Game3DView extends GLSurfaceView {
                             new Vector2f(0.8f, 0.2f),
                     };
                     points = BitmapUtil.cutBitmapToQuads(quadPositions, cutNum, cutNum);
-                    src.recycle();
                     break;
             }
         }

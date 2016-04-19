@@ -93,6 +93,7 @@ public class MatrixState {
     }
 
     //设置透视投影参数
+    public static float[] projects;
     public static void setProjectFrustum
     (
             float left,        //near面的left
@@ -102,6 +103,7 @@ public class MatrixState {
             float near,        //near面距离
             float far       //far面距离
     ) {
+        projects = new float[]{left, right, bottom, top, near, far};
         Matrix.frustumM(mProjMatrix, 0, left, right, bottom, top, near, far);
     }
 
@@ -115,6 +117,7 @@ public class MatrixState {
             float near,        //near面距离
             float far       //far面距离
     ) {
+        projects = new float[]{left, right, bottom, top, near, far};
         Matrix.orthoM(mProjMatrix, 0, left, right, bottom, top, near, far);
     }
 
@@ -165,9 +168,9 @@ public class MatrixState {
         float w = GameConstant.WIDTH;// 屏幕宽度
         float h = GameConstant.HEIGHT;// 屏幕高度
         float left = GameConstant.RATIO;//视角left值
-        float top = 1;//视角top值
-        float near = 10;//视角near值
-        float far = 400;//视角far值
+        float top = projects[3];//视角top值
+        float near = projects[4];//视角near值
+        float far = projects[5];//视角far值
         //求视口的坐标中心在原点时，触控点的坐标
         float x0 = x - w / 2;
         float y0 = h / 2 - y;
