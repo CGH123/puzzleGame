@@ -109,7 +109,7 @@ public class Game3DView extends GLSurfaceView {
                         //设置摄像机绕原点旋转
                         camera.rotateCamera(distanceXMoveP1, distanceYMoveP1);
                     } else if (modeP1 == 2) {
-                        isP1Move = true;
+                        isP1Move = false; //平板手机问题
                     }
                 }
                 if (mode == 3) {
