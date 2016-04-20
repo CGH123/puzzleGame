@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * 对传输过程中的Buffer操作的Utils类
+ * 对传输过程中的Buffer操作的Utils类 
  * Created by HUI on 2016-04-19.
  */
 public class BufferUtils {
