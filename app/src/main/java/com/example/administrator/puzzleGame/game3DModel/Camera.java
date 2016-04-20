@@ -45,7 +45,7 @@ public class Camera {
         upz = (float) (distanceTotal * Math.cos(angelB + angelC) * Math.cos(angelA) - distance * Math.cos(angelB) * Math.cos(angelA));
 
         //调用此方法计算产生透视投影矩阵
-        MatrixState.setProjectFrustum(-GameConstant.RATIO, GameConstant.RATIO, -1, 1, 1, 3000);
+        MatrixState.setProjectFrustum(-GameConstant.RATIO, GameConstant.RATIO, -1, 1, 1, 300);
         // 调用此方法产生摄像机9参数位置矩阵
         MatrixState.setCamera(cx, cy, cz, tx, ty, tz, upx, upy, upz);
     }
@@ -59,6 +59,8 @@ public class Camera {
 
     public void scaleCamera(float scale1, float scale2, float scale3) {
         distance /= (scale1 + scale2 + scale3) / 3;
+        //distance = Math.min(distance, 30f);
+        //distance = Math.max(distance, 10f);
         distanceTotal = (float) Math.sqrt(1 + distance * distance);
         angelC = (float) Math.atan(1 / distance);
     }

@@ -49,8 +49,9 @@ public class Game3DView extends GLSurfaceView {
     private int firstPickNum = -1;
 
     private Whole object;
-    private Sky sky;
-    private Mountain mountain;
+    private Water water;
+    private SkyTree tree;
+    private SkyCloud cloud;
 
     public Game3DView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -60,10 +61,10 @@ public class Game3DView extends GLSurfaceView {
         setRenderer(mRenderer);                //设置渲染器
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);   //设置渲染模式为主动渲染
         //创建摄像机
-        float cameraDistance = 70f;
+        float cameraDistance = 20f;
         camera = new Camera(cameraDistance);
         //初始化光源
-        MatrixState.setLightLocation(0, 100, 0);
+        MatrixState.setLightLocation(0, 0, 0);
     }
 
 
@@ -113,7 +114,8 @@ public class Game3DView extends GLSurfaceView {
                         //设置摄像机绕原点旋转
                         camera.rotateCamera(distanceXMoveP1, distanceYMoveP1);
                     } else if (modeP1 == 2) {
-                        isP1Move = true;
+                        //// TODO: 2016/4/20 两手指交互 
+                        isP1Move = false;
                     }
                 }
                 if (mode == 3) {
@@ -177,16 +179,25 @@ public class Game3DView extends GLSurfaceView {
     }
 
     public class SceneRenderer implements Renderer {
-        int[] texIds;
-        int skyTexId;
-        int mountainTexId;
-        int rockTexId;
         Vector2f[] points;
+        int[] texIds;
+        //水的纹理
+        int waterId;
+        //天空球的纹理
+        int treeId;
+        int cloudId;
+        int frameBufferId;
+        int shadowId;// 动态产生的阴影纹理Id
+        int renderDepthBufferId;// 动态产生的阴影纹理Id
+        float skyAngle = 0;
+
+        private boolean isBegin = true;
 
         private void initTaskReal() {
-            sky = new Sky(skyTexId);
-            mountain = new Mountain(TextureUtil.loadTexture(context, R.mipmap.land), mountainTexId, rockTexId);
 
+            water = new Water(shadowId, waterId, GameConstant.WIDTH, GameConstant.HEIGHT);
+            tree = new SkyTree(treeId);
+            cloud = new SkyCloud(cloudId);
             switch (objectType) {
                 case CUBE:
                     object = new Cube(cutNum, points, texIds);
@@ -212,37 +223,170 @@ public class Game3DView extends GLSurfaceView {
 
         @Override
         public void onDrawFrame(GL10 gl) {
-            //清除深度缓冲与颜色缓冲
-            GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
-
-            //调用此方法计算产生透视投影矩阵
-            MatrixState.setProjectFrustum(-GameConstant.RATIO, GameConstant.RATIO, -1, 1, 10, 400);
-            //设置摄像头
-            camera.setCamera();
-
             if (!hasLoad) {
                 initTaskReal();
                 hasLoad = true;
             } else {
-                //绘制
+                //设置摄像头
+                camera.setCamera();
+
+                //绘制倒影纹理
+                MatrixState.pushMatrix();
+                generateShadowImage();
+                MatrixState.popMatrix();
+
+                //使用到屏幕的帧缓冲
+                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+                //设置视窗大小及位置
+                GLES20.glViewport(0, 0, GameConstant.WIDTH, GameConstant.HEIGHT);
+                //清除深度缓冲与颜色缓冲
+                GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
+
+                //绘制物体
+                MatrixState.pushMatrix();
+
                 MatrixState.pushMatrix();    //进栈
-                MatrixState.scale(10, 10, 10);
+                MatrixState.scale(2, 2, 2);
+                object.setDrawLine(true);
                 object.drawSelf();
                 MatrixState.popMatrix();//出栈
 
                 MatrixState.pushMatrix();
-                MatrixState.rotate(180, 1, 0, 0);
-                MatrixState.translate(0, 2, 0);
-                sky.drawSelf();
+                MatrixState.translate(0, -35, 0);
+
+                MatrixState.pushMatrix();
+                MatrixState.rotate(skyAngle, 0, 1, 0);
+                cloud.drawSelf();
                 MatrixState.popMatrix();
 
                 MatrixState.pushMatrix();
-                MatrixState.translate(0, -2, 0);
-                sky.drawSelf();
+                //开启混合
+                GLES20.glEnable(GLES20.GL_BLEND);
+                //设置混合因子c
+                GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+                MatrixState.translate(0, -1.0f, 0);
+                tree.drawSelf();
+                //关闭混合
+                GLES20.glDisable(GLES20.GL_BLEND);
                 MatrixState.popMatrix();
 
+                //绘制水面
+                MatrixState.pushMatrix();
+                MatrixState.rotate(180,1,0,0);
+                water.setTexIdDY(shadowId);
+                water.drawSelf();
+                MatrixState.popMatrix();
+
+                MatrixState.popMatrix();
+
+                MatrixState.popMatrix();
+
+                GLES20.glDeleteFramebuffers(1, new int[]{frameBufferId}, 0);
+                GLES20.glDeleteTextures(1, new int[]{shadowId}, 0);
+                skyAngle += 0.1f;
             }
         }
+
+        //通过绘制产生倒影纹理
+        private void generateShadowImage() {
+            initFRBuffers();
+
+            //清除深度缓冲与颜色缓冲
+            GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
+
+            //绘制倒影
+            MatrixState.pushMatrix();
+            MatrixState.scale(1, -1, 1);
+
+            MatrixState.pushMatrix();    //进栈
+            MatrixState.scale(2, 2, 2);
+            object.setDrawLine(false);
+            object.drawSelf();
+            MatrixState.popMatrix();//出栈
+
+            //绘制云天空
+            MatrixState.pushMatrix();
+            MatrixState.translate(0, -5.0f, 0);
+            MatrixState.rotate(skyAngle, 0, 1, 0);
+            cloud.drawSelf();
+            MatrixState.popMatrix();
+
+            //开启混合
+            GLES20.glEnable(GLES20.GL_BLEND);
+            //设置混合因子c
+            GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+            //绘制树木
+            MatrixState.pushMatrix();
+            tree.drawSelf();
+            MatrixState.popMatrix();
+            //关闭混合
+            GLES20.glDisable(GLES20.GL_BLEND);
+
+
+            MatrixState.popMatrix();
+        }
+
+        //初始化帧缓冲和渲染缓冲
+        public void initFRBuffers() {
+            int[] tia = new int[1];
+            GLES20.glGenFramebuffers(1, tia, 0);
+            frameBufferId = tia[0];
+
+            if(isBegin)
+            {
+                GLES20.glGenRenderbuffers(1, tia, 0);
+                renderDepthBufferId=tia[0];
+                GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, renderDepthBufferId);
+                GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT16, GameConstant.SHADOW_TEX_WIDTH, GameConstant.SHADOW_TEX_HEIGHT);
+                isBegin=false;
+            }
+
+            int[] tempIds = new int[1];
+            GLES20.glGenTextures(
+                    1,          //产生的纹理id的数量
+                    tempIds,   //纹理id的数组
+                    0           //偏移量
+            );
+
+            shadowId = tempIds[0];
+
+            GLES20.glViewport(0, 0, GameConstant.SHADOW_TEX_WIDTH, GameConstant.SHADOW_TEX_HEIGHT);
+            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBufferId);
+
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, shadowId);//绑定纹理
+            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
+            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
+
+            GLES20.glFramebufferTexture2D(
+                    GLES20.GL_FRAMEBUFFER,
+                    GLES20.GL_COLOR_ATTACHMENT0,
+                    GLES20.GL_TEXTURE_2D,
+                    shadowId,
+                    0
+            );
+
+            GLES20.glTexImage2D(
+                    GLES20.GL_TEXTURE_2D,
+                    0,
+                    GLES20.GL_RGB,
+                    GameConstant.SHADOW_TEX_WIDTH,
+                    GameConstant.SHADOW_TEX_HEIGHT,
+                    0,
+                    GLES20.GL_RGB,
+                    GLES20.GL_UNSIGNED_SHORT_5_6_5,
+                    null
+            );
+
+            GLES20.glFramebufferRenderbuffer(
+                    GLES20.GL_FRAMEBUFFER,
+                    GLES20.GL_DEPTH_ATTACHMENT,
+                    GLES20.GL_RENDERBUFFER,
+                    renderDepthBufferId
+            );
+        }
+
 
         @Override
         public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -252,13 +396,15 @@ public class Game3DView extends GLSurfaceView {
             GameConstant.RATIO = (float) width / height;
             GameConstant.WIDTH = width;
             GameConstant.HEIGHT = height;
+            //关闭背面剪裁
+            GLES20.glDisable(GLES20.GL_CULL_FACE);
 
         }
 
         @Override
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             //设置屏幕背景色RGBA
-            GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+            GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
             //打开深度检测
             GLES20.glEnable(GLES20.GL_DEPTH_TEST);
@@ -273,12 +419,10 @@ public class Game3DView extends GLSurfaceView {
             Bitmap src;
             Vector2f[] quadPositions;
             //初始化纹理
-            src = TextureUtil.loadTexture(context, R.mipmap.sky);
-            skyTexId = TextureUtil.initTexture(src, false);
-            src = TextureUtil.loadTexture(context, R.mipmap.grass);
-            mountainTexId = TextureUtil.initTexture(src, true);
-            src = TextureUtil.loadTexture(context, R.mipmap.rock);
-            rockTexId = TextureUtil.initTexture(src, true);
+            waterId = TextureUtil.initTexture(context, R.drawable.water);
+            treeId = TextureUtil.initTexture(context, R.drawable.sky_tree);
+            cloudId = TextureUtil.initTexture(context, R.drawable.sky_cloud);
+
 
             switch (objectType) {
                 case CUBE:
