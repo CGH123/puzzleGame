@@ -19,30 +19,29 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package com.example.nionet;
+package com.example.nionet_test.PackageRW;
 
+import com.example.nionet.PacketReader;
 
 import java.nio.ByteBuffer;
 
 /**
- * Interface for packet reader plugins to assist a socket in reading.
- * <p>
- * PacketReaders are in general intended to help splitting
+ * This packet reader reads as many bytes as possible from the stream
+ * and then bundles those bytes into a packet.
  *
  * @author Christoffer Lerno
  */
-public interface PacketReader {
-    byte[] SKIP_PACKET = new byte[0];
+public class RawPacketReader implements PacketReader {
 
-    /**
-     * Create a new packet using the  given.
-     * <p>
-     * If there isn't sufficient data to construct a packet, return null.
-     *
-     * @param byteBuffer the byte buffer to use.
-     * @return the new packet created, or null if no packet could be created. The method will continously
-     * be called until nextPacket returns null.
-     */
-    byte[] nextPacket(ByteBuffer byteBuffer);
+    public final static RawPacketReader INSTANCE = new RawPacketReader();
+
+    private RawPacketReader() {
+    }
+
+    public byte[] nextPacket(ByteBuffer byteBuffer) {
+        byte[] packet = new byte[byteBuffer.remaining()];
+        byteBuffer.get(packet);
+        return packet;
+    }
 
 }
