@@ -7,9 +7,8 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
-public class Sky implements Draw {
-
-    final float UNIT_SIZE = 100.0f;
+public class SkyCloud implements Draw {
+    final float UNIT_SIZE = 103.0f;
     //自定义渲染程序的引用
     int mProgram;
     //总变换矩阵的引用
@@ -23,17 +22,17 @@ public class Sky implements Draw {
     FloatBuffer mTexCoorBuffer;
     //顶点数量
     int vCount = 0;
-    int texId = 0;
+    int texId;
 
-    public Sky(int texId) {
+    public SkyCloud(int texId) {
         this.texId = texId;
-        initData(UNIT_SIZE);
+        initVertexData(UNIT_SIZE);
         initShader(ShaderManager.getShaderProgram(3));
     }
 
     //初始化顶点数据的方法
-    public void initData(float radius) {
-        float ANGLE_SPAN = 18f;
+    public void initVertexData(float radius) {
+        float ANGLE_SPAN = 9f;
         float angleV = 90;
         ArrayList<Float> alVertix = new ArrayList<>();//存放顶点坐标的ArrayList
 
@@ -114,10 +113,11 @@ public class Sky implements Draw {
     //初始化Shader程序的方法
     public void initShader(int mProgram) {
         this.mProgram = mProgram;
-        //获得顶点坐标数据的引用
+        //获取程序中顶点位置属性引用id  
         maPositionHandle = GLES20.glGetAttribLocation(mProgram, "aPosition");
-        //顶点纹理坐标的引用id
+        //获取程序中顶点纹理坐标属性引用id  
         maTexCoorHandle = GLES20.glGetAttribLocation(mProgram, "aTexCoor");
+        //获取程序中总变换矩阵引用id
         muMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
     }
 
@@ -192,5 +192,4 @@ public class Sky implements Draw {
         }
         return result;
     }
-
 }
