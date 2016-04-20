@@ -41,4 +41,6 @@ public interface Whole extends Draw {
      * @param pieceNum
      */
     void hintPiece(int pieceNum);
+
+    void setDrawLine(Boolean isDrawLine);
 }

@@ -9,8 +9,8 @@ public class ShaderManager {
     final static String[][] shaderName = {
             {"vertexTexture.sh", "fragTexture.sh"},
             {"vertexColor.sh", "fragColor.sh"},
-            {"vertexMountain.sh", "fragMountain.sh"},
-            {"vertex.sh", "frag.sh"}
+            {"vertexWater.sh", "fragWater.sh"},
+            {"vertexFly.sh", "fragFly.sh"}
     };
     final static int shaderCount = shaderName.length;
     static String[] mVertexShader = new String[shaderCount];

@@ -5,6 +5,7 @@ public abstract class PieceBody extends BaseBody implements Piece {
 
     PieceFillBody pieceFill;
     PieceLineBody pieceLine;
+    Boolean isDrawLine = true;
 
     public class PieceLineData{
         float[] vertices;
@@ -60,6 +61,11 @@ public abstract class PieceBody extends BaseBody implements Piece {
         pieceFill.hint();
     }
 
+    @Override
+    public void setDrawLine(Boolean isDrawLine){
+        this.isDrawLine = isDrawLine;
+    }
+
 
     @Override
     public void drawSelf() {
@@ -68,9 +74,11 @@ public abstract class PieceBody extends BaseBody implements Piece {
         pieceFill.drawSelf();
         MatrixState.popMatrix();
 
-        MatrixState.pushMatrix();
-        PieceLineTransForm();
-        pieceLine.drawSelf();
-        MatrixState.popMatrix();
+        if(isDrawLine) {
+            MatrixState.pushMatrix();
+            PieceLineTransForm();
+            pieceLine.drawSelf();
+            MatrixState.popMatrix();
+        }
     }
 }

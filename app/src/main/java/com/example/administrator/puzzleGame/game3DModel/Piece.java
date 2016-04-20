@@ -26,4 +26,6 @@ public interface Piece extends Draw {
      * 高亮拼图块
      */
     void hint();
+
+    void setDrawLine(Boolean isDrawLine);
 }

@@ -59,6 +59,13 @@ public abstract class WholeBody extends BaseBody implements Whole {
         return pieces.size();
     }
 
+
+    @Override
+    public void setDrawLine(Boolean isDrawLine){
+        for (Piece piece : pieces)
+            piece.setDrawLine(isDrawLine);
+    }
+
     @Override
     public void drawSelf() {
         MatrixState.pushMatrix();

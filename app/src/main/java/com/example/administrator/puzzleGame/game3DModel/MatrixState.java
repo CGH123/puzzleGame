@@ -17,6 +17,7 @@ public class MatrixState {
     private static float[] mVMatrix = new float[16];//摄像机位置朝向9参数矩阵   
     private static float[] mProjMatrix = new float[16];//4x4矩阵 投影用
     public static float[] mMVPMatrix = new float[16];//摄像矩阵与变换矩阵相乘的模型矩阵
+    public static float[] mVPMatrix=new float[16];//获取摄像机观察及投影的总变换矩阵
     public static FloatBuffer cameraFB;
     public static FloatBuffer lightPositionFB;
 
@@ -126,6 +127,13 @@ public class MatrixState {
         Matrix.multiplyMM(mMVPMatrix, 0, mVMatrix, 0, currMatrix, 0);
         Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mMVPMatrix, 0);
         return mMVPMatrix;
+    }
+
+
+    public static float[] getFinalVPMatrix()
+    {
+        Matrix.multiplyMM(mVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
+        return mVPMatrix;
     }
 
     //获取具体物体的变换矩阵
