@@ -1,4 +1,4 @@
-package com.example.nionet_test;
+package com.example.nionet.PacketRW.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -24,15 +24,12 @@ import java.util.Set;
  * <p/>
  * Created by HUI on 2016-04-16.
  */
-public class NIOReactor implements Runnable {
-
-    final int MAXIN = 1024;
-    final int MAXOUT = 1024;
+public class Reactor implements Runnable {
 
     final Selector selector;
     final ServerSocketChannel serverSocket;
 
-    NIOReactor(int port) throws IOException {
+    Reactor(int port) throws IOException {
         selector = Selector.open();
         serverSocket = ServerSocketChannel.open();
         serverSocket.socket().bind(new InetSocketAddress(port));
@@ -99,8 +96,8 @@ public class NIOReactor implements Runnable {
 
         final SocketChannel socket;
         final SelectionKey sk;
-        ByteBuffer input = ByteBuffer.allocate(MAXIN);
-        ByteBuffer output = ByteBuffer.allocate(MAXOUT);
+        ByteBuffer input = ByteBuffer.allocate(NetConstant.MAXIN);
+        ByteBuffer output = ByteBuffer.allocate(NetConstant.MAXOUT);
         static final int READING = 0, SENDING = 1;
         int state = READING;
 
@@ -116,8 +113,6 @@ public class NIOReactor implements Runnable {
 
         boolean inputIsComplete() {
             //判断input是否完整
-
-
             return true;
         }
 

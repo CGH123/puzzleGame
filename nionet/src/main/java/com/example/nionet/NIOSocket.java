@@ -21,6 +21,8 @@ SOFTWARE.
 */
 package com.example.nionet;
 
+import com.example.nionet.PacketRW.PacketWriter;
+
 import java.net.Socket;
 
 /**
@@ -143,7 +145,7 @@ public interface NIOSocket extends NIOAbstractSocket {
      *
      * @param packetReader the packet reader to interpret the incoming byte stream.
      */
-    void setPacketReader(PacketReader packetReader);
+    void setPacketReader(com.example.nionet.PacketRW.PacketReader packetReader);
 
     /**
      * Sets the packet writer for this socket.

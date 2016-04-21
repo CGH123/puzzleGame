@@ -22,7 +22,7 @@ SOFTWARE.
 package com.example.nionet;
 
 
-import com.example.nionet.PacketRW.RawPacketWriter;
+import com.example.nionet.PacketRW.*;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -36,7 +36,7 @@ import java.nio.channels.SocketChannel;
 class SocketWriter {
     private long m_bytesWritten;
     private ByteBuffer[] m_writeBuffers;
-    private PacketWriter m_packetWriter;
+    private com.example.nionet.PacketRW.PacketWriter m_packetWriter;
     private Object m_tag;
     private int m_currentBuffer;
 
@@ -46,11 +46,11 @@ class SocketWriter {
         m_packetWriter = RawPacketWriter.INSTANCE;
     }
 
-    public PacketWriter getPacketWriter() {
+    public com.example.nionet.PacketRW.PacketWriter getPacketWriter() {
         return m_packetWriter;
     }
 
-    public void setPacketWriter(PacketWriter packetWriter) {
+    public void setPacketWriter(com.example.nionet.PacketRW.PacketWriter packetWriter) {
         m_packetWriter = packetWriter;
     }
 

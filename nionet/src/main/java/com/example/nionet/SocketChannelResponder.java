@@ -22,7 +22,8 @@ SOFTWARE.
 package com.example.nionet;
 
 
-import com.example.nionet.PacketRW.RawPacketReader;
+import com.example.nionet.PacketRW.*;
+import com.example.nionet.PacketRW.PacketWriter;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -41,7 +42,7 @@ class SocketChannelResponder extends ChannelResponder implements NIOSocket {
     private long m_timeOpened;
     private final AtomicLong m_bytesInQueue;
     private ConcurrentLinkedQueue<Object> m_packetQueue;
-    private PacketReader m_packetReader;
+    private com.example.nionet.PacketRW.PacketReader m_packetReader;
     private volatile SocketObserver m_socketObserver;
     private final SocketReader m_socketReader;
     private final SocketWriter m_socketWriter;
@@ -53,7 +54,7 @@ class SocketChannelResponder extends ChannelResponder implements NIOSocket {
         m_timeOpened = -1;
         m_packetReader = RawPacketReader.INSTANCE;
         m_bytesInQueue = new AtomicLong(0L);
-        m_packetQueue = new ConcurrentLinkedQueue<Object>();
+        m_packetQueue = new ConcurrentLinkedQueue<>();
         m_socketReader = new SocketReader(service);
         m_socketWriter = new SocketWriter();
     }
@@ -136,7 +137,7 @@ class SocketChannelResponder extends ChannelResponder implements NIOSocket {
                 ByteBuffer buffer = m_socketReader.getBuffer();
                 while (buffer.remaining() > 0
                         && (packet = m_packetReader.nextPacket(buffer)) != null) {
-                    if (packet == PacketReader.SKIP_PACKET) continue;
+                    if (packet == com.example.nionet.PacketRW.PacketReader.SKIP_PACKET) continue;
                     notifyPacketReceived(packet);
                 }
                 m_socketReader.compact();
@@ -288,7 +289,7 @@ class SocketChannelResponder extends ChannelResponder implements NIOSocket {
         }
     }
 
-    public void setPacketReader(PacketReader packetReader) {
+    public void setPacketReader(com.example.nionet.PacketRW.PacketReader packetReader) {
         m_packetReader = packetReader;
     }
 

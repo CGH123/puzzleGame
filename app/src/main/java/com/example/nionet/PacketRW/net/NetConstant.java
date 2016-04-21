@@ -1,6 +1,4 @@
-package com.example.administrator.puzzleGame.net;
-
-import com.example.administrator.puzzleGame.util.LogUtil;
+package com.example.nionet.PacketRW.net;
 
 /**
  * 用于存放网络中用到的常量

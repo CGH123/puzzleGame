@@ -359,7 +359,6 @@ public class NIOService {
             }
         } catch (CancelledKeyException e) {
             responder.close(e);
-            // The key was cancelled and will automatically be removed next select.
         }
     }
 
