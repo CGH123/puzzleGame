@@ -19,12 +19,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package com.example.nionet_test.PackageRW;
+package com.example.administrator.puzzleGame.nioFrame.nioFrame.PacketRW;
 
-
-import com.example.nionet.NIOUtils;
-import com.example.nionet.PacketWriter;
-import com.example.nionet_test.BufferUtils;
+import com.example.administrator.puzzleGame.nioFrame.nioFrame.NIOUtils;
+import com.example.administrator.puzzleGame.nioFrame.nioFrame.PacketWriter;
 
 import java.nio.ByteBuffer;
 
@@ -46,27 +44,29 @@ import java.nio.ByteBuffer;
  *
  * @author Christoffer Lerno
  */
-public class RegularPacketWriter implements PacketWriter {
-    private final boolean m_bigEndian;
+public class RegularPacketWriter implements PacketWriter
+{
+	private final boolean m_bigEndian;
     private final ByteBuffer m_header;
 
-    /**
-     * Creates a regular packet writer with the given header size.
-     *
-     * @param headerSize the header size, 1 - 4 bytes.
-     * @param bigEndian  big endian (largest byte first) or little endian (smallest byte first)
-     */
-    public RegularPacketWriter(int headerSize, boolean bigEndian) {
-        if (headerSize < 1 || headerSize > 4)
-            throw new IllegalArgumentException("Header must be between 1 and 4 bytes long.");
-        m_bigEndian = bigEndian;
+	/**
+	 * Creates a regular packet writer with the given header size.
+	 *
+	 * @param headerSize the header size, 1 - 4 bytes.
+	 * @param bigEndian big endian (largest byte first) or little endian (smallest byte first)
+	 */
+	public RegularPacketWriter(int headerSize, boolean bigEndian)
+	{
+		if (headerSize < 1 || headerSize > 4) throw new IllegalArgumentException("Header must be between 1 and 4 bytes long.");
+		m_bigEndian = bigEndian;
         m_header = ByteBuffer.allocate(headerSize);
-    }
+	}
 
-    public ByteBuffer[] write(ByteBuffer[] byteBuffers) {
+    public ByteBuffer[] write(ByteBuffer[] byteBuffers)
+    {
         m_header.clear();
-        BufferUtils.setPacketSizeInByteBuffer(m_header, m_header.capacity(),
-                (int) NIOUtils.remaining(byteBuffers), m_bigEndian);
+        NIOUtils.setPacketSizeInByteBuffer(m_header, m_header.capacity(),
+                                           (int) NIOUtils.remaining(byteBuffers), m_bigEndian);
         m_header.flip();
         return NIOUtils.concat(m_header, byteBuffers);
     }

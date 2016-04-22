@@ -19,7 +19,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package com.example.nionet_test;
+package com.example.administrator.puzzleGame.nioFrame.nioFrame;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -29,16 +29,23 @@ import java.nio.channels.SocketChannel;
 
 /**
  * A Socket reader handles read/writes on a socket.
+ *
+ * @author Christoffer Lerno
  */
-class SocketReader {
+class SocketReader
+{
+    private final NIOService m_nioService;
     private ByteBuffer m_previousBytes;
     private long m_bytesRead;
 
-    SocketReader() {
+    SocketReader(NIOService nioService)
+    {
+        m_nioService = nioService;
         m_bytesRead = 0;
     }
 
-    public int read(SocketChannel channel) throws IOException {
+    public int read(SocketChannel channel) throws IOException
+    {
         // Retrieve the shared buffer.
         ByteBuffer buffer = getBuffer();
 
@@ -46,7 +53,8 @@ class SocketReader {
         buffer.clear();
 
         // Create an offset if there are unconsumed bytes.
-        if (m_previousBytes != null) {
+        if (m_previousBytes != null)
+        {
             buffer.position(m_previousBytes.remaining());
         }
 
@@ -67,7 +75,8 @@ class SocketReader {
 
         // If we read data, we need to insert the previous bytes.
         // We could avoid this at the cost of making the "read" method more complex in PacketReader.
-        if (m_previousBytes != null) {
+        if (m_previousBytes != null)
+        {
             // Remember the old position.
             int position = buffer.position();
 
@@ -93,13 +102,15 @@ class SocketReader {
     /**
      * Moves any unread bytes to a buffer to be available later.
      */
-    public void compact() {
+    public void compact()
+    {
         // Retrieve our shared buffer.
         ByteBuffer buffer = getBuffer();
 
         // If there is data remaining, copy that data.
-        if (buffer.remaining() > 0) {
-            m_previousBytes = BufferUtils.copy(buffer);
+        if (buffer.remaining() > 0)
+        {
+            m_previousBytes = NIOUtils.copy(buffer);
         }
     }
 
@@ -108,15 +119,18 @@ class SocketReader {
      *
      * @return the number of bytes read.
      */
-    public long getBytesRead() {
+    public long getBytesRead()
+    {
         return m_bytesRead;
     }
 
     /**
      * Returns the shared buffer (associated with the NIOService) for read/write.
+     *
+     * @return the shared buffer-
      */
-    public ByteBuffer getBuffer() {
-        return ByteBuffer.allocate(1024);
-//        return m_nioService.getSharedBuffer();
+    public ByteBuffer getBuffer()
+    {
+        return m_nioService.getSharedBuffer();
     }
 }

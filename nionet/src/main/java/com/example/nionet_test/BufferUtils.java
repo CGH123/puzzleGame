@@ -1,62 +1,18 @@
 package com.example.nionet_test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * 对传输过程中的Buffer操作的Utils类 
+ * �Դ�������е�Buffer������Util��
  * Created by HUI on 2016-04-19.
  */
 public class BufferUtils {
 
 
-    /**
-     * encode into byte[]
-     */
-    public static byte[] encodeByte(String[] content) throws IOException {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        DataOutputStream dataStream = new DataOutputStream(stream);
-        for(String e : content)
-            dataStream.writeUTF(e);
-        dataStream.flush();
-        dataStream.close();
-        byte[] temp = stream.toByteArray();
-        stream.close();
-        return temp;
-    }
-    /**
-     * encode into byte[]
-     */
-    public static byte[] encodeByte(String content) throws IOException {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        DataOutputStream dataStream = new DataOutputStream(stream);
-            dataStream.writeUTF(content);
-        dataStream.flush();
-        dataStream.close();
-        byte[] temp = stream.toByteArray();
-        stream.close();
-        return temp;
-    }
-
-    /**
-     * deconde into String
-     */
-    public static String[] decodeByte(byte[] content , int size) throws IOException {
-        String[] temp = new String[size];
-        DataInputStream stream = new DataInputStream(new ByteArrayInputStream(content));
-        for(int i=0;i<size;i++)
-            temp[i] = stream.readUTF();
-        stream.close();
-        return temp;
-    }
 
 
     /**
-     * 压缩一个byte Buffer,只留下含有数据的bUffers
+     * ѹ��һ��byte buffers,ֻ�����к������ݵ�Buffers
      */
     public static ByteBuffer[] compact(ByteBuffer[] buffers)
     {
@@ -74,7 +30,7 @@ public class BufferUtils {
     }
 
     /**
-     * 合并buffer
+     * �ϲ�buffer
      */
     public static ByteBuffer[] concat(ByteBuffer[] buffers, ByteBuffer buffer)
     {
@@ -82,7 +38,7 @@ public class BufferUtils {
     }
 
     /**
-     * 合并buffer
+     * �ϲ�buffer
      */
     public static ByteBuffer[] concat(ByteBuffer buffer, ByteBuffer[] buffers2)
     {
@@ -90,7 +46,7 @@ public class BufferUtils {
     }
 
     /**
-     * 合并buffer
+     * �ϲ�buffer
      */
     public static ByteBuffer[] concat(ByteBuffer[] buffers1, ByteBuffer[] buffers2)
     {
@@ -103,7 +59,7 @@ public class BufferUtils {
     }
 
     /**
-     * 复制ByteBuffer
+     * ����ByteBuffer
      */
     public static ByteBuffer copy(ByteBuffer buffer)
     {
@@ -115,7 +71,7 @@ public class BufferUtils {
     }
 
     /**
-     * 获取Pack的长度
+     * ��ȡpack�ĳ���
      * Converts a value in a header byte array encoded in either big or little endian
      * encoding.
      * <p>
@@ -151,7 +107,7 @@ public class BufferUtils {
     }
 
     /**
-     * 获取Bytebuffer的长度
+     * ��ȡbytebuffer�ĳ���
      * Converts a value in a header buffer encoded in either big or little endian
      * encoding.
      * <p>
@@ -187,7 +143,7 @@ public class BufferUtils {
     }
 
     /**
-     * byteBuffers是否为空
+     * byteBuffers�����Ƿ�Ϊ��
      */
     public static boolean isEmpty(ByteBuffer[] byteBuffers)
     {
@@ -199,7 +155,7 @@ public class BufferUtils {
     }
 
     /**
-     * 把bytebuffer1后面加入bytebuffer2
+     * ��byteBuffer1�ĺ������bytebuffer2
      * @param buffer1
      * @param buffer2
      * @return
@@ -216,7 +172,7 @@ public class BufferUtils {
     }
 
     /**
-     *获取剩下的buffer长度
+     *��ȡʣ�µ�bytebuffer�ĳ���
      */
     public static long remaining(ByteBuffer[] byteBuffers)
     {
@@ -226,7 +182,6 @@ public class BufferUtils {
     }
 
 
-    //待用
 
     /**
      * Inserts a header in the first bytes of a byte array
