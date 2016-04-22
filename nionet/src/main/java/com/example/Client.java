@@ -27,6 +27,14 @@ public interface Client {
     Client start();
 
     /**
+     * 绑定线程
+     * @param timeout 寻找时间
+     * @return 服务器IP
+     */
+    String findServerIP(int timeout);
+
+
+    /**
      * 停止线程
      * @return 客户端instance
      */
