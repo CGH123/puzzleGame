@@ -46,7 +46,7 @@ public class TCPServer implements Runnable{
         isRunning = true;
         mSocketList = new Vector<NIOSocket>();
         mlistener = listener;
-        init_connect();
+        init_connect();  
     }
 
     /**
