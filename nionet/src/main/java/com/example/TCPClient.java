@@ -108,7 +108,7 @@ public class TCPClient implements Runnable {
     }
 
     /**
-     * 初始化客户端的连接是要用的所有数据
+     * 初始化客户端的连接要用的所有数据
      */
     public void init_connect() {
 

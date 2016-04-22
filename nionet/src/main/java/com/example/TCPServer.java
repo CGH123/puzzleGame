@@ -46,7 +46,7 @@ public class TCPServer implements Runnable{
         isRunning = true;
         mSocketList = new Vector<NIOSocket>();
         mlistener = listener;
-        init_connect();  
+        init_connect();
     }
 
     /**
@@ -112,7 +112,7 @@ public class TCPServer implements Runnable{
                 public void newConnection(NIOSocket nioSocket)
                 {
                     LogUtil.d(TAG, "Received connection: " + nioSocket);
-                    //利用naga框架的监听器回调，保留通信的NIOsocket
+                    //利用Naga框架的监听器回调，保留通信的NIOSocket
                     if(!mSocketList.contains(nioSocket))
                         mSocketList.add(nioSocket);
 
@@ -133,6 +133,9 @@ public class TCPServer implements Runnable{
                         }
 
                         public void packetReceived(NIOSocket socket, byte[] packet) {
+                            //回应一下当前发送过来的客户端
+                            //TO-DO
+
                             //把其中一个客户端发送的信息，在服务端更新了之后，传递给其他每一个的客户端
                             for(NIOSocket e:mSocketList){
                                 if(e!=socket){
