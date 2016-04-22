@@ -1,4 +1,4 @@
-package com.example.administrator.puzzleGame.net;
+package com.example;
 
 /**
  * 用于存放网络中用到的常量
@@ -7,12 +7,12 @@ package com.example.administrator.puzzleGame.net;
 public class NetConstant {
 
     /**
-     * 用于ByteBufferd的最大输入 待定
+     * 输入缓存最大值
      */
     public static final int MAXIN = 1024;
 
     /**
-     * 用于ByteBufferd的最大输入 待定
+     * 输出缓存最大值
      */
     public static final int MAXOUT = 1024;
 

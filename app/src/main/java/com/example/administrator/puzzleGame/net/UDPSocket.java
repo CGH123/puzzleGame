@@ -14,10 +14,9 @@ import java.net.SocketException;
  * Created by HUI on 2016-04-16.
  */
 public class UDPSocket implements Runnable {
-
+    private final String BROADCASTIP = "255.255.255.255";
     private static UDPSocket instance;
     private String TAG = "UDPSocket";
-    private final String BROADCASTIP = "255.255.255.255";
     private DatagramSocket UDPSocket;
     public static boolean STATE = false;
     public static boolean Thread_Flag = true;
@@ -50,12 +49,9 @@ public class UDPSocket implements Runnable {
                 if (result.equals("hello"))
                     STATE = true;
                 Thread.sleep(500);
-            } catch (IOException e) {
-                LogUtil.d(TAG, e.toString());
             } catch (Exception e) {
                 LogUtil.d(TAG, e.toString());
             }
-
         }
     }
 
@@ -78,10 +74,7 @@ public class UDPSocket implements Runnable {
                 } catch (IOException e) {
                     LogUtil.d(TAG, e.toString());
                 }
-
             }
         }
     }
-
-
 }

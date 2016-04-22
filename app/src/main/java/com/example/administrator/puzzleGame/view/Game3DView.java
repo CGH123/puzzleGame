@@ -299,6 +299,7 @@ public class Game3DView extends GLSurfaceView {
             MatrixState.scale(1, -1, 1);
 
             MatrixState.pushMatrix();    //进栈
+            MatrixState.translate(0, 35f, 0);
             MatrixState.scale(2, 2, 2);
             object.setDrawLine(false);
             object.drawSelf();
