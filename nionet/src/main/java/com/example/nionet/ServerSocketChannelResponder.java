@@ -37,7 +37,6 @@ class ServerSocketChannelResponder extends ChannelResponder implements NIOServer
     private long m_totalConnections;
     private ServerSocketObserver m_observer;
 
-    @SuppressWarnings({"ObjectToString"})
     public ServerSocketChannelResponder(NIOService service,
                                         ServerSocketChannel channel,
                                         InetSocketAddress address) throws IOException {

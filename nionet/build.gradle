@@ -1,5 +1,10 @@
+import com.sun.org.apache.xalan.internal.xsltc.cmdline.Compile
+
 apply plugin: 'java'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+tasks.withType(Compile) {
+    options.encoding = "UTF-8"
 }
