@@ -19,6 +19,7 @@ android {
     }
 
     compileOptions {
+        encoding "UTF-8"
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
@@ -30,6 +31,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
     compile 'com.squareup.picasso:picasso:2.5.0'
+    compile 'com.alibaba:fastjson:1.2.9'
     compile project(':nionet')
 }
 

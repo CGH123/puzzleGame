@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.administrator.puzzleGame.R;
-import com.example.nionet.PacketRW.net.UDPSocket;
+import com.example.administrator.puzzleGame.net.UDPSocket;
 
 /**
  * 用于创建服务器和客户端
