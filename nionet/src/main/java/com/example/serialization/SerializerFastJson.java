@@ -14,4 +14,5 @@ public class SerializerFastJson implements Serializer{
         return JSON.toJSONBytes(paramObject);
     }
 
+
 }

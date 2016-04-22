@@ -200,6 +200,14 @@ public class NIOService
 		return registerSocketChannel(channel, address);
 	}
 
+	public NIOSocket openSocket(int port) throws IOException
+	{
+		SocketChannel channel = SocketChannel.open();
+		channel.configureBlocking(false);
+		InetSocketAddress address = new InetSocketAddress(port);
+		channel.connect(address);
+		return registerSocketChannel(channel, address);
+	}
 
 
 
