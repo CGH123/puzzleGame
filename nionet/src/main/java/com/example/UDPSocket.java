@@ -17,13 +17,13 @@ public class UDPSocket implements Runnable {
     private String TAG = "UDPSocket";
     private DatagramSocket UDPSocket;
     public static boolean STATE = false;
-    public static boolean Thread_Flag = true;
+    public static boolean ThreadFlag = true;
 
     UDPSocket() {
         try {
             UDPSocket = new DatagramSocket(NetConstant.UDP_PORT);
         } catch (SocketException e) {
-            LogUtil.d(TAG, "UDPSocket new failed");
+            System.out.print(TAG + "UDPSocket new failed");
         }
 
     }
@@ -37,23 +37,23 @@ public class UDPSocket implements Runnable {
 
     @Override
     public void run() {
-        while (Thread_Flag) {
+        while (ThreadFlag) {
             try {
                 byte data[] = new byte[1024];
                 DatagramPacket dataPacket = new DatagramPacket(data, data.length);
                 UDPSocket.receive(dataPacket);
                 String result = new String(dataPacket.getData(), dataPacket.getOffset(), dataPacket.getLength());
-                LogUtil.d(TAG, result);
+                System.out.print(TAG + result);
                 if (result.equals("hello"))
                     STATE = true;
                 Thread.sleep(500);
             } catch (Exception e) {
-                LogUtil.d(TAG, e.toString());
+                System.out.print(TAG + e.toString());
             }
         }
     }
 
-    public void sendBroad() {
+    public void sendBroadcast() {
         new Thread(new sendBroadcast()).start();
     }
 
@@ -70,7 +70,7 @@ public class UDPSocket implements Runnable {
                     DatagramPacket dataPacket = new DatagramPacket(data, data.length, broadcastAddr, NetConstant.UDP_PORT);
                     UDPSocket.send(dataPacket);
                 } catch (IOException e) {
-                    LogUtil.d(TAG, e.toString());
+                    System.out.print(TAG + e.toString());
                 }
             }
         }

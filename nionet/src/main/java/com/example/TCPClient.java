@@ -7,101 +7,160 @@ import com.example.nioFrame.PacketRW.RawPacketWriter;
 import com.example.nioFrame.SocketObserver;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 
 
 /**
  * TCP连接的客户端
- * 用户必须自己实现OnMsglistener
  * Created by HUI on 2016-04-20.
  */
-public class TCPClient implements Runnable {
-    private static String TAG = "TCPClient";
+public class TCPClient implements Runnable, Client, SocketObserver{
+    private final static String TAG = "TCPClient";
+    private NIOService service;
+    private NIOSocket socket;
+    private SocketObserver socketObserver;
+    private String host;
+    private int port;
 
-    private static TCPClient instance;
-    private NIOService mService;
-    private NIOSocket mSocket;
-    private int PORT = NetConstant.TCP_PORT;
-    private OnMsgRecListener mlistener; //设置监听器的回调函数
-    private boolean isRunning = true;
+    private List<OnClientReadListener> clientReadListeners; //设置监听器的回调函数
+    private Map<String,Object> clientDataMap;
+    private boolean isRunning;
 
-
-
-    TCPClient(){
-        mlistener = null;
-        init_connect();
+    private TCPClient() {
+        clientReadListeners = new LinkedList<>();
+        clientDataMap = new TreeMap<>();
+        socketObserver = this;
+        isRunning = false;
     }
-
-    TCPClient(OnMsgRecListener listener){
-        mlistener = listener;
-        init_connect();
-    }
-
-
-    /**
-     *  设置OnMsgReclistener
-     */
-    public void setMlistener(OnMsgRecListener mlistener) {
-        this.mlistener = mlistener;
-    }
-
-
 
     /**
      * 单例模型
      */
-    public static TCPClient getInstance(){
-        if (instance == null) {
-            instance = new TCPClient();
-        }
-        return instance;
+    private static class SingletonHolder {
+        private static TCPClient client = new TCPClient();
+        private static Thread workThread = new Thread(client);
+    }
+
+    public static Client getInstance() {
+        return SingletonHolder.client;
+    }
+
+    public Client setSocketObserver(SocketObserver mSocketObserver) {
+        this.socketObserver = mSocketObserver;
+        return getInstance();
+    }
+
+    public Client addClientReadListener(OnClientReadListener mlistener) {
+        this.clientReadListeners.add(mlistener);
+        return getInstance();
+    }
+
+    public Client removeClientReadListener(OnClientReadListener mlistener) {
+        this.clientReadListeners.remove(mlistener);
+        return getInstance();
     }
 
     /**
-     * 需要序列化功能实现,建议在回调函数Listener中使用
-     * 由于客户端只有一个管道，所以不用socketChannel的参数
+     * 绑定线程
      */
-    public void write(byte[] content) {
-        if(mSocket == null){
-            LogUtil.d(TAG,"mSocket is null");
-            return;
-        }
-        //往通道写入数据
-        mSocket.write(content);
+    public Client bind(int port) {
+        return bind(null, port);
     }
 
     /**
-     *待定，用观察者模式来处理
+     * 绑定线程
      */
-    public byte[] read(){
-        //暂时不用，由监听器来处理
-        return null;
+    public Client bind(String host, int port) {
+        this.host = host;
+        this.port = port;
+        initClientObserver();
+        return getInstance();
     }
 
 
     /**
      * 开启线程
      */
-    public void start(){
+    public Client start() {
         isRunning = true;
-        new Thread(TCPClient.getInstance()).start();
+        SingletonHolder.workThread.start();
+        return getInstance();
+    }
+
+    /**
+     * 停止线程
+     */
+    public Client stop() {
+        isRunning = false;
+        return getInstance();
     }
 
     /**
      * 关闭线程
      */
-    public void stop(){
-        mService.close();
-        mSocket.close();
-        isRunning =false;
+    public Client close() {
+        service.close();
+        socket.close();
+        return getInstance();
     }
 
+    /**
+     * 发送数据给服务器
+     */
+    public Client sendToServer(byte[] content) {
+        write(content);
+        return getInstance();
+    }
+
+    /**
+     * 需要序列化功能实现,建议在回调函数Listener中使用
+     * 由于客户端只有一个管道，所以不用socketChannel的参数
+     */
+    private void write(byte[] content){
+        if (socket == null || socket.isOpen() || service.isOpen() || !isRunning) {
+            System.out.print(TAG + "write socket wrong");
+            stop();
+            close();
+            throw new NullPointerException();
+        }
+        //往通道写入数据
+        socket.write(content);
+    }
+
+
+
+    public void putData(String key, Object o){
+        if(key.isEmpty()) {
+            stop();
+            close();
+            throw new NullPointerException();
+        }
+        clientDataMap.put(key, o);
+    }
+
+    public Object putData(String key){
+        if(key.isEmpty()){
+            stop();
+            close();
+            throw new NullPointerException();
+        }
+        return  clientDataMap.get(key);
+    }
+
+
     @Override
-    public void run(){
-        while(isRunning){
+    public void run() {
+        while (isRunning) {
             try {
-                mService.selectBlocking();
+                service.selectBlocking();
             } catch (IOException e) {
-                LogUtil.d(TAG,"mService wrong");
+                System.out.print(TAG + "mService wrong");
+                this.stop();
+                this.close();
                 e.printStackTrace();
             }
         }
@@ -110,44 +169,47 @@ public class TCPClient implements Runnable {
     /**
      * 初始化客户端的连接要用的所有数据
      */
-    public void init_connect() {
-
+    private void initClientObserver() {
         try {
-            mService = new NIOService();
-            mSocket = mService.openSocket(PORT);
-
-            mSocket.setPacketReader(new RawPacketReader());
-            mSocket.setPacketWriter(new RawPacketWriter());
-
-            mSocket.listen(new SocketObserver() {
-                public void connectionOpened(NIOSocket nioSocket) {
-                    System.out.println("login success");
-                }
-
-                public void packetSent(NIOSocket socket, Object tag) {
-                    System.out.println("Packet sent success");
-                }
-
-                public void packetReceived(NIOSocket socket, byte[] packet) {
-                    try {
-                       //处理返回得到的数据,用观察者(监听器)模式来处理
-                        if(mlistener!=null)
-                            mlistener.processMSG(packet);
-                        else
-                            LogUtil.d(TAG,"Client listener is null");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                public void connectionBroken(NIOSocket nioSocket,
-                                             Exception exception) {
-                    System.out.println("Connection failed.");
-                }
-
-            });
-        }catch (IOException e){
+            service = new NIOService();
+            if(host == null)
+                socket = service.openSocket(port);
+            else
+                socket = service.openSocket(host, port);
+            socket.setPacketReader(new RawPacketReader());
+            socket.setPacketWriter(new RawPacketWriter());
+            socket.listen(socketObserver);
+        } catch (IOException e) {
+            this.stop();
+            this.close();
             e.getStackTrace();
         }
+    }
+
+    public void connectionOpened(NIOSocket nioSocket) {
+        System.out.println("login success");
+    }
+
+    public void packetSent(NIOSocket socket, Object tag) {
+        System.out.println("Packet sent success");
+    }
+
+    public void packetReceived(NIOSocket socket, byte[] packet) {
+        try {
+            //处理返回得到的数据,用观察者(监听器)模式来处理
+            if (!clientReadListeners.isEmpty())
+                for(OnClientReadListener clientReadListener : clientReadListeners)
+                    clientReadListener.processMSG(packet);
+            else
+                System.out.print(TAG + "Client listener is empty");
+        } catch (Exception e) {
+            this.stop();
+            this.close();
+            e.printStackTrace();
+        }
+    }
+
+    public void connectionBroken(NIOSocket nioSocket,Exception exception) {
+        System.out.println("Connection failed.");
     }
 }
