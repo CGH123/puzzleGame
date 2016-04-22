@@ -1,7 +1,7 @@
 package com.example;
 
-/**
- * Created by Administrator on 2016/4/22.
- */
-public class OnServerReadListener {
+import com.example.nioFrame.NIOSocket;
+
+public interface OnServerReadListener {
+    void processMSG(byte[] packet, NIOSocket nioSocket);
 }
