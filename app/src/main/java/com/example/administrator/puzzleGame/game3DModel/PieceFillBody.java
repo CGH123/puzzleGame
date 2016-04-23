@@ -35,7 +35,7 @@ public class PieceFillBody extends BaseBody implements PieceFill {
     int isCheck = 0;
     Boolean cantChoose = true;
 
-    public PieceFillBody(PieceBody.PieceFillData pieceFillData){
+    public PieceFillBody(PieceBody.PieceFillData pieceFillData) {
         this.num = pieceFillData.num;
         this.texId = pieceFillData.texId;
         this.cantChoose = pieceFillData.cantChoose;
@@ -46,7 +46,6 @@ public class PieceFillBody extends BaseBody implements PieceFill {
         initShader(ShaderManager.getShaderProgram(0));
         initBuffer();
     }
-
 
 
     public void initBuffer() {

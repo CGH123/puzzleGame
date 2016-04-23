@@ -30,6 +30,7 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
     private boolean isRunning;
     private volatile boolean isFindServer;
     private String serverIp;
+
     private ClientLAN() {
         clientReadListeners = new LinkedList<>();
         clientDataMap = new TreeMap<>();
@@ -39,16 +40,28 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
         serverIp = "";
     }
 
-    /**
-     * 单例模型
-     */
-    private static class SingletonHolder {
-        private static ClientLAN client = new ClientLAN();
-        private static Thread workThread = new Thread(client);
-    }
-
     public static Client getInstance() {
         return SingletonHolder.client;
+    }
+
+    public static void main(String args[]) {
+        final Client client = ClientLAN.getInstance();
+        OnClientReadListener clientReadListener = new OnClientReadListener() {
+            @Override
+            public void processMsg(byte[] packet) {
+                System.out.println(new String(packet));
+            }
+        };
+
+        client.addClientReadListener(clientReadListener)
+                .bind("localhost", NetConstant.TCP_PORT)
+                .start();
+
+        client.sendToServer("hello".getBytes());
+
+        client.removeClientReadListener(clientReadListener)
+                .stop()
+                .close();
     }
 
     public Client setSocketObserver(SocketObserver mSocketObserver) {
@@ -243,25 +256,12 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
         System.out.println("Connection failed.");
     }
 
-
-    public static void main(String args[]) {
-        final Client client = ClientLAN.getInstance();
-        OnClientReadListener clientReadListener = new OnClientReadListener() {
-            @Override
-            public void processMsg(byte[] packet) {
-                System.out.println(new String(packet));
-            }
-        };
-
-        client.addClientReadListener(clientReadListener)
-                .bind("localhost", NetConstant.TCP_PORT)
-                .start();
-
-        client.sendToServer("hello".getBytes());
-
-        client.removeClientReadListener(clientReadListener)
-                .stop()
-                .close();
+    /**
+     * 单例模型
+     */
+    private static class SingletonHolder {
+        private static ClientLAN client = new ClientLAN();
+        private static Thread workThread = new Thread(client);
     }
 
 

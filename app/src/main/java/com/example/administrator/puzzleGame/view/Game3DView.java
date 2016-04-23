@@ -1,9 +1,6 @@
 package com.example.administrator.puzzleGame.view;
 
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
@@ -12,21 +9,32 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 import com.example.administrator.puzzleGame.R;
-
-import java.util.Random;
-
-import com.example.administrator.puzzleGame.game3DModel.*;
 import com.example.administrator.puzzleGame.constant.GameConstant;
+import com.example.administrator.puzzleGame.game3DModel.Camera;
+import com.example.administrator.puzzleGame.game3DModel.Cube;
+import com.example.administrator.puzzleGame.game3DModel.MatrixState;
+import com.example.administrator.puzzleGame.game3DModel.Quad;
+import com.example.administrator.puzzleGame.game3DModel.ShaderManager;
+import com.example.administrator.puzzleGame.game3DModel.SkyCloud;
+import com.example.administrator.puzzleGame.game3DModel.SkyTree;
+import com.example.administrator.puzzleGame.game3DModel.Sphere;
+import com.example.administrator.puzzleGame.game3DModel.Vector2f;
+import com.example.administrator.puzzleGame.game3DModel.Water;
+import com.example.administrator.puzzleGame.game3DModel.Whole;
 import com.example.administrator.puzzleGame.util.BitmapUtil;
 import com.example.administrator.puzzleGame.util.LogUtil;
 import com.example.administrator.puzzleGame.util.TextureUtil;
 import com.example.administrator.puzzleGame.util.VectorUtil;
 
+import java.util.Random;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+
 public class Game3DView extends GLSurfaceView {
-    public enum ObjectType {CUBE, SPHERE, QUAD_PLANE}
-
     private static final String TAG = "Game3DView";
-
+    //手指触控数
+    private static int mode = 0;
     private Camera camera;
     private Context context;
 
@@ -34,25 +42,19 @@ public class Game3DView extends GLSurfaceView {
     private float locationXEndP1, locationYEndP1;
     //三手down时两指向量
     private Vector2f Vector2fP01DownP3, Vector2fP02DownP3, Vector2fP12DownP3;
-    //手指触控数
-    private static int mode = 0;
     //单指操作模式:
     private int modeP1 = 0;
-
     private boolean hasLoad = false;//是否初始化完成
     private boolean isP1Lock = false;//判断单手指操作是否被锁定
     private boolean isP1Move = false;//判断单手指操作是否被锁定
     private boolean canMoveCamera = false;
-
     private ObjectType objectType;
     private int cutNum;
     private int firstPickNum = -1;
-
     private Whole object;
     private Water water;
     private SkyTree tree;
     private SkyCloud cloud;
-
     public Game3DView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
@@ -66,7 +68,6 @@ public class Game3DView extends GLSurfaceView {
         //初始化光源
         MatrixState.setLightLocation(0, 0, 0);
     }
-
 
     public void init(int cutNum, ObjectType objectType, Boolean canMoveCamera) {
         this.objectType = objectType;
@@ -114,7 +115,7 @@ public class Game3DView extends GLSurfaceView {
                         //设置摄像机绕原点旋转
                         camera.rotateCamera(distanceXMoveP1, distanceYMoveP1);
                     } else if (modeP1 == 2) {
-                        //// TODO: 2016/4/20 两手指交互 
+                        //// TODO: 2016/4/20 两手指交互
                         isP1Move = false;
                     }
                 }
@@ -177,6 +178,8 @@ public class Game3DView extends GLSurfaceView {
 
         return true;
     }
+
+    public enum ObjectType {CUBE, SPHERE, QUAD_PLANE}
 
     public class SceneRenderer implements Renderer {
         Vector2f[] points;
@@ -272,7 +275,7 @@ public class Game3DView extends GLSurfaceView {
 
                 //绘制水面
                 MatrixState.pushMatrix();
-                MatrixState.rotate(180,1,0,0);
+                MatrixState.rotate(180, 1, 0, 0);
                 water.setTexIdDY(shadowId);
                 water.drawSelf();
                 MatrixState.popMatrix();
@@ -333,13 +336,12 @@ public class Game3DView extends GLSurfaceView {
             GLES20.glGenFramebuffers(1, tia, 0);
             frameBufferId = tia[0];
 
-            if(isBegin)
-            {
+            if (isBegin) {
                 GLES20.glGenRenderbuffers(1, tia, 0);
-                renderDepthBufferId=tia[0];
+                renderDepthBufferId = tia[0];
                 GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, renderDepthBufferId);
                 GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT16, GameConstant.SHADOW_TEX_WIDTH, GameConstant.SHADOW_TEX_HEIGHT);
-                isBegin=false;
+                isBegin = false;
             }
 
             int[] tempIds = new int[1];

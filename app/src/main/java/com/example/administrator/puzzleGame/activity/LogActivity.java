@@ -10,22 +10,20 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.administrator.puzzleGame.R;
-
 import com.example.administrator.puzzleGame.sqlServer.sqlserver;
 
 /**
  * Created by Administrator on 2016-03-15.
  */
 public class LogActivity extends Activity {
+    Bitmap bit;
     private int screenWidth;
     private int screenHeight;
     private sqlserver sql;
-
     private EditText et_1;
     private EditText et_2;
     private String user;
     private String pwd;
-    Bitmap bit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

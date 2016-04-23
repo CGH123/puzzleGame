@@ -57,14 +57,12 @@ abstract class ChannelResponder implements NIOAbstractSocket {
         m_tag = null;
     }
 
-
+    public Object getTag() {
+        return m_tag;
+    }
 
     public void setTag(Object tag) {
         m_tag = tag;
-    }
-
-    public Object getTag() {
-        return m_tag;
     }
 
     /**
@@ -76,10 +74,10 @@ abstract class ChannelResponder implements NIOAbstractSocket {
 
     /**
      * Mark the observer for this responder as set.
-     * <p>
+     * <p/>
      * This does not mean that the observer is really set, but instead that
      * a set has been queued on the NIOService thread.
-     * <p>
+     * <p/>
      * This call prevents the observer from being set more than once.
      */
     protected void markObserverSet() {
@@ -119,7 +117,7 @@ abstract class ChannelResponder implements NIOAbstractSocket {
 
     /**
      * Get the channel used by this responder.
-     * <p>
+     * <p/>
      * <em>This method is thread-safe.</em>
      *
      * @return the channel used by the responder.
@@ -129,8 +127,19 @@ abstract class ChannelResponder implements NIOAbstractSocket {
     }
 
     /**
+     * Returns the selection key or null if the key is not set.
+     * <p/>
+     * <em>This method is thread-safe.</em>
+     *
+     * @return the selection key or nul if the responder is not yet registered.
+     */
+    protected SelectionKey getKey() {
+        return m_key;
+    }
+
+    /**
      * Sets the selection key of this responder.
-     * <p>
+     * <p/>
      * This method is called on the NIOService-thread.
      *
      * @param key the selection key for this responder.
@@ -149,19 +158,8 @@ abstract class ChannelResponder implements NIOAbstractSocket {
     }
 
     /**
-     * Returns the selection key or null if the key is not set.
-     * <p>
-     * <em>This method is thread-safe.</em>
-     *
-     * @return the selection key or nul if the responder is not yet registered.
-     */
-    protected SelectionKey getKey() {
-        return m_key;
-    }
-
-    /**
      * This method is called after the SelectionKey is set.
-     * <p>
+     * <p/>
      * This method is called on the NIOService-thread.
      */
     abstract void keyInitialized();
@@ -189,7 +187,7 @@ abstract class ChannelResponder implements NIOAbstractSocket {
     /**
      * Synchronizes the desired interest ops with the key interests ops,
      * <em>if</em> the key is initialized.
-     * <p>
+     * <p/>
      * <em>This method is thread-safe.</em>
      */
     private void synchronizeKeyInterestOps() {
@@ -212,7 +210,7 @@ abstract class ChannelResponder implements NIOAbstractSocket {
 
     /**
      * Deleted an interest on a key.
-     * <p>
+     * <p/>
      * This method is called on the NIOService-thread.
      *
      * @param interest the interest to delete.
@@ -224,7 +222,7 @@ abstract class ChannelResponder implements NIOAbstractSocket {
 
     /**
      * Add an interest to the key, or change the currently pending interest.
-     * <p>
+     * <p/>
      * This method is called on the NIOService-thread.
      *
      * @param interest the interest to add.
@@ -248,7 +246,7 @@ abstract class ChannelResponder implements NIOAbstractSocket {
 
     /**
      * Called once when the responder goes from state open to closed.
-     * <p>
+     * <p/>
      * This method is called on the NIOService thread.
      *
      * @param e the exception that caused the shutdown, may be null.
@@ -258,10 +256,10 @@ abstract class ChannelResponder implements NIOAbstractSocket {
 
     /**
      * A close event sent when close() is called.
-     * <p>
+     * <p/>
      * When run this event sets m_open to false and silently cancels
      * the key and closes the channel.
-     * <p>
+     * <p/>
      * Finally the responder's shutdown method is called.
      */
     private static class CloseEvent implements Runnable {

@@ -8,7 +8,7 @@ public interface NIOServerSocket extends NIOAbstractSocket {
     /**
      * Associates a server socket observer with this server socket and
      * starts accepting connections.
-     * <p>
+     * <p/>
      * <em>This method is thread-safe, but may only be called once.</em>
      *
      * @param observer the observer to receive callbacks from this socket.
@@ -19,12 +19,12 @@ public interface NIOServerSocket extends NIOAbstractSocket {
 
     /**
      * Sets the connection acceptor for this server socket.
-     * <p>
+     * <p/>
      * A connection acceptor determines if a connection should be
      * disconnected or not <em>after</em> the initial accept is done.
-     * <p>
+     * <p/>
      * For more information, see the documentation for <code>naga.ConnectionAcceptor</code>.
-     * <p>
+     * <p/>
      * <em>This method is thread-safe.</em>
      *
      * @param acceptor the acceptor to use, or null to default to
@@ -34,7 +34,7 @@ public interface NIOServerSocket extends NIOAbstractSocket {
 
     /**
      * Allows access to the underlying server socket.
-     * <p>
+     * <p/>
      * <em>Note calling close and similar functions on this socket
      * will put the NIOServerSocket in an undefined state</em>
      *

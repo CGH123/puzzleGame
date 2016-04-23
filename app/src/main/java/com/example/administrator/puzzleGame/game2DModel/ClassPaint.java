@@ -17,10 +17,6 @@ public class ClassPaint {
      */
     public static Paint paintAddStr = null;
     /**
-     * Paint对象：高亮背景画笔
-     */
-    public Paint paintHighBGColor = null;
-    /**
      * Paint对象：高亮字体画笔
      */
     public static Paint paintHighColor = null;
@@ -28,7 +24,10 @@ public class ClassPaint {
      * Paint对象：暗颜色字体画笔
      */
     public static Paint paintLowColor = null;
-
+    /**
+     * Paint对象：高亮背景画笔
+     */
+    public Paint paintHighBGColor = null;
     /**
      * Paint对象：大、粗、黑色
      */

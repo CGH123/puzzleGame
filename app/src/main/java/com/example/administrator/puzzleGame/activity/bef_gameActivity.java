@@ -9,15 +9,19 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.puzzleGame.R;
+
 import java.util.Timer;
 import java.util.TimerTask;
-
-import com.example.administrator.puzzleGame.R;
 
 /**
  * Created by Administrator on 2016-03-15.
  */
 public class bef_gameActivity extends AppCompatActivity {
+    /**
+     * 双击退出函数
+     */
+    private static Boolean isExit = false;
     private TextView b_newgame;
     private Button b_backmusic;
     private Button b_choseclass;
@@ -36,7 +40,6 @@ public class bef_gameActivity extends AppCompatActivity {
         Intent intent = new Intent(bef_gameActivity.this, ConnectModeActivtiy.class);
         startActivity(intent);
     }
-
 
     /*
     新游戏
@@ -83,11 +86,6 @@ public class bef_gameActivity extends AppCompatActivity {
         }
         return true;
     }
-
-    /**
-     * 双击退出函数
-     */
-    private static Boolean isExit = false;
 
     private void exitBy2Click() {
         Timer tExit = null;

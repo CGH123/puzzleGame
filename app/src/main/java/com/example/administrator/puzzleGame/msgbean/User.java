@@ -14,21 +14,13 @@ import java.util.List;
  */
 public class User extends Entity {
     public String name;
-    User(){
+
+    User() {
     }
 
     public User(String name) {
         this.name = name;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
 
     public static void main(String args[]) {
         Serializer serializer = SerializerFastJson.getInstance();
@@ -45,9 +37,17 @@ public class User extends Entity {
         System.out.println(s2);
         msgProtocol1 = serializer.parse(s1, User.class);
         msgProtocol2 = serializer.parse(s2, User.class);
-        if(msgProtocol1.getSetType() == MSGProtocol.SET_TYPE.BEAN)
-            user =  msgProtocol1.getAddObject();
-        if(msgProtocol2.getSetType() == MSGProtocol.SET_TYPE.LIST)
+        if (msgProtocol1.getSetType() == MSGProtocol.SET_TYPE.BEAN)
+            user = msgProtocol1.getAddObject();
+        if (msgProtocol2.getSetType() == MSGProtocol.SET_TYPE.LIST)
             users = msgProtocol2.getAddObjects();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

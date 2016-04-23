@@ -2,7 +2,7 @@ package com.example.administrator.puzzleGame.game3DModel;
 
 
 //物体基类
-public abstract class BaseBody implements Draw{
+public abstract class BaseBody implements Draw {
     float[] matrix = new float[16];//仿射变换的矩阵
     Bound box;//仿射变换之前的包围盒
 

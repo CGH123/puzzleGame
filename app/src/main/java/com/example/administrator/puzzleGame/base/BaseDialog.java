@@ -4,16 +4,15 @@ package com.example.administrator.puzzleGame.base;
  * Created by HUI on 2016-04-05.
  */
 
-import com.example.administrator.puzzleGame.R;
-
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.administrator.puzzleGame.R;
 
 /**
  * 对话框基类
@@ -23,6 +22,32 @@ import android.widget.TextView;
 public class BaseDialog extends Dialog implements View.OnClickListener {
 
     private static BaseDialog mBaseDialog;// 当前的对话框
+    protected Context mContext;// 上下文
+    private Button mBtnButton1;// 底部按钮1
+    private Button mBtnButton2;// 底部按钮2
+    private Button mBtnButton3;// 底部按钮3
+    private TextView mHtvMessage;// 内容
+    private TextView mHtvTitle;// 标题
+    private int mID; // 附加属性
+    private LinearLayout mLayoutBottom;// 底部根布局
+    private LinearLayout mLayoutContent;// 内容根布局
+    private LinearLayout mLayoutRoot;// 总体根布局
+    private LinearLayout mLayoutTitle;// 标题根布局
+    private LinearLayout mLayoutTop;// 头部根布局
+    private OnClickListener mOnClickListener1;// 按钮1的单击监听事件
+    private OnClickListener mOnClickListener2;// 按钮2的单击监听事件
+    private OnClickListener mOnClickListener3;// 按钮3的单击监听事件
+    private View mViewTitleLine;// 标题分割线
+
+    public BaseDialog(Context context) {
+        super(context, R.style.Theme_Light_FullScreenDialogAct);
+        mContext = context;
+        setContentView(R.layout.dialog_generic);
+        initViews();
+        initEvents();
+        setCancelable(true);
+        setCanceledOnTouchOutside(true);
+    }
 
     public static BaseDialog getDialog(Context context, int titleId, CharSequence message) {
         return getDialog(context, titleId, message, null, null, null, null, null, null);
@@ -59,39 +84,6 @@ public class BaseDialog extends Dialog implements View.OnClickListener {
         return mBaseDialog;
     }
 
-    private Button mBtnButton1;// 底部按钮1
-    private Button mBtnButton2;// 底部按钮2
-    private Button mBtnButton3;// 底部按钮3
-    protected Context mContext;// 上下文
-    private TextView mHtvMessage;// 内容
-    private TextView mHtvTitle;// 标题
-    private int mID; // 附加属性
-
-    private LinearLayout mLayoutBottom;// 底部根布局
-    private LinearLayout mLayoutContent;// 内容根布局
-    private LinearLayout mLayoutRoot;// 总体根布局
-    private LinearLayout mLayoutTitle;// 标题根布局
-
-    private LinearLayout mLayoutTop;// 头部根布局
-
-    private OnClickListener mOnClickListener1;// 按钮1的单击监听事件
-
-    private OnClickListener mOnClickListener2;// 按钮2的单击监听事件
-
-    private OnClickListener mOnClickListener3;// 按钮3的单击监听事件
-
-    private View mViewTitleLine;// 标题分割线
-
-    public BaseDialog(Context context) {
-        super(context, R.style.Theme_Light_FullScreenDialogAct);
-        mContext = context;
-        setContentView(R.layout.dialog_generic);
-        initViews();
-        initEvents();
-        setCancelable(true);
-        setCanceledOnTouchOutside(true);
-    }
-
     public boolean buttonIsExist(CharSequence button1, OnClickListener listener1,
                                  CharSequence button2, OnClickListener listener2, CharSequence button3,
                                  OnClickListener listener3) {
@@ -107,6 +99,10 @@ public class BaseDialog extends Dialog implements View.OnClickListener {
 
     public int getID() {
         return this.mID;
+    }
+
+    public void setID(int id) {
+        this.mID = id;
     }
 
     private void initEvents() {
@@ -249,10 +245,6 @@ public class BaseDialog extends Dialog implements View.OnClickListener {
             mLayoutContent.removeAllViews();
         }
         mLayoutContent.addView(v, params);
-    }
-
-    public void setID(int id) {
-        this.mID = id;
     }
 
     public void setMessage(CharSequence text) {

@@ -7,8 +7,6 @@ import com.example.nioFrame.NIOSocket;
 import com.example.nioFrame.ServerSocketObserver;
 import com.example.nioFrame.SocketObserver;
 import com.example.nioFrame.UDPSocket;
-import com.example.protocol.Entity;
-
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -53,17 +51,28 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
         });
     }
 
-
-    /**
-     * 单例模型
-     */
-    private static class SingletonHolder {
-        private static ServerLAN server = new ServerLAN();
-        private static Thread workThread = new Thread(server);
-    }
-
     public static Server getInstance() {
         return SingletonHolder.server;
+    }
+
+    public static void main(String args[]) {
+        final Server server = ServerLAN.getInstance();
+        OnServerReadListener serverReadListener = new OnServerReadListener() {
+            @Override
+            public void processMsg(byte[] packet, NIOSocket nioSocket) {
+                System.out.println(new String(packet));
+                server.sendToClient(packet, nioSocket);
+                server.sendExceptClient(packet, nioSocket);
+                server.sendAllClient(packet);
+            }
+        };
+        server.addServerReadListener(serverReadListener)
+                .bind(NetConstant.TCP_PORT)
+                .start();
+
+        server.removeServerReadListener(serverReadListener)
+                .stop()
+                .close();
     }
 
     public Server setServerSocketObserver(ServerSocketObserver serverSocketObserver) {
@@ -264,23 +273,11 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
         });
     }
 
-    public static void main(String args[]) {
-        final Server server = ServerLAN.getInstance();
-        OnServerReadListener serverReadListener = new OnServerReadListener() {
-            @Override
-            public void processMsg(byte[] packet, NIOSocket nioSocket) {
-                System.out.println(new String(packet));
-                server.sendToClient(packet, nioSocket);
-                server.sendExceptClient(packet, nioSocket);
-                server.sendAllClient(packet);
-            }
-        };
-        server.addServerReadListener(serverReadListener)
-                .bind(NetConstant.TCP_PORT)
-                .start();
-
-        server.removeServerReadListener(serverReadListener)
-                .stop()
-                .close();
+    /**
+     * 单例模型
+     */
+    private static class SingletonHolder {
+        private static ServerLAN server = new ServerLAN();
+        private static Thread workThread = new Thread(server);
     }
 }

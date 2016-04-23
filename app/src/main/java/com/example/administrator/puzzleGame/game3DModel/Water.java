@@ -10,21 +10,21 @@ import java.nio.FloatBuffer;
 
 //有波浪效果的纹理矩形
 public class Water implements Draw {
+    final float WIDTH_SPAN = 4 * 63;//2.8f;//横向长度总跨度
     int mPrograms;//自定义渲染管线着色器程序id
     int muMVPMatrixHandle;//总变换矩阵引用
     int muVPMatrixHandle;//摄像机观察及投影的总变换矩阵引用
-    int maPositionHandle; //顶点位置属性引用  
-    int maTexCoorHandle; //顶点纹理坐标属性引用  
+    int maPositionHandle; //顶点位置属性引用
+    int maTexCoorHandle; //顶点纹理坐标属性引用
     int maStartAngleHandle; //本帧起始角度属性引用
-    int muWidthSpanHandle;//横向长度总跨度引用    
-    int muScreenWidth;//设备屏幕宽度引用    
-    int muScreenHeight;//设备屏幕高度引用    
-    int uDYTexHandle;//倒影纹理属性引用id  
-    int uWaterTexHandle;//水自身纹理属性引用id  
+    int muWidthSpanHandle;//横向长度总跨度引用
+    int muScreenWidth;//设备屏幕宽度引用
+    int muScreenHeight;//设备屏幕高度引用
+    int uDYTexHandle;//倒影纹理属性引用id
+    int uWaterTexHandle;//水自身纹理属性引用id
     FloatBuffer mVertexBuffer;//顶点坐标数据缓冲
     FloatBuffer mTexCoorBuffer;//顶点纹理坐标数据缓冲
     int vCount = 0;
-    final float WIDTH_SPAN = 4 * 63;//2.8f;//横向长度总跨度
     float currStartAngle = 0;//当前帧的起始角度0~2PI
     int texIdDY;
     int texIdWater;

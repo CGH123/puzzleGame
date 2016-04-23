@@ -3,9 +3,9 @@ package com.example.administrator.puzzleGame.game2DModel;
 import android.app.Application;
 import android.graphics.Bitmap;
 
-import java.util.Random;
-
 import com.example.administrator.puzzleGame.sqlServer.GameDB;
+
+import java.util.Random;
 
 /**
  * Created by Administrator on 2016-03-16.
@@ -21,6 +21,12 @@ public class BorderModel extends Application {
     // cell geometry in pixels
     public int cellWidth;// 方格的宽
     public int cellHeight;// 方格的高
+    /**
+     * 方格里面图片之间的空隙像素大小
+     */
+    public int spaces = 1;
+    //Command[] cmd;// 命令数组
+    public boolean cheated;
     // 窗口的宽度
     private int screenWidth = 0;
     // 窗口的高度
@@ -29,10 +35,6 @@ public class BorderModel extends Application {
     private int photoWidth = 0;
     // 背景图片的高度
     private int photoHeight = 0;
-    /**
-     * 方格里面图片之间的空隙像素大小
-     */
-    public int spaces = 1;
     /**
      * 屏幕的水平偏移量
      */
@@ -49,18 +51,8 @@ public class BorderModel extends Application {
      * 图片的垂直偏移量
      */
     private int photoOffset_y = 0;
-    //Command[] cmd;// 命令数组
-    public boolean cheated;
 
     // public ClassSQLite classSQLite;
-
-    public void setScreenWidth(int screenWidth) {
-        this.screenWidth = screenWidth;
-    }
-
-    public void setScreenHeight(int screenHeight) {
-        this.screenHeight = screenHeight;
-    }
 
     public BorderModel(Bitmap bit) {
         this.orgImage = bit;
@@ -90,6 +82,14 @@ public class BorderModel extends Application {
         this.all = new Piece[rows * columns];
         initPhotoData();
 
+    }
+
+    public void setScreenWidth(int screenWidth) {
+        this.screenWidth = screenWidth;
+    }
+
+    public void setScreenHeight(int screenHeight) {
+        this.screenHeight = screenHeight;
     }
 
     public void initPhotoData() {

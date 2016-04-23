@@ -10,7 +10,6 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.administrator.puzzleGame.R;
-
 import com.example.administrator.puzzleGame.sqlServer.GameDB;
 
 /**

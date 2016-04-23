@@ -30,7 +30,7 @@ public interface SocketObserver {
 
     /**
      * Called by the NIOService on the NIO thread when a connection completes on a socket.
-     * <p>
+     * <p/>
      * <b>Note: Since this is a direct callback on the NIO thread, this method will suspend IO on
      * all other connections until the method returns. It is therefore strongly recommended
      * that the implementation of this method returns as quickly as possible to avoid blocking IO.</b>
@@ -41,11 +41,11 @@ public interface SocketObserver {
 
     /**
      * Called by the NIOService on the NIO thread when a connection is disconnected.
-     * <p>
+     * <p/>
      * This may be sent even if a <code>connectionOpened(NIOSocket)</code>
      * wasn't ever called, since the connect itself may
      * fail.
-     * <p>
+     * <p/>
      * <b>Note: Since this is a direct callback on the NIO thread, this method will suspend IO on
      * all other connections until the method returns. It is therefore strongly recommended
      * that the implementation of this method returns as quickly as possible to avoid blocking IO.</b>
@@ -58,7 +58,7 @@ public interface SocketObserver {
     /**
      * Called by the NIOService on the NIO thread when a packet is finished reading.
      * The byte array contains the packet as parsed by the current PacketReader.
-     * <p>
+     * <p/>
      * <b>Note: Since this is a direct callback on the NIO thread, this method will suspend IO on
      * all other connections until the method returns. It is therefore strongly recommended
      * that the implementation of this method returns as quickly as possible to avoid blocking IO.</b>
@@ -70,7 +70,7 @@ public interface SocketObserver {
 
     /**
      * Called by the NIOService on the NIO thread when a packet has finished writing.
-     * <p>
+     * <p/>
      * <b>Note: Since this is a direct callback on the NIO thread, this method will suspend IO on
      * all other connections until the method returns. It is therefore strongly recommended
      * that the implementation of this method returns as quickly as possible to avoid blocking IO.</b>

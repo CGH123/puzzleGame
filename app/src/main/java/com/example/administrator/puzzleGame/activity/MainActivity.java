@@ -10,19 +10,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.administrator.puzzleGame.R;
+import com.example.administrator.puzzleGame.game2DModel.Person;
+import com.example.administrator.puzzleGame.sqlServer.GameDB;
+import com.example.administrator.puzzleGame.sqlServer.sqlserver;
 
 import java.util.List;
 
-import com.example.administrator.puzzleGame.sqlServer.GameDB;
-import com.example.administrator.puzzleGame.sqlServer.sqlserver;
-import com.example.administrator.puzzleGame.game2DModel.Person;
-
 public class MainActivity extends Activity {
+    static String user;
+    static String pwd;
     private EditText et_user;
     private EditText et_pwd;
     private sqlserver sql;
-    static String user;
-    static String pwd;
     private CheckBox checkBox;
     private SharedPreferences pref;
 

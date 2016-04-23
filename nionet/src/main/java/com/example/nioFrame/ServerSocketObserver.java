@@ -6,7 +6,7 @@ import java.io.IOException;
 public interface ServerSocketObserver {
     /**
      * Called by the NIOService on the NIO thread when an accept fails on the socket.
-     * <p>
+     * <p/>
      * <b>Note: Since this is a direct callback on the NIO thread, this method will suspend IO on
      * all other connections until the method returns. It is therefore strongly recommended
      * that the implementation of this method returns as quickly as possible to avoid blocking IO.</b>
@@ -17,7 +17,7 @@ public interface ServerSocketObserver {
 
     /**
      * Called by the NIOService on the NIO thread when the server socket is closed.
-     * <p>
+     * <p/>
      * <b>Note: Since this is a direct callback on the NIO thread, this method will suspend IO on
      * all other connections until the method returns. It is therefore strongly recommended
      * that the implementation of this method returns as quickly as possible to avoid blocking IO.</b>
@@ -29,10 +29,10 @@ public interface ServerSocketObserver {
 
     /**
      * Called by the NIOService on the NIO thread when a new connection has been accepted by the socket.
-     * <p>
+     * <p/>
      * The normal behaviour would be for the observer to assign a reader and a writer to the socket,
      * and then finally invoke <code>NIOSocket#listen(SocketObserver)</code> on the socket.
-     * <p>
+     * <p/>
      * <b>Note: Since this is a direct callback on the NIO thread, this method will suspend IO on
      * all other connections until the method returns. It is therefore strongly recommended
      * that the implementation of this method returns as quickly as possible to avoid blocking IO.</b>

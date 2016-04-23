@@ -8,40 +8,40 @@
     android:paddingTop="@dimen/activity_vertical_margin">
 
     <TextView
+        android:id="@+id/text_easy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="简单游戏"
-        android:textSize="28dp"
-        android:id="@+id/text_easy"
-        android:onClick="easy_game"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="83dp" />
+        android:layout_marginTop="83dp"
+        android:onClick="easy_game"
+        android:text="简单游戏"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="28dp" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="正常难度"
-        android:textSize="28dp"
-        android:onClick="normal_game"
         android:id="@+id/text_normal"
-        android:layout_marginTop="53dp"
-        android:layout_below="@+id/text_easy"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="困难游戏"
-        android:textSize="28dp"
-        android:onClick="hard_game"
-        android:id="@+id/text_hard"
-        android:layout_marginTop="140dp"
         android:layout_below="@+id/text_easy"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="53dp"
+        android:onClick="normal_game"
+        android:text="正常难度"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="28dp" />
+
+    <TextView
+        android:id="@+id/text_hard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_easy"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="140dp"
+        android:onClick="hard_game"
+        android:text="困难游戏"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="28dp" />
 
 
 </RelativeLayout>

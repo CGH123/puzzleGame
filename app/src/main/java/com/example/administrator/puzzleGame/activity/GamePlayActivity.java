@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.administrator.puzzleGame.R;
-
 import com.example.administrator.puzzleGame.game2DModel.BorderModel;
 import com.example.administrator.puzzleGame.game2DModel.ClassSetScreenWH;
 import com.example.administrator.puzzleGame.sqlServer.GameDB;
@@ -25,15 +23,22 @@ import com.example.administrator.puzzleGame.sqlServer.GameDB;
  * Created by Administrator on 2016-03-16.
  */
 public class GamePlayActivity extends AppCompatActivity {
+    /*
+    图片移动监听事件
+     */
+    public boolean double_click = true;
+    public boolean first_11 = true;
     Canvas canvas;
+    boolean move_up = false;
+    boolean down_move = false;  //控制down和move的关系
     private boolean inittable_sign;
     private BorderModel boardModel;
     private ClassSetScreenWH classSetScreenWH;
+    // private Chronometer timer;
     private Bitmap bit;
     private ImageView[] imageView;   //本身对应于正确的图片顺序
     private int[] reg_pic;
     private int num_row;
-    // private Chronometer timer;
     /**
      * 窗口的宽度
      */
@@ -42,261 +47,10 @@ public class GamePlayActivity extends AppCompatActivity {
      * 窗口的高度
      */
     private int screenHeight = 0;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-
-        bit = ((BitmapDrawable) getResources().getDrawable(Integer.valueOf(GameDB.mImageIds.get(GameDB.pic_res_choice)))).getBitmap();
-        classSetScreenWH = new ClassSetScreenWH(GamePlayActivity.this);
-        this.screenHeight = classSetScreenWH.getScreenHeight();//设置屏幕的宽高
-        this.screenWidth = classSetScreenWH.getScreenWidth();
-        this.inittable_sign = true;
-
-        this.boardModel = new BorderModel(bit);
-        GameDB.game_state = GameDB.game_playing;
-        this.boardModel.setScreenWidth(this.screenWidth);
-        this.boardModel.setScreenHeight(this.screenHeight);
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.game_playing);
-        initImageview(GameDB.Diffcult_choice);
-        //简单计时器
-        // timer = (Chronometer)this.findViewById(R.id.chronometer);
-        init_pic();//初始化图片
-        init_num_row();//根据难度来初始化列数
-
-    }
-
-    public void init_num_row() {
-        switch (GameDB.Diffcult_choice) {
-            case GameDB.Diffcult_hard:
-                num_row = 4;
-                break;
-            default:
-                num_row = 3;
-        }
-    }
-
-    public void init_pic() {
-        reg_pic = new int[16];
-        for (int i = 0; i < 16; i++)
-            reg_pic[i] = -1;
-    }
-
-    /*
-    根据难度选择，控件初始化内容
-     */
-    public void initImageview(int Diffcult_choice) {
-        imageView = new ImageView[16];
-        imageView[0] = (ImageView) findViewById(R.id.ima_game_playing0);
-        imageView[0].setOnTouchListener(movingEventListener);
-        imageView[0].setImageBitmap(boardModel.all[0].bitmap);
-
-        imageView[1] = (ImageView) findViewById(R.id.ima_game_playing1);
-        imageView[1].setOnTouchListener(movingEventListener);
-        imageView[1].setImageBitmap(boardModel.all[1].bitmap);
-
-        imageView[2] = (ImageView) findViewById(R.id.ima_game_playing2);
-        imageView[2].setOnTouchListener(movingEventListener);
-        imageView[2].setImageBitmap(boardModel.all[2].bitmap);
-
-        imageView[3] = (ImageView) findViewById(R.id.ima_game_playing3);
-        imageView[3].setOnTouchListener(movingEventListener);
-        imageView[3].setImageBitmap(boardModel.all[3].bitmap);
-
-        imageView[4] = (ImageView) findViewById(R.id.ima_game_playing4);
-        imageView[4].setOnTouchListener(movingEventListener);
-        imageView[4].setImageBitmap(boardModel.all[4].bitmap);
-
-        imageView[5] = (ImageView) findViewById(R.id.ima_game_playing5);
-        imageView[5].setOnTouchListener(movingEventListener);
-        imageView[5].setImageBitmap(boardModel.all[5].bitmap);
-
-        imageView[6] = (ImageView) findViewById(R.id.ima_game_playing6);
-        imageView[6].setOnTouchListener(movingEventListener);
-        imageView[6].setImageBitmap(boardModel.all[6].bitmap);
-
-        imageView[7] = (ImageView) findViewById(R.id.ima_game_playing7);
-        imageView[7].setOnTouchListener(movingEventListener);
-        imageView[7].setImageBitmap(boardModel.all[7].bitmap);
-
-        imageView[8] = (ImageView) findViewById(R.id.ima_game_playing8);
-        imageView[8].setOnTouchListener(movingEventListener);
-        imageView[8].setImageBitmap(boardModel.all[8].bitmap);
-        switch (Diffcult_choice) {
-            case GameDB.Diffcult_hard:
-                imageView[12] = (ImageView) findViewById(R.id.ima_game_playing12);
-                imageView[12].setOnTouchListener(movingEventListener);
-                imageView[12].setImageBitmap(boardModel.all[12].bitmap);
-
-                imageView[13] = (ImageView) findViewById(R.id.ima_game_playing13);
-                imageView[13].setOnTouchListener(movingEventListener);
-                imageView[13].setImageBitmap(boardModel.all[13].bitmap);
-
-                imageView[14] = (ImageView) findViewById(R.id.ima_game_playing14);
-                imageView[14].setOnTouchListener(movingEventListener);
-                imageView[14].setImageBitmap(boardModel.all[14].bitmap);
-
-                imageView[15] = (ImageView) findViewById(R.id.ima_game_playing15);
-                imageView[15].setOnTouchListener(movingEventListener);
-                imageView[15].setImageBitmap(boardModel.all[15].bitmap);
-
-                imageView[9] = (ImageView) findViewById(R.id.ima_game_playing9);
-                imageView[9].setOnTouchListener(movingEventListener);
-                imageView[9].setImageBitmap(boardModel.all[9].bitmap);
-
-                imageView[10] = (ImageView) findViewById(R.id.ima_game_playing10);
-                imageView[10].setOnTouchListener(movingEventListener);
-                imageView[10].setImageBitmap(boardModel.all[10].bitmap);
-
-                imageView[11] = (ImageView) findViewById(R.id.ima_game_playing11);
-                imageView[11].setOnTouchListener(movingEventListener);
-                imageView[11].setImageBitmap(boardModel.all[11].bitmap);
-                break;
-            case GameDB.Diffcult_normal:
-                imageView[9] = (ImageView) findViewById(R.id.ima_game_playing9);
-                imageView[9].setOnTouchListener(movingEventListener);
-                imageView[9].setImageBitmap(boardModel.all[9].bitmap);
-
-                imageView[10] = (ImageView) findViewById(R.id.ima_game_playing10);
-                imageView[10].setOnTouchListener(movingEventListener);
-                imageView[10].setImageBitmap(boardModel.all[10].bitmap);
-
-                imageView[11] = (ImageView) findViewById(R.id.ima_game_playing11);
-                imageView[11].setOnTouchListener(movingEventListener);
-                imageView[11].setImageBitmap(boardModel.all[11].bitmap);
-            default:
-
-                break;
-        }
-
-
-    }
-
     /*
     构建动画层并且实现移动
      */
     private RelativeLayout mAnimLayout;
-
-    /*
-    随机分布和动画
-    */
-    public void inittable(View ima, int Diffcult_choice) {
-        Boolean[] sign = new Boolean[16];
-        int value;
-        int num_row;
-
-        switch (Diffcult_choice) {
-            case GameDB.Diffcult_normal:
-                value = 11;
-                num_row = 3;
-                break;
-            case GameDB.Diffcult_easy:
-                value = 8;
-                num_row = 3;
-                break;
-            default:
-                value = 15;
-                num_row = 4;
-                break;
-        }
-        //timer.setBase(SystemClock.elapsedRealtime());
-        ////开始计时
-        //   timer.start();
-        for (int i = 0; i <= value; i++)
-            sign[i] = false;
-        //设置动画层
-        final int Width = ima.getRight() - ima.getLeft();
-        final int Height = ima.getBottom() - ima.getTop();
-        int ix = Integer.valueOf((int) (Math.random() * value));
-
-        setUpAnimlayout();
-        for (int i = 0; i <= value; i++) {
-            while (true)
-                if (sign[ix] == false) {
-                    final int row = ix % num_row;
-                    final int column = ix / num_row;
-                    reg_pic[ix] = i;
-                    imageView[i].setVisibility(View.INVISIBLE);
-                    ImageView ima1 = new ImageView(this.getApplicationContext());
-                    ima1.setImageBitmap(boardModel.all[i].bitmap);
-
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(Width, Height);
-
-                    lp.leftMargin = 50;
-                    lp.topMargin = 50;
-
-                    ima1.setLayoutParams(lp);
-                    mAnimLayout.addView(ima1);
-
-                    //设置动画
-                    ObjectAnimator anim = new ObjectAnimator().ofFloat(ima1, "TranslationX", 0, row * Width).setDuration(300);
-                    anim.ofFloat(ima1, "TranslationY", 0, column * Height).setDuration(300).start();
-                    // TranslateAnimation anim= new TranslateAnimation(50,2*Width, 50, 2 * Height);
-                    // anim.setDuration(300);
-                    // anim.setFillAfter(true);
-                    //  ima.startAnimation(anim);
-                    final int k = i;
-                    //监听动画
-                    anim.addListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-
-                            imageView[k].layout(row * Width + 50, column * Height + 50, row * Width + Width + 50, column * Height + 50 + Height);
-
-                            mAnimLayout.removeAllViews();
-                            // mAnimLayout.clearAnimation();
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-
-                        }
-                    });
-                    anim.start();
-                    imageView[k].setVisibility(View.VISIBLE);
-                    sign[ix] = true;
-                    ix = Integer.valueOf((int) (Math.random() * value));
-                    break;
-                } else {
-                    if (sign[ix] == true && ix == value)
-                        ix = Integer.valueOf((int) (Math.random() * value));
-                    else ix++;
-                }
-        }
-    }
-
-    /*
-    创建动画层
-     */
-    private void setUpAnimlayout() {
-        if (mAnimLayout == null) {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.FILL_PARENT,
-                    RelativeLayout.LayoutParams.FILL_PARENT);
-
-            mAnimLayout = new RelativeLayout(getApplicationContext());
-            this.addContentView(mAnimLayout, params);
-        }
-    }
-
-    /*
-    图片移动监听事件
-     */
-    public boolean double_click = true;
-    public boolean first_11 = true;
-    boolean move_up = false;
-    boolean down_move = false;  //控制down和move的关系
     private View.OnTouchListener movingEventListener = new View.OnTouchListener() {
         int lastX, lastY;
         int r_lastX, r_lastY;
@@ -430,6 +184,248 @@ public class GamePlayActivity extends AppCompatActivity {
         }
 
     };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+
+        bit = ((BitmapDrawable) getResources().getDrawable(Integer.valueOf(GameDB.mImageIds.get(GameDB.pic_res_choice)))).getBitmap();
+        classSetScreenWH = new ClassSetScreenWH(GamePlayActivity.this);
+        this.screenHeight = classSetScreenWH.getScreenHeight();//设置屏幕的宽高
+        this.screenWidth = classSetScreenWH.getScreenWidth();
+        this.inittable_sign = true;
+
+        this.boardModel = new BorderModel(bit);
+        GameDB.game_state = GameDB.game_playing;
+        this.boardModel.setScreenWidth(this.screenWidth);
+        this.boardModel.setScreenHeight(this.screenHeight);
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.game_playing);
+        initImageview(GameDB.Diffcult_choice);
+        //简单计时器
+        // timer = (Chronometer)this.findViewById(R.id.chronometer);
+        init_pic();//初始化图片
+        init_num_row();//根据难度来初始化列数
+
+    }
+
+    public void init_num_row() {
+        switch (GameDB.Diffcult_choice) {
+            case GameDB.Diffcult_hard:
+                num_row = 4;
+                break;
+            default:
+                num_row = 3;
+        }
+    }
+
+    public void init_pic() {
+        reg_pic = new int[16];
+        for (int i = 0; i < 16; i++)
+            reg_pic[i] = -1;
+    }
+
+    /*
+    根据难度选择，控件初始化内容
+     */
+    public void initImageview(int Diffcult_choice) {
+        imageView = new ImageView[16];
+        imageView[0] = (ImageView) findViewById(R.id.ima_game_playing0);
+        imageView[0].setOnTouchListener(movingEventListener);
+        imageView[0].setImageBitmap(boardModel.all[0].bitmap);
+
+        imageView[1] = (ImageView) findViewById(R.id.ima_game_playing1);
+        imageView[1].setOnTouchListener(movingEventListener);
+        imageView[1].setImageBitmap(boardModel.all[1].bitmap);
+
+        imageView[2] = (ImageView) findViewById(R.id.ima_game_playing2);
+        imageView[2].setOnTouchListener(movingEventListener);
+        imageView[2].setImageBitmap(boardModel.all[2].bitmap);
+
+        imageView[3] = (ImageView) findViewById(R.id.ima_game_playing3);
+        imageView[3].setOnTouchListener(movingEventListener);
+        imageView[3].setImageBitmap(boardModel.all[3].bitmap);
+
+        imageView[4] = (ImageView) findViewById(R.id.ima_game_playing4);
+        imageView[4].setOnTouchListener(movingEventListener);
+        imageView[4].setImageBitmap(boardModel.all[4].bitmap);
+
+        imageView[5] = (ImageView) findViewById(R.id.ima_game_playing5);
+        imageView[5].setOnTouchListener(movingEventListener);
+        imageView[5].setImageBitmap(boardModel.all[5].bitmap);
+
+        imageView[6] = (ImageView) findViewById(R.id.ima_game_playing6);
+        imageView[6].setOnTouchListener(movingEventListener);
+        imageView[6].setImageBitmap(boardModel.all[6].bitmap);
+
+        imageView[7] = (ImageView) findViewById(R.id.ima_game_playing7);
+        imageView[7].setOnTouchListener(movingEventListener);
+        imageView[7].setImageBitmap(boardModel.all[7].bitmap);
+
+        imageView[8] = (ImageView) findViewById(R.id.ima_game_playing8);
+        imageView[8].setOnTouchListener(movingEventListener);
+        imageView[8].setImageBitmap(boardModel.all[8].bitmap);
+        switch (Diffcult_choice) {
+            case GameDB.Diffcult_hard:
+                imageView[12] = (ImageView) findViewById(R.id.ima_game_playing12);
+                imageView[12].setOnTouchListener(movingEventListener);
+                imageView[12].setImageBitmap(boardModel.all[12].bitmap);
+
+                imageView[13] = (ImageView) findViewById(R.id.ima_game_playing13);
+                imageView[13].setOnTouchListener(movingEventListener);
+                imageView[13].setImageBitmap(boardModel.all[13].bitmap);
+
+                imageView[14] = (ImageView) findViewById(R.id.ima_game_playing14);
+                imageView[14].setOnTouchListener(movingEventListener);
+                imageView[14].setImageBitmap(boardModel.all[14].bitmap);
+
+                imageView[15] = (ImageView) findViewById(R.id.ima_game_playing15);
+                imageView[15].setOnTouchListener(movingEventListener);
+                imageView[15].setImageBitmap(boardModel.all[15].bitmap);
+
+                imageView[9] = (ImageView) findViewById(R.id.ima_game_playing9);
+                imageView[9].setOnTouchListener(movingEventListener);
+                imageView[9].setImageBitmap(boardModel.all[9].bitmap);
+
+                imageView[10] = (ImageView) findViewById(R.id.ima_game_playing10);
+                imageView[10].setOnTouchListener(movingEventListener);
+                imageView[10].setImageBitmap(boardModel.all[10].bitmap);
+
+                imageView[11] = (ImageView) findViewById(R.id.ima_game_playing11);
+                imageView[11].setOnTouchListener(movingEventListener);
+                imageView[11].setImageBitmap(boardModel.all[11].bitmap);
+                break;
+            case GameDB.Diffcult_normal:
+                imageView[9] = (ImageView) findViewById(R.id.ima_game_playing9);
+                imageView[9].setOnTouchListener(movingEventListener);
+                imageView[9].setImageBitmap(boardModel.all[9].bitmap);
+
+                imageView[10] = (ImageView) findViewById(R.id.ima_game_playing10);
+                imageView[10].setOnTouchListener(movingEventListener);
+                imageView[10].setImageBitmap(boardModel.all[10].bitmap);
+
+                imageView[11] = (ImageView) findViewById(R.id.ima_game_playing11);
+                imageView[11].setOnTouchListener(movingEventListener);
+                imageView[11].setImageBitmap(boardModel.all[11].bitmap);
+            default:
+
+                break;
+        }
+
+
+    }
+
+    /*
+    随机分布和动画
+    */
+    public void inittable(View ima, int Diffcult_choice) {
+        Boolean[] sign = new Boolean[16];
+        int value;
+        int num_row;
+
+        switch (Diffcult_choice) {
+            case GameDB.Diffcult_normal:
+                value = 11;
+                num_row = 3;
+                break;
+            case GameDB.Diffcult_easy:
+                value = 8;
+                num_row = 3;
+                break;
+            default:
+                value = 15;
+                num_row = 4;
+                break;
+        }
+        //timer.setBase(SystemClock.elapsedRealtime());
+        ////开始计时
+        //   timer.start();
+        for (int i = 0; i <= value; i++)
+            sign[i] = false;
+        //设置动画层
+        final int Width = ima.getRight() - ima.getLeft();
+        final int Height = ima.getBottom() - ima.getTop();
+        int ix = Integer.valueOf((int) (Math.random() * value));
+
+        setUpAnimlayout();
+        for (int i = 0; i <= value; i++) {
+            while (true)
+                if (sign[ix] == false) {
+                    final int row = ix % num_row;
+                    final int column = ix / num_row;
+                    reg_pic[ix] = i;
+                    imageView[i].setVisibility(View.INVISIBLE);
+                    ImageView ima1 = new ImageView(this.getApplicationContext());
+                    ima1.setImageBitmap(boardModel.all[i].bitmap);
+
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(Width, Height);
+
+                    lp.leftMargin = 50;
+                    lp.topMargin = 50;
+
+                    ima1.setLayoutParams(lp);
+                    mAnimLayout.addView(ima1);
+
+                    //设置动画
+                    ObjectAnimator anim = new ObjectAnimator().ofFloat(ima1, "TranslationX", 0, row * Width).setDuration(300);
+                    anim.ofFloat(ima1, "TranslationY", 0, column * Height).setDuration(300).start();
+                    // TranslateAnimation anim= new TranslateAnimation(50,2*Width, 50, 2 * Height);
+                    // anim.setDuration(300);
+                    // anim.setFillAfter(true);
+                    //  ima.startAnimation(anim);
+                    final int k = i;
+                    //监听动画
+                    anim.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+
+                            imageView[k].layout(row * Width + 50, column * Height + 50, row * Width + Width + 50, column * Height + 50 + Height);
+
+                            mAnimLayout.removeAllViews();
+                            // mAnimLayout.clearAnimation();
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+                    anim.start();
+                    imageView[k].setVisibility(View.VISIBLE);
+                    sign[ix] = true;
+                    ix = Integer.valueOf((int) (Math.random() * value));
+                    break;
+                } else {
+                    if (sign[ix] == true && ix == value)
+                        ix = Integer.valueOf((int) (Math.random() * value));
+                    else ix++;
+                }
+        }
+    }
+
+    /*
+    创建动画层
+     */
+    private void setUpAnimlayout() {
+        if (mAnimLayout == null) {
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.FILL_PARENT,
+                    RelativeLayout.LayoutParams.FILL_PARENT);
+
+            mAnimLayout = new RelativeLayout(getApplicationContext());
+            this.addContentView(mAnimLayout, params);
+        }
+    }
 
     public void back_to(View v) {   //虽然会出现各种复杂的问题，但是最后殊途同归啊。直接重新刷新图片即可
         int k = 0;
