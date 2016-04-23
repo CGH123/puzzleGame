@@ -22,14 +22,6 @@ public class GameDB {
      */
     public static final int Diffcult_hard = 2;
     /**
-     * 游戏难度变量:困难
-     */
-    public static int Diffcult_choice = 0;
-    /**
-     * 记录游戏的状态
-     */
-    public static int game_state = 0;
-    /**
      * 正在游戏中
      */
     public static final int game_playing = 0;
@@ -37,6 +29,14 @@ public class GameDB {
      * 游戏完成
      */
     public static final int game_win = 1;
+    /**
+     * 游戏难度变量:困难
+     */
+    public static int Diffcult_choice = 0;
+    /**
+     * 记录游戏的状态
+     */
+    public static int game_state = 0;
     /**
      * 游戏背景音乐选择
      */

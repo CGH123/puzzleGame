@@ -1,7 +1,6 @@
 package com.example.administrator.puzzleGame.util;
 
 
-
 import com.example.administrator.puzzleGame.game3DModel.Vector2f;
 
 public class BitmapUtil {
@@ -23,13 +22,12 @@ public class BitmapUtil {
     }
 
 
-
     /**
      * 将bitmap按任意四边形分割成col*row数量的不规则bitmaps，并返回纹理映射的坐标
      *
      * @param quadPositions 四边形坐标,按逆时针传入
-     * @param col     行
-     * @param row     列
+     * @param col           行
+     * @param row           列
      * @return 不规则bitmaps得纹理映射坐标
      */
     public static Vector2f[] cutBitmapToCubes(Vector2f[] quadPositions, int row, int col) {

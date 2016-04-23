@@ -31,12 +31,12 @@
 
         <TextView
             android:id="@+id/gameroom_my_name"
-            android:layout_toRightOf="@+id/gameroom_my_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/gameroom_my_avatar"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/gameroom_my_avatar"
             android:textColor="@color/black"
             android:textSize="30sp" />
 
@@ -45,16 +45,16 @@
             android:id="@+id/gameroom_layout_gender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/gameroom_my_name"
             android:layout_alignBottom="@+id/gameroom_my_name"
             android:layout_marginBottom="4dp"
+            android:layout_marginRight="20dp"
+            android:layout_toRightOf="@+id/gameroom_my_name"
             android:gravity="center"
             android:orientation="horizontal"
-            android:layout_marginRight="20dp"
-            android:paddingTop="4dip"
             android:paddingBottom="4dip"
             android:paddingLeft="4dip"
-            android:paddingRight="4dip">
+            android:paddingRight="4dip"
+            android:paddingTop="4dip">
 
             <ImageView
                 android:id="@+id/gameroom_my_gender"
@@ -69,8 +69,8 @@
             android:id="@+id/gameroom_my_order"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:textColor="@color/text_color"
             android:textSize="18sp" />
@@ -89,15 +89,15 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@id/empty2"
-        android:orientation="vertical"
-        android:background="@drawable/ab_solid_dark_holo">
+        android:background="@drawable/ab_solid_dark_holo"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/gameroom_tv_playersnumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
+            android:layout_weight="1"
             android:gravity="center"
             android:textSize="15sp"></TextView>
 
@@ -114,8 +114,8 @@
         android:id="@+id/friends_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/gameroom_playersnumber"
         android:layout_above="@+id/gameroom_footer"
+        android:layout_below="@id/gameroom_playersnumber"
         android:cacheColorHint="@color/transparent"
         android:divider="@null"
         android:fadingEdge="none"
@@ -138,6 +138,7 @@
 
         <Button
             android:id="@+id/gameroom_create"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="42dp"
             android:layout_marginRight="9dip"
@@ -146,12 +147,11 @@
             android:gravity="center"
             android:text="@string/gameroom_create"
             android:textColor="@drawable/profile_bottom_text_color"
-            style="?android:attr/borderlessButtonStyle"
             android:textSize="14sp" />
 
         <Button
             android:id="@+id/gameroom_ready"
-            android:visibility="gone"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="42dp"
             android:layout_marginRight="9dip"
@@ -160,13 +160,13 @@
             android:gravity="center"
             android:text="@string/gameroom_ready"
             android:textColor="@drawable/profile_bottom_text_color"
-            style="?android:attr/borderlessButtonStyle"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:visibility="gone" />
 
 
         <Button
             android:id="@+id/gameroom_start"
-            android:visibility="gone"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="42dp"
             android:layout_marginLeft="9dip"
@@ -175,8 +175,8 @@
             android:gravity="center"
             android:text="@string/gameroom_start"
             android:textColor="@drawable/profile_bottom_text_color"
-            style="?android:attr/borderlessButtonStyle"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:visibility="gone" />
     </LinearLayout>
 
 </RelativeLayout>

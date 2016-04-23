@@ -7,10 +7,13 @@ import android.graphics.Bitmap;
  * 方格类
  */
 public class Piece {
-    boolean isblank = false;
     public Bitmap bitmap;
-    boolean addString = false;//是否在每个方格上添加图片的原始位置
     public int index;
+    //方格的当前位置
+    public int x; // current location in grid coordinates
+    public int y; // current location in grid coordinates
+    boolean isblank = false;
+    boolean addString = false;//是否在每个方格上添加图片的原始位置
     /**
      * 方格的宽
      */
@@ -28,14 +31,10 @@ public class Piece {
      */
     float cellOffset_y = 0;
     float spaces = 1;
-
     int serial; // serial number for ordering
     //方格的初始化位置
     int ix; // initial location in grid coordinates
     int iy; // initial location in grid coordinates
-    //方格的当前位置
-    public int x; // current location in grid coordinates
-    public int y; // current location in grid coordinates
 
     /**
      * @param bitmap 图片

@@ -7,7 +7,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
-public class SkyTree implements Draw{
+public class SkyTree implements Draw {
     final float UNIT_SIZE = 100.0f;
     //自定义渲染程序的引用
     int mProgram;
@@ -23,6 +23,7 @@ public class SkyTree implements Draw{
     //顶点数量
     int vCount = 0;
     int texId;
+
     public SkyTree(int texId) {
         this.texId = texId;
         initVertexData(UNIT_SIZE);

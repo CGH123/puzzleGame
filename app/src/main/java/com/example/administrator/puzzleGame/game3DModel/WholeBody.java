@@ -61,7 +61,7 @@ public abstract class WholeBody extends BaseBody implements Whole {
 
 
     @Override
-    public void setDrawLine(Boolean isDrawLine){
+    public void setDrawLine(Boolean isDrawLine) {
         for (Piece piece : pieces)
             piece.setDrawLine(isDrawLine);
     }

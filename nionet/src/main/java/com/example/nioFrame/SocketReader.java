@@ -10,10 +10,10 @@ import java.nio.channels.SocketChannel;
 class SocketReader {
     public static byte[] SKIP_PACKET = new byte[0];
     private final NIOService m_nioService;
-    private ByteBuffer m_previousBytes;
     // Send SKIP_PACKET to cause the returning byte to be discarded, while not stopping the read loop.
     private final boolean m_bigEndian;
     private final int m_headerSize;
+    private ByteBuffer m_previousBytes;
 
     SocketReader(NIOService nioService, int headerSize, boolean bigEndian) {
         m_nioService = nioService;

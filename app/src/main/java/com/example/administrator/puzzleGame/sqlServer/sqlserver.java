@@ -4,10 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.administrator.puzzleGame.game2DModel.Person;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.example.administrator.puzzleGame.game2DModel.Person;
 
 /**
  * Created by Administrator on 2016-03-15.

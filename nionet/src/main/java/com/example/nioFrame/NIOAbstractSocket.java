@@ -3,14 +3,14 @@ package com.example.nioFrame;
 public interface NIOAbstractSocket {
     /**
      * Closes this socket (the actual disconnect will occur on the NIOService thread)
-     * <p>
+     * <p/>
      * <em>This method is thread-safe.</em>
      */
     void close();
 
     /**
      * Returns the current state of this socket.
-     * <p>
+     * <p/>
      * <em>This method is thread-safe.</em>
      *
      * @return true if the connection is socket is open, false if closed.

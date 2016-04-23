@@ -3,8 +3,6 @@ package com.example.administrator.puzzleGame.game3DModel;
 
 import com.example.administrator.puzzleGame.constant.GameConstant;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 public class SpherePiece extends PieceBody {
@@ -17,7 +15,7 @@ public class SpherePiece extends PieceBody {
     Float[] alVetex;
     Vector3f translateV;
 
-    public SpherePiece(int num, int cutNum,List<Float> alVetex, float[] vertices, float[] normals, float[] textures, int texId) {
+    public SpherePiece(int num, int cutNum, List<Float> alVetex, float[] vertices, float[] normals, float[] textures, int texId) {
         this.num = num;
         this.texId = texId;
         this.vertices = vertices;
@@ -29,9 +27,9 @@ public class SpherePiece extends PieceBody {
         int pos1 = 0;
         int pos2 = cutNum * (cutNum + 1) / 2;
         int pos3 = cutNum * (cutNum + 1) / 2 + cutNum;
-        Vector3f vector3f1 = new Vector3f(this.alVetex[pos1 * 3],this.alVetex[pos1 * 3 + 1],this.alVetex[pos1 * 3 + 2]);
-        Vector3f vector3f2 = new Vector3f(this.alVetex[pos2 * 3],this.alVetex[pos2 * 3 + 1],this.alVetex[pos2 * 3+ 2]);
-        Vector3f vector3f3 = new Vector3f(this.alVetex[pos3 * 3],this.alVetex[pos3 * 3 + 1],this.alVetex[pos2 * 3 + 2]);
+        Vector3f vector3f1 = new Vector3f(this.alVetex[pos1 * 3], this.alVetex[pos1 * 3 + 1], this.alVetex[pos1 * 3 + 2]);
+        Vector3f vector3f2 = new Vector3f(this.alVetex[pos2 * 3], this.alVetex[pos2 * 3 + 1], this.alVetex[pos2 * 3 + 2]);
+        Vector3f vector3f3 = new Vector3f(this.alVetex[pos3 * 3], this.alVetex[pos3 * 3 + 1], this.alVetex[pos2 * 3 + 2]);
         translateV = vector3f1.minus(vector3f2)
                 .cross(vector3f2.minus(vector3f3))
                 .normalize()

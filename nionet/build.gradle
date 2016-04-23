@@ -1,4 +1,3 @@
-import com.sun.org.apache.xalan.internal.xsltc.cmdline.Compile
 apply plugin: 'java'
 
 dependencies {
@@ -9,5 +8,5 @@ dependencies {
 
 
 tasks.withType(JavaCompile) {
-    options.encoding="UTF-8"
+    options.encoding = "UTF-8"
 }

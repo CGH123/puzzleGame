@@ -10,55 +10,55 @@
 
 
     <Button
+        android:id="@+id/b_newgame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="新游戏"
-        android:id="@+id/b_newgame"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="90dp"
         android:onClick="b_newgame_"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:text="新游戏" />
 
     <Button
+        android:id="@+id/b_backMusic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="背景音乐"
-        android:id="@+id/b_backMusic"
-        android:layout_below="@+id/b_newgame"
         android:layout_alignLeft="@+id/b_newgame"
         android:layout_alignStart="@+id/b_newgame"
+        android:layout_below="@+id/b_newgame"
         android:layout_marginTop="39dp"
-        android:onClick="bgMusicSel" />
+        android:onClick="bgMusicSel"
+        android:text="背景音乐" />
 
     <Button
+        android:id="@+id/choseclass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="难度选择"
-        android:id="@+id/choseclass"
+        android:layout_alignLeft="@+id/b_backMusic"
+        android:layout_alignStart="@+id/b_backMusic"
+        android:layout_below="@+id/b_backMusic"
         android:layout_marginTop="32dp"
         android:onClick="Diffcult_choice"
-        android:layout_below="@+id/b_backMusic"
-        android:layout_alignLeft="@+id/b_backMusic"
-        android:layout_alignStart="@+id/b_backMusic" />
+        android:text="难度选择" />
 
     <Button
+        android:id="@+id/b_pic_chose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="图片选择"
-        android:id="@+id/b_pic_chose"
         android:layout_below="@+id/choseclass"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="33dp"
         android:onClick="to_pic_chose"
-        android:layout_marginTop="33dp" />
+        android:text="图片选择" />
 
     <Button
+        android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="我的测试入口"
-        android:onClick="test_entry"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:id="@+id/button2" />
+        android:onClick="test_entry"
+        android:text="我的测试入口" />
 
 
 </RelativeLayout>

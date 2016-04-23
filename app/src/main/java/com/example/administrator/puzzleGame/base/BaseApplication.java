@@ -1,24 +1,21 @@
 package com.example.administrator.puzzleGame.base;
 
-import com.example.administrator.puzzleGame.util.LogUtil;
-
 import android.app.Application;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Vibrator;
 
-
 import com.example.administrator.puzzleGame.R;
+import com.example.administrator.puzzleGame.util.LogUtil;
 
 /**
  * Created by HUI on 2016-04-04.
  */
 public class BaseApplication extends Application {
 
-    private static BaseApplication instance;
     public static boolean isDebugmode = false;
-
+    private static BaseApplication instance;
     /**
      * 静音、震动默认开关
      **/
@@ -51,11 +48,18 @@ public class BaseApplication extends Application {
         return !isSlient;
     }
 
+    public static void setSoundFlag(boolean pIsSlient) {
+        isSlient = pIsSlient;
+    }
+
     /* 设置震动提醒 */
     public static boolean getVibrateFlag() {
         return isVibrate;
     }
 
+    public static void setVibrateFlag(boolean pIsvibrate) {
+        isVibrate = pIsvibrate;
+    }
 
     /**
      * 新消息提醒 - 声音提醒、振动提醒
@@ -68,14 +72,6 @@ public class BaseApplication extends Application {
             notiVibrator.vibrate(200);
         }
 
-    }
-
-    public static void setSoundFlag(boolean pIsSlient) {
-        isSlient = pIsSlient;
-    }
-
-    public static void setVibrateFlag(boolean pIsvibrate) {
-        isVibrate = pIsvibrate;
     }
 
     private void initNotification() {

@@ -55,8 +55,7 @@ public class TextureUtil {
     }
 
     //生成纹理Id的方法
-    public static int initTexture(Context context, int drawableId)
-    {
+    public static int initTexture(Context context, int drawableId) {
         //生成纹理ID
         int[] textures = new int[1];
         GLES20.glGenTextures
@@ -65,29 +64,23 @@ public class TextureUtil {
                         textures,   //纹理id的数组
                         0           //偏移量
                 );
-        int textureId=textures[0];
+        int textureId = textures[0];
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId);
-        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER,GLES20.GL_NEAREST);
-        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,GLES20.GL_TEXTURE_MAG_FILTER,GLES20.GL_LINEAR);
+        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
+        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
         //ST方向纹理拉伸方式
-        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S,GLES20.GL_REPEAT);
-        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,GLES20.GL_REPEAT);
+        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
+        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
 
         //通过输入流加载图片
         InputStream is = context.getResources().openRawResource(drawableId);
         Bitmap bitmapTmp;
-        try
-        {
+        try {
             bitmapTmp = BitmapFactory.decodeStream(is);
-        }
-        finally
-        {
-            try
-            {
+        } finally {
+            try {
                 is.close();
-            }
-            catch(IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -107,7 +100,6 @@ public class TextureUtil {
         //返回纹理ID
         return textureId;
     }
-
 
 
     //生成纹理Id的方法

@@ -7,8 +7,8 @@ import com.example.nioFrame.NIOSocket;
 import com.example.nioFrame.ServerSocketObserver;
 import com.example.nioFrame.SocketObserver;
 import com.example.nioFrame.UDPSocket;
-import com.example.protocol.Entity;
-
+import com.example.protocol.MSGProtocol;
+import com.example.serialization.SerializerFastJson;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -53,17 +53,26 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
         });
     }
 
-
-    /**
-     * 单例模型
-     */
-    private static class SingletonHolder {
-        private static ServerLAN server = new ServerLAN();
-        private static Thread workThread = new Thread(server);
-    }
-
     public static Server getInstance() {
         return SingletonHolder.server;
+    }
+
+    public static void main(String args[]) {
+        final Server server = ServerLAN.getInstance();
+        OnServerReadListener serverReadListener = new OnServerReadListener() {
+            @Override
+            public void processMsg(byte[] packet, NIOSocket nioSocket) {
+                System.out.println(new String(packet));
+                MSGProtocol msgProtocol = SerializerFastJson.getInstance().parseNull(new String(packet), MSGProtocol.class);
+                msgProtocol = new MSGProtocol("hello client",msgProtocol.getCommand());
+                String msgString = SerializerFastJson.getInstance().serialize(msgProtocol);
+                server.sendToClient(msgString.getBytes(), nioSocket);
+            }
+        };
+        server.addServerReadListener(serverReadListener)
+                .bind(NetConstant.TCP_PORT)
+                .start();
+
     }
 
     public Server setServerSocketObserver(ServerSocketObserver serverSocketObserver) {
@@ -176,7 +185,7 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
      * 向指定的客户端管道写信息
      */
     private void write(byte[] content, NIOSocket socket) {
-        if (socket == null || socket.isOpen() || service.isOpen() || !isRunning) {
+        if (socket == null || !isRunning) {
             System.out.print(TAG + "mSocket is null");
             stop();
             close();
@@ -246,15 +255,11 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
 
             public void packetReceived(NIOSocket socket, byte[] packet) {
                 //把其中一个客户端发送的信息，在服务端更新了之后，传递给其他每一个的客户端
-                for (NIOSocket e : socketList) {
-                    if (e != socket) {
-                        if (!serverReadListeners.isEmpty())
-                            for (OnServerReadListener serverReadListener : serverReadListeners)
-                                serverReadListener.processMsg(packet, socket);
-                        else
-                            System.out.print(TAG + "Server listener is null");
-                    }
-                }
+                if (!serverReadListeners.isEmpty())
+                    for (OnServerReadListener serverReadListener : serverReadListeners)
+                        serverReadListener.processMsg(packet, socket);
+                else
+                    System.out.print(TAG + "Server listener is empty");
             }
 
             @Override
@@ -264,23 +269,11 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
         });
     }
 
-    public static void main(String args[]) {
-        final Server server = ServerLAN.getInstance();
-        OnServerReadListener serverReadListener = new OnServerReadListener() {
-            @Override
-            public void processMsg(byte[] packet, NIOSocket nioSocket) {
-                System.out.println(new String(packet));
-                server.sendToClient(packet, nioSocket);
-                server.sendExceptClient(packet, nioSocket);
-                server.sendAllClient(packet);
-            }
-        };
-        server.addServerReadListener(serverReadListener)
-                .bind(NetConstant.TCP_PORT)
-                .start();
-
-        server.removeServerReadListener(serverReadListener)
-                .stop()
-                .close();
+    /**
+     * 单例模型
+     */
+    private static class SingletonHolder {
+        private static ServerLAN server = new ServerLAN();
+        private static Thread workThread = new Thread(server);
     }
 }

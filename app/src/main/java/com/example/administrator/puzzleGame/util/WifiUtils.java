@@ -1,12 +1,12 @@
 package com.example.administrator.puzzleGame.util;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.content.Context;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -19,10 +19,6 @@ import java.util.List;
  * Created by HUI on 2016-04-03.
  */
 public class WifiUtils {
-    public static enum WifiCipherType {
-        WIFICIPHER_INVALID, WIFICIPHER_NOPASS, WIFICIPHER_WEP, WIFICIPHER_WPA
-    }
-
     //获得当前的Context
     private static Context mContext;
     // 定义WifiManager对象
@@ -33,8 +29,6 @@ public class WifiUtils {
     private List<ScanResult> mWifiList;
     // 网络连接列表
     private List<WifiConfiguration> mWifiConfiguration;
-
-
     // 构造器
     public WifiUtils(Context context) {
         this.mContext = context;
@@ -44,7 +38,6 @@ public class WifiUtils {
         // 取得WifiInfo对象
 //        mWifiInfo = mWifiManager.getConnectionInfo();
     }
-
 
     /**
      * Function: 连接Wifi热点 <br>
@@ -166,51 +159,6 @@ public class WifiUtils {
         return mWifiManager.getWifiState();
     }
 
-
-    // 得到配置好的网络
-    public List<WifiConfiguration> getConfiguration() {
-        return mWifiConfiguration;
-    }
-
-    // 指定配置好的网络进行连接
-    public void connectConfiguration(int index) {
-        // 索引大于配置好的网络索引返回
-        if (index > mWifiConfiguration.size()) {
-            return;
-        }
-        // 连接配置好的指定ID的网络
-        mWifiManager.enableNetwork(mWifiConfiguration.get(index).networkId,
-                true);
-    }
-
-    public void startScan() {
-        OpenWifi();
-        mWifiManager.startScan();
-        // 得到扫描结果
-        mWifiList = mWifiManager.getScanResults();
-        // 得到配置好的网络连接
-        mWifiConfiguration = mWifiManager.getConfiguredNetworks();
-    }
-
-    // 得到网络列表
-    public List<ScanResult> getScanResults() {
-        return mWifiList;
-    }
-
-    // 查看扫描结果
-    public StringBuilder lookUpScan() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < mWifiList.size(); i++) {
-            stringBuilder
-                    .append("Index_" + new Integer(i + 1).toString() + ":");
-            // 将ScanResult信息转换成一个字符串包
-            // 其中把包括：BSSID、SSID、capabilities、frequency、level
-            stringBuilder.append((mWifiList.get(i)).toString());
-            stringBuilder.append("/n");
-        }
-        return stringBuilder;
-    }
-
     // 得到MAC地址
     public static String getMacAddress() {
         WifiInfo mWifiInfo = mWifiManager.getConnectionInfo();
@@ -254,7 +202,6 @@ public class WifiUtils {
         mWifiManager.disableNetwork(netId);
         mWifiManager.disconnect();
     }
-
 
     public static boolean isWifiConnect() {
         NetworkInfo mNetworkInfo = ((ConnectivityManager) mContext
@@ -335,6 +282,54 @@ public class WifiUtils {
             } catch (InvocationTargetException e) {
             }
         }
+    }
+
+    // 得到配置好的网络
+    public List<WifiConfiguration> getConfiguration() {
+        return mWifiConfiguration;
+    }
+
+    // 指定配置好的网络进行连接
+    public void connectConfiguration(int index) {
+        // 索引大于配置好的网络索引返回
+        if (index > mWifiConfiguration.size()) {
+            return;
+        }
+        // 连接配置好的指定ID的网络
+        mWifiManager.enableNetwork(mWifiConfiguration.get(index).networkId,
+                true);
+    }
+
+    public void startScan() {
+        OpenWifi();
+        mWifiManager.startScan();
+        // 得到扫描结果
+        mWifiList = mWifiManager.getScanResults();
+        // 得到配置好的网络连接
+        mWifiConfiguration = mWifiManager.getConfiguredNetworks();
+    }
+
+    // 得到网络列表
+    public List<ScanResult> getScanResults() {
+        return mWifiList;
+    }
+
+    // 查看扫描结果
+    public StringBuilder lookUpScan() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < mWifiList.size(); i++) {
+            stringBuilder
+                    .append("Index_" + new Integer(i + 1).toString() + ":");
+            // 将ScanResult信息转换成一个字符串包
+            // 其中把包括：BSSID、SSID、capabilities、frequency、level
+            stringBuilder.append((mWifiList.get(i)).toString());
+            stringBuilder.append("/n");
+        }
+        return stringBuilder;
+    }
+
+    public static enum WifiCipherType {
+        WIFICIPHER_INVALID, WIFICIPHER_NOPASS, WIFICIPHER_WEP, WIFICIPHER_WPA
     }
 
     /*

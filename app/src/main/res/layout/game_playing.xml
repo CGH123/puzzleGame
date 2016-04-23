@@ -8,82 +8,82 @@
     android:paddingTop="@dimen/activity_vertical_margin">
 
     <ImageView
+        android:id="@+id/ima_game_playing0"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ima_game_playing0" />
+        android:layout_height="wrap_content" />
 
     <ImageView
+        android:id="@+id/ima_game_playing8"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ima_game_playing8" />
+        android:layout_height="wrap_content" />
 
     <ImageView
+        android:id="@+id/ima_game_playing11"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ima_game_playing11" />
+        android:layout_height="wrap_content" />
 
     <ImageView
+        android:id="@+id/ima_game_playing3"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ima_game_playing3" />
+        android:layout_height="wrap_content" />
 
     <ImageView
+        android:id="@+id/ima_game_playing9"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ima_game_playing9" />
+        android:layout_height="wrap_content" />
 
     <ImageView
+        android:id="@+id/ima_game_playing5"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ima_game_playing5" />
+        android:layout_height="wrap_content" />
 
     <ImageView
+        android:id="@+id/ima_game_playing6"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ima_game_playing6" />
+        android:layout_height="wrap_content" />
 
     <ImageView
+        android:id="@+id/ima_game_playing15"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ima_game_playing15" />
+        android:layout_height="wrap_content" />
 
     <ImageView
+        android:id="@+id/ima_game_playing4"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ima_game_playing4" />
+        android:layout_height="wrap_content" />
 
     <ImageView
+        android:id="@+id/ima_game_playing10"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ima_game_playing10" />
+        android:layout_height="wrap_content" />
 
     <ImageView
+        android:id="@+id/ima_game_playing1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ima_game_playing1" />
+        android:layout_height="wrap_content" />
 
     <ImageView
+        android:id="@+id/ima_game_playing13"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ima_game_playing13" />
+        android:layout_height="wrap_content" />
 
     <ImageView
+        android:id="@+id/ima_game_playing12"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ima_game_playing12" />
+        android:layout_height="wrap_content" />
 
     <ImageView
+        android:id="@+id/ima_game_playing14"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ima_game_playing14" />
+        android:layout_height="wrap_content" />
 
     <ImageView
+        android:id="@+id/ima_game_playing7"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ima_game_playing7" />
+        android:layout_height="wrap_content" />
 
     <ImageView
+        android:id="@+id/ima_game_playing2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ima_game_playing2" />
+        android:layout_height="wrap_content" />
 </RelativeLayout>

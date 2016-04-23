@@ -8,7 +8,6 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.example.administrator.puzzleGame.R;
-
 import com.example.administrator.puzzleGame.view.Game3DView;
 
 public class Game3DActivity extends Activity {
