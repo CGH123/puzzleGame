@@ -1,7 +1,6 @@
 package com.example;
 
 
-import com.example.msgbean.Entity;
 import com.example.nioFrame.NIOService;
 import com.example.nioFrame.NIOSocket;
 import com.example.nioFrame.SocketObserver;
@@ -29,7 +28,6 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
     private List<OnClientReadListener> clientReadListeners; //设置监听器的回调函数
     private Map<String, Object> clientDataMap;
     private boolean isRunning;
-    private int timeout;
     private volatile boolean isFindServer;
     private String serverIp;
     private ClientLAN() {
@@ -47,9 +45,6 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
     private static class SingletonHolder {
         private static ClientLAN client = new ClientLAN();
         private static Thread workThread = new Thread(client);
-        static{
-            Entity.registerBeanTypes();
-        }
     }
 
     public static Client getInstance() {
@@ -99,22 +94,33 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
     }
 
     public String findServerIP(int timeout) {
-        this.timeout = timeout;
         udpSocket = UDPSocket.getInstance();
         udpSocket.setUdpReadListener(new UDPSocket.OnUdpReadListener() {
             @Override
             public void processMsg(String hostName, byte[] packet) {
-                if(new String(packet).equals(NetConstant.RETURN_HOST)) {
+                if (new String(packet).equals(NetConstant.RETURN_HOST)) {
                     isFindServer = true;
                     serverIp = hostName;
+                    udpSocket.stop();
+                    udpSocket.close();
                 }
             }
         });
         udpSocket.bind(NetConstant.UDP_PORT).start();
-        UDPBroadcastThread udpBroadcastThread = new UDPBroadcastThread(300);
-        udpBroadcastThread.broadcast();
-        udpSocket.stop();
-        udpSocket.close();
+        int time = 0;
+        int sleepTime = 300;
+        while (time < timeout && !isFindServer) {
+            try {
+                byte[] data = "find_server".getBytes();
+                udpSocket.send(NetConstant.BROADCAST_HOST, data);
+                Thread.sleep(sleepTime);
+                time += sleepTime;
+            } catch (InterruptedException e) {
+                udpSocket.stop();
+                udpSocket.close();
+                System.out.print(TAG + e.toString());
+            }
+        }
         return serverIp;
     }
 
@@ -237,6 +243,7 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
         System.out.println("Connection failed.");
     }
 
+
     public static void main(String args[]) {
         final Client client = ClientLAN.getInstance();
         OnClientReadListener clientReadListener = new OnClientReadListener() {
@@ -258,25 +265,4 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
     }
 
 
-    class UDPBroadcastThread{
-        public int time = 0;
-        public int sleepTime;
-        UDPBroadcastThread(int sleepTime){
-            this.sleepTime = sleepTime;
-        }
-        public void broadcast(){
-            while (time < timeout && !isFindServer) {
-                try {
-                    byte[] data = "find_server".getBytes();
-                    udpSocket.send(NetConstant.BROADCAST_HOST, data);
-                    Thread.sleep(sleepTime);
-                    time += sleepTime;
-                } catch (InterruptedException e) {
-                    udpSocket.stop();
-                    udpSocket.close();
-                    System.out.print(TAG + e.toString());
-                }
-            }
-        }
-    }
 }

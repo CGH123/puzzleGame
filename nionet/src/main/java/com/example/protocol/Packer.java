@@ -1,4 +1,4 @@
-package com.example.msgbean;
+package com.example.protocol;
 
 
 public class Packer<T> {
