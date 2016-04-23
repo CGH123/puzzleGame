@@ -18,7 +18,7 @@ public class SerializerFastJson implements Serializer {
      */
     private static class SingletonHolder {
         private static Serializer serializer = new SerializerFastJson();
-    }   
+    }
 
     public static Serializer getInstance() {
         return SingletonHolder.serializer;
