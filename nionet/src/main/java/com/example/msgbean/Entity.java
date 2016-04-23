@@ -36,8 +36,10 @@ public class Entity {
         System.out.println(s1);
         String s2 = serializer.serialize(msgProtocol2);
         System.out.println(s2);
+
         msgProtocol1 = serializer.parseObject(s1, MSGProtocol.class);
         msgProtocol2 = serializer.parseObject(s2, MSGProtocol.class);
+
 
     }
 }

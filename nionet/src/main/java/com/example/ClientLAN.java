@@ -135,14 +135,14 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
         return getInstance();
     }
 
-    /** 
+    /**
      * 发送数据给服务器
      */
     public Client sendToServer(byte[] content) {
         write(content);
         return getInstance();
     }
-
+  
     /**
      * 需要序列化功能实现,建议在回调函数Listener中使用
      * 由于客户端只有一个管道，所以不用socketChannel的参数

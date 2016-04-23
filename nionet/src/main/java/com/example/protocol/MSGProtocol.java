@@ -17,7 +17,7 @@ import java.util.Map;
 public class MSGProtocol {
 
     /*
-    协议其实很简单啊，就一个name command option object
+    协议就一个name command option object
     可以用手机的IMEI号当name
     option是选项
     command是包的命令
@@ -91,7 +91,7 @@ public class MSGProtocol {
     }
 
 
-    public MSGProtocol(String paramSenderName, int option, int paramCommand, List<? extends Entity> paramObjects) {
+    public MSGProtocol(String paramSenderName, int option, int paramCommand, List<? extends Entity> paramObjects)     {
         this.senderName = paramSenderName;
         this.option = option;
         this.command = paramCommand;

@@ -26,7 +26,7 @@ public class UDPSocket implements Runnable {
         isRunning  = false;
     }
 
-    /** 
+    /**
      * 单例模型
      */
     private static class SingletonHolder {
