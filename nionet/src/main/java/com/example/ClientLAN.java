@@ -1,6 +1,7 @@
 package com.example;
 
 
+import com.example.msgbean.Entity;
 import com.example.nioFrame.NIOService;
 import com.example.nioFrame.NIOSocket;
 import com.example.nioFrame.SocketObserver;
@@ -46,6 +47,9 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
     private static class SingletonHolder {
         private static ClientLAN client = new ClientLAN();
         private static Thread workThread = new Thread(client);
+        static{
+            Entity.registerBeanTypes();
+        }
     }
 
     public static Client getInstance() {

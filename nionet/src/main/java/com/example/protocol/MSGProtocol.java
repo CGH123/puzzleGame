@@ -1,15 +1,13 @@
 package com.example.protocol;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.example.msgbean.Entity;
-import com.example.msgbean.GameProcess;
-import com.example.msgbean.Message;
-import com.example.msgbean.User;
-import com.example.msgbean.UserList;
-import com.example.serialization.SerializerFastJson;
+import com.example.msgbean.Packer;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 网络应用层协议
@@ -21,67 +19,86 @@ public class MSGProtocol {
     /*
     协议其实很简单啊，就一个name command option object
     可以用手机的IMEI号当name
-    command是包的命令
     option是选项
+    command是包的命令
     object是附加数据对象
      */
 
-    public enum ADDTION_TYPE {
+    public enum SET_TYPE {
         //待写，根据游戏中需要传递的数据来判断
-        GAMEPROCESS,USER,USERLIST,MESSAGE
+        BEAN, LIST
     }
 
-    private final String NAME = "IMEI";
-    private final String COMMAND = "command";
-    private final String OPTION = "option";
-    private final String ADDTYPE = "addType";
-    private final String ADDOBJECT = "addObject";
+    @JSONField(serialize = false)
+    private static Map<Class<?>, Entity.ADD_TYPE> typeMap = new HashMap<>();
 
     private String senderName;    //手机IMEI
+    private int option;  //附加数据对象 选项内容待定
     private int command;    //包的命令
-    private String option;  //附加数据对象 选项内容待定
-    private ADDTION_TYPE addType; //附加的对象的类型
-    private Entity addObject;   //附加的对象
+    private Entity.ADD_TYPE addType; //附加的对象的类型
+    private SET_TYPE setType; //附加的对象的集合类型
+    private Packer<? extends Entity> addObject;   //附加的对象
+    private List<? extends Entity> addObjects = new ArrayList<>();   //附加的对象
 
-    public  MSGProtocol(){
+    @JSONField(serialize = false)
+    public static void register(Class<?> tClass, Entity.ADD_TYPE addType) {
+        typeMap.put(tClass, addType);
     }
 
-    public MSGProtocol(byte[] paramProtocolJSON) throws JSONException{
-        JSONObject protocolJSON = new JSONObject(paramProtocolJSON);
-        senderName = protocolJSON.getString(NAME);
-        command = protocolJSON.getInt(COMMAND);
-
-        //判断是否有附加选项
-        if(protocolJSON.has(OPTION)){
-            option = protocolJSON.getString(OPTION);
-        }else{
-            option = null;
-        }
-
-        //判断是否有附加的对象
-        if(protocolJSON.has(ADDTYPE))
-        {
-            //获取返回对象的类型
-            addType = ADDTION_TYPE.valueOf(protocolJSON.getString(ADDTYPE));
-            //获取附加的对象
-            byte[] objectData = protocolJSON.getString(ADDOBJECT).getBytes();
-            switch (addType){
-                case GAMEPROCESS: //游戏通关完成度
-                    addObject = new SerializerFastJson().deserialize(objectData, GameProcess.class);
-                    break;
-                case MESSAGE:
-                    addObject = new SerializerFastJson().deserialize(objectData, Message.class);
-                    break;
-                case USER:
-                    addObject = new SerializerFastJson().deserialize(objectData, User.class);
-                    break;
-                case USERLIST:
-                    addObject = new SerializerFastJson().deserialize(objectData, UserList.class);
-                    break;
-            }
-        }
+    public MSGProtocol() {
     }
 
+    public MSGProtocol(String paramSenderName, int paramCommand) {
+        this.senderName = paramSenderName;
+        this.option = ProtocolConstant.OPTION_DEFAULT;
+        this.command = paramCommand;
+    }
+
+
+    public MSGProtocol(String paramSenderName, int option, int paramCommand) {
+        this.senderName = paramSenderName;
+        this.option = option;
+        this.command = paramCommand;
+    }
+
+
+    public MSGProtocol(String paramSenderName, int paramCommand, Entity paramObject) {
+        this.senderName = paramSenderName;
+        this.option = ProtocolConstant.OPTION_DEFAULT;
+        this.command = paramCommand;
+        this.addObject = new Packer<>(paramObject);
+        this.setType = SET_TYPE.BEAN;
+        this.addType = typeMap.get(paramObject.getClass());
+    }
+
+
+    public MSGProtocol(String paramSenderName, int option, int paramCommand, Entity paramObject) {
+        this.senderName = paramSenderName;
+        this.option = option;
+        this.command = paramCommand;
+        this.addObject = new Packer<>(paramObject);
+        this.setType = SET_TYPE.BEAN;
+        this.addType = typeMap.get(paramObject.getClass());
+    }
+
+    public MSGProtocol(String paramSenderName, int paramCommand, List<? extends Entity> paramObjects) {
+        this.senderName = paramSenderName;
+        this.option = ProtocolConstant.OPTION_DEFAULT;
+        this.command = paramCommand;
+        this.addObjects = paramObjects;
+        this.setType = SET_TYPE.LIST;
+        this.addType = typeMap.get(paramObjects.get(0).getClass());
+    }
+
+
+    public MSGProtocol(String paramSenderName, int option, int paramCommand, List<? extends Entity> paramObjects) {
+        this.senderName = paramSenderName;
+        this.option = option;
+        this.command = paramCommand;
+        this.addObjects = paramObjects;
+        this.setType = SET_TYPE.LIST;
+        this.addType = typeMap.get(paramObjects.get(0).getClass());
+    }
 
     public String getSenderName() {
         return senderName;
@@ -99,28 +116,45 @@ public class MSGProtocol {
         this.command = command;
     }
 
-    public String getOption() {
+    public int getOption() {
         return option;
     }
 
-    public void setOption(String option) {
+    public void setOption(int option) {
         this.option = option;
     }
 
-    public ADDTION_TYPE getAddType() {
+    public Entity.ADD_TYPE getAddType() {
         return addType;
     }
 
-    public void setAddType(ADDTION_TYPE addType) {
+    public void setAddType(Entity.ADD_TYPE addType) {
         this.addType = addType;
     }
 
-    public Entity getAddObject() {
+    public SET_TYPE getSetType() {
+        return setType;
+    }
+
+    public void setSetType(SET_TYPE setType) {
+        this.setType = setType;
+    }
+
+
+    public Packer<? extends Entity> getAddObject() {
         return addObject;
     }
 
-    public void setAddObject(Entity addObject) {
+    public void setAddObject(Packer<? extends Entity> addObject) {
         this.addObject = addObject;
+    }
+
+    public List<? extends Entity> getAddObjects() {
+        return addObjects;
+    }
+
+    public void setAddObjects(List<? extends Entity> addObjects) {
+        this.addObjects = addObjects;
     }
 
 
