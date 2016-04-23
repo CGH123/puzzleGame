@@ -4,10 +4,9 @@ import com.example.nioFrame.ConnectionAcceptor;
 import com.example.nioFrame.NIOServerSocket;
 import com.example.nioFrame.NIOService;
 import com.example.nioFrame.NIOSocket;
-import com.example.nioFrame.PacketRW.RawPacketReader;
-import com.example.nioFrame.PacketRW.RawPacketWriter;
 import com.example.nioFrame.ServerSocketObserver;
 import com.example.nioFrame.SocketObserver;
+import com.example.nioFrame.UDPSocket;
 
 
 import java.io.IOException;
@@ -22,8 +21,8 @@ import java.util.Vector;
  * 用户必须自定义OnMsgRecListener
  * Created by HUI on 2016-04-22.
  */
-public class TCPServer implements Runnable, Server, ServerSocketObserver {
-    private final static String TAG = "TCPServer";
+public class ServerLAN implements Runnable, Server, ServerSocketObserver {
+    private final static String TAG = "mServer";
     private NIOService service;
     private NIOServerSocket serverSocket;
     private ServerSocketObserver serverSocketObserver;
@@ -32,20 +31,33 @@ public class TCPServer implements Runnable, Server, ServerSocketObserver {
     private List<NIOSocket> socketList;
     private boolean isRunning;
     private int port;
+    private UDPSocket udpSocket;
 
-    private TCPServer() {
+
+    private ServerLAN() {
         serverReadListeners = new LinkedList<>();
         serverDataMap = new TreeMap<>();
         socketList = new Vector<>();
         serverSocketObserver = this;
         isRunning = false;
+        udpSocket = UDPSocket.getInstance();
+        udpSocket.setUdpReadListener(new UDPSocket.OnUdpReadListener() {
+            @Override
+            public void processMsg(String hostName, byte[] packet) {
+                String s = new String(packet);
+                if (s.equals(NetConstant.FIND_SERVER)) {
+                    udpSocket.send(hostName, NetConstant.RETURN_HOST.getBytes());
+                }
+            }
+        });
     }
+
 
     /**
      * 单例模型
      */
     private static class SingletonHolder {
-        private static TCPServer server = new TCPServer();
+        private static ServerLAN server = new ServerLAN();
         private static Thread workThread = new Thread(server);
     }
 
@@ -108,6 +120,19 @@ public class TCPServer implements Runnable, Server, ServerSocketObserver {
         return getInstance();
     }
 
+    @Override
+    public Server startUdp(int port) {
+        udpSocket.bind(port).start();
+        return getInstance();
+    }
+
+    @Override
+    public Server stopUdp() {
+        udpSocket.stop();
+        udpSocket.close();
+        return getInstance();
+    }
+
     /**
      * 关闭线程
      */
@@ -129,8 +154,8 @@ public class TCPServer implements Runnable, Server, ServerSocketObserver {
      * 关闭线程
      */
     public Server sendExceptClient(byte[] content, NIOSocket socket) {
-        for(NIOSocket nioSocket : socketList)
-            if(nioSocket != socket)
+        for (NIOSocket nioSocket : socketList)
+            if (nioSocket != socket)
                 write(content, nioSocket);
         return getInstance();
     }
@@ -139,7 +164,7 @@ public class TCPServer implements Runnable, Server, ServerSocketObserver {
      * 关闭线程
      */
     public Server sendAllClient(byte[] content) {
-        for(NIOSocket nioSocket : socketList)
+        for (NIOSocket nioSocket : socketList)
             write(content, nioSocket);
         return getInstance();
     }
@@ -207,9 +232,6 @@ public class TCPServer implements Runnable, Server, ServerSocketObserver {
         System.out.print(TAG + "Received connection: " + nioSocket);
         socketList.add(nioSocket);
 
-        nioSocket.setPacketReader(new RawPacketReader());
-        nioSocket.setPacketWriter(new RawPacketWriter());
-
         nioSocket.listen(new SocketObserver() {
             @Override
             public void connectionOpened(NIOSocket nioSocket) {
@@ -227,7 +249,7 @@ public class TCPServer implements Runnable, Server, ServerSocketObserver {
                     if (e != socket) {
                         if (!serverReadListeners.isEmpty())
                             for (OnServerReadListener serverReadListener : serverReadListeners)
-                                serverReadListener.processMSG(packet, socket);
+                                serverReadListener.processMsg(packet, socket);
                         else
                             System.out.print(TAG + "Server listener is null");
                     }
@@ -239,5 +261,25 @@ public class TCPServer implements Runnable, Server, ServerSocketObserver {
                 //待定
             }
         });
+    }
+
+    public static void main(String args[]) {
+        final Server server = ServerLAN.getInstance();
+        OnServerReadListener serverReadListener = new OnServerReadListener() {
+            @Override
+            public void processMsg(byte[] packet, NIOSocket nioSocket) {
+                System.out.println(new String(packet));
+                server.sendToClient(packet, nioSocket);
+                server.sendExceptClient(packet, nioSocket);
+                server.sendAllClient(packet);
+            }
+        };
+        server.addServerReadListener(serverReadListener)
+                .bind(NetConstant.TCP_PORT)
+                .start();
+
+        server.removeServerReadListener(serverReadListener)
+                .stop()
+                .close();
     }
 }
