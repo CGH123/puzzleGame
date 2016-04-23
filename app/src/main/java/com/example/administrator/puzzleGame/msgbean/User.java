@@ -1,10 +1,12 @@
-package com.example.msgbean;
+package com.example.administrator.puzzleGame.msgbean;
+
+import com.example.protocol.Entity;
 
 /**
  * 玩家信息
  * Created by HUI on 2016-04-23.
  */
-public class User extends Entity{
+public class User extends Entity {
     public String name;
     User(){
     }
