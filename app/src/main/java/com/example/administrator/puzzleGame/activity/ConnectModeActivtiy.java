@@ -14,10 +14,9 @@ import com.example.administrator.puzzleGame.util.WifiUtils;
  */
 public class ConnectModeActivtiy extends Activity {
 
-    private WifiUtils temp;
-
     Button wifi;
     Button bluetooth;
+    private WifiUtils temp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

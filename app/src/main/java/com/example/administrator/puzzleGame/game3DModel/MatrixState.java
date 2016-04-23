@@ -1,29 +1,34 @@
 package com.example.administrator.puzzleGame.game3DModel;
 
+import android.opengl.GLU;
+import android.opengl.Matrix;
+
+import com.example.administrator.puzzleGame.constant.GameConstant;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-
-import android.opengl.Matrix;
-import android.opengl.GLU;
-
-import com.example.administrator.puzzleGame.constant.GameConstant;
-
 //存储系统矩阵状态的类
 public class MatrixState {
-    private static float[] currMatrix;//当前变换矩阵
     public static float[] lightLocation = new float[]{0, 0, 0};//定位光光源位置
-    private static float[] mVMatrix = new float[16];//摄像机位置朝向9参数矩阵   
-    private static float[] mProjMatrix = new float[16];//4x4矩阵 投影用
     public static float[] mMVPMatrix = new float[16];//摄像矩阵与变换矩阵相乘的模型矩阵
-    public static float[] mVPMatrix=new float[16];//获取摄像机观察及投影的总变换矩阵
+    public static float[] mVPMatrix = new float[16];//获取摄像机观察及投影的总变换矩阵
     public static FloatBuffer cameraFB;
     public static FloatBuffer lightPositionFB;
-
+    //设置透视投影参数
+    public static float[] projects;
     //保护变换矩阵的栈
     static float[][] mStack = new float[10][16];
     static int stackTop = -1;
+    //设置摄像机
+    static ByteBuffer llbb = ByteBuffer.allocateDirect(3 * 4);
+    static float[] cameraLocation = new float[3];//摄像机位置
+    //设置灯光位置的方法
+    static ByteBuffer llbbL = ByteBuffer.allocateDirect(3 * 4);
+    private static float[] currMatrix;//当前变换矩阵
+    private static float[] mVMatrix = new float[16];//摄像机位置朝向9参数矩阵
+    private static float[] mProjMatrix = new float[16];//4x4矩阵 投影用
 
     //获取不变换初始矩阵
     public static void setInitStack() {
@@ -58,10 +63,6 @@ public class MatrixState {
         Matrix.scaleM(currMatrix, 0, x, y, z);
     }
 
-    //设置摄像机
-    static ByteBuffer llbb = ByteBuffer.allocateDirect(3 * 4);
-    static float[] cameraLocation = new float[3];//摄像机位置
-
     public static void setCamera
             (
                     float cx,    //摄像机位置x
@@ -93,17 +94,15 @@ public class MatrixState {
         cameraFB.position(0);
     }
 
-    //设置透视投影参数
-    public static float[] projects;
     public static void setProjectFrustum
-    (
-            float left,        //near面的left
-            float right,    //near面的right
-            float bottom,   //near面的bottom
-            float top,      //near面的top
-            float near,        //near面距离
-            float far       //far面距离
-    ) {
+            (
+                    float left,        //near面的left
+                    float right,    //near面的right
+                    float bottom,   //near面的bottom
+                    float top,      //near面的top
+                    float near,        //near面距离
+                    float far       //far面距离
+            ) {
         projects = new float[]{left, right, bottom, top, near, far};
         Matrix.frustumM(mProjMatrix, 0, left, right, bottom, top, near, far);
     }
@@ -129,9 +128,7 @@ public class MatrixState {
         return mMVPMatrix;
     }
 
-
-    public static float[] getFinalVPMatrix()
-    {
+    public static float[] getFinalVPMatrix() {
         Matrix.multiplyMM(mVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
         return mVPMatrix;
     }
@@ -140,10 +137,6 @@ public class MatrixState {
     public static float[] getMMatrix() {
         return currMatrix;
     }
-
-
-    //设置灯光位置的方法
-    static ByteBuffer llbbL = ByteBuffer.allocateDirect(3 * 4);
 
     public static void setLightLocation(float x, float y, float z) {
         llbbL.clear();

@@ -12,12 +12,12 @@ import java.util.concurrent.atomic.AtomicLong;
 
 
 class SocketChannelResponder extends ChannelResponder implements NIOSocket {
-    private int m_maxQueueSize;
     private final AtomicLong m_bytesInQueue;
-    private ConcurrentLinkedQueue<Object> m_packetQueue;
-    private volatile SocketObserver m_socketObserver;
     private final SocketReader m_socketReader;
     private final SocketWriter m_socketWriter;
+    private int m_maxQueueSize;
+    private ConcurrentLinkedQueue<Object> m_packetQueue;
+    private volatile SocketObserver m_socketObserver;
 
     public SocketChannelResponder(NIOService service, SocketChannel socketChannel, InetSocketAddress address) {
         super(service, socketChannel, address);
@@ -226,6 +226,9 @@ class SocketChannelResponder extends ChannelResponder implements NIOSocket {
         notifyObserverOfDisconnect(e);
     }
 
+    public Socket socket() {
+        return getChannel().socket();
+    }
 
     private class AddInterestEvent implements Runnable {
         private final int m_interest;
@@ -263,9 +266,5 @@ class SocketChannelResponder extends ChannelResponder implements NIOSocket {
         public String toString() {
             return "BeginListen[" + m_newObserver + "]";
         }
-    }
-
-    public Socket socket() {
-        return getChannel().socket();
     }
 }

@@ -6,26 +6,26 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30dp"
-        android:text="点击选择图片"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="点击选择图片"
+        android:textSize="30dp" />
 
     <Gallery
+        android:id="@+id/mygallery"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/mygallery" />
+        android:layout_height="match_parent" />
 
     <ImageView
+        android:id="@+id/ima_pic_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/pic_add"
-        android:id="@+id/ima_pic_add"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="126dp"
-        android:layout_marginStart="126dp" />
+        android:layout_marginStart="126dp"
+        android:src="@drawable/pic_add" />
 
 </RelativeLayout>

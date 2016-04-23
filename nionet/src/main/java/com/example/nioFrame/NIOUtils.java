@@ -50,7 +50,7 @@ public class NIOUtils {
     /**
      * Converts a value in a header buffer encoded in either big or little endian
      * encoding.
-     * <p>
+     * <p/>
      * <em>Note that trying to decode a value larger than 2^31 - 2 is not supported.</em>
      *
      * @param header    the header to encode from.

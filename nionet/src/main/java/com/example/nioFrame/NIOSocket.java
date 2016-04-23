@@ -7,12 +7,12 @@ public interface NIOSocket extends NIOAbstractSocket {
 
     /**
      * Write a packet of bytes asynchronously on this socket.
-     * <p>
+     * <p/>
      * The bytes will be sent to the PacketWriter belonging to this
      * socket for dispatch. However, if the queue is full (i.e. the new
      * queue size would exceed <code>getMaxQueueSize()</code>),
      * the packet is discarded and the method returns false.
-     * <p>
+     * <p/>
      * <em>This method is thread-safe.</em>
      *
      * @param packet the packet to send.
@@ -29,11 +29,11 @@ public interface NIOSocket extends NIOAbstractSocket {
 
     /**
      * Opens the socket for reads.
-     * <p>
+     * <p/>
      * The socket observer will receive connects, disconnects and packets.
      * If the socket was opened or disconnected before the observer was attached,
      * the socket observer will still receive those callbacks.
-     * <p>
+     * <p/>
      * <em>This method is thread-safe, but may only be called once.</em>
      *
      * @param socketObserver the observer to receive packets and be notified of connects/disconnects.
@@ -44,7 +44,7 @@ public interface NIOSocket extends NIOAbstractSocket {
 
     /**
      * Allows access to the underlying socket.
-     * <p>
+     * <p/>
      * <em>Note that accessing streams or closing the socket will
      * put this NIOSocket in an undefined state</em>
      *

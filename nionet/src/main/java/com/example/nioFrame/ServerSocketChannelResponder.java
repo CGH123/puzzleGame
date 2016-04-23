@@ -105,6 +105,14 @@ class ServerSocketChannelResponder extends ChannelResponder implements NIOServer
         getNIOService().queue(new BeginListenEvent(observer));
     }
 
+    protected void shutdown(Exception e) {
+        notifyObserverSocketDied(e);
+    }
+
+    public ServerSocket socket() {
+        return getChannel().socket();
+    }
+
     private class BeginListenEvent implements Runnable {
         private final ServerSocketObserver m_newObserver;
 
@@ -125,13 +133,5 @@ class ServerSocketChannelResponder extends ChannelResponder implements NIOServer
         public String toString() {
             return "BeginListen[" + m_newObserver + "]";
         }
-    }
-
-    protected void shutdown(Exception e) {
-        notifyObserverSocketDied(e);
-    }
-
-    public ServerSocket socket() {
-        return getChannel().socket();
     }
 }

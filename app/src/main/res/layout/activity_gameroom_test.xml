@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="准备"
         android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_x="150dp"
-        android:layout_y="456dp" />
+        android:layout_y="456dp"
+        android:text="准备" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="开始"
         android:id="@+id/button3"
-        android:layout_x="262dp"
-        android:layout_y="460dp" />
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="创建房间"
+        android:layout_x="262dp"
+        android:layout_y="460dp"
+        android:text="开始" />
+
+    <Button
         android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_x="41dp"
-        android:layout_y="456dp" />
+        android:layout_y="456dp"
+        android:text="创建房间" />
 
     <TextView
         android:id="@+id/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="显示内容"
         android:layout_x="9dp"
         android:layout_y="21dp"
+        android:text="显示内容"
         android:textSize="30sp" />
 
 </AbsoluteLayout>

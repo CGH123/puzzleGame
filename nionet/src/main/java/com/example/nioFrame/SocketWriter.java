@@ -6,12 +6,11 @@ import java.nio.channels.SocketChannel;
 
 
 class SocketWriter {
+    private final boolean m_bigEndian;
+    private final ByteBuffer m_header;
     private ByteBuffer[] m_writeBuffers;
     private Object m_tag;
     private int m_currentBuffer;
-
-    private final boolean m_bigEndian;
-    private final ByteBuffer m_header;
 
     SocketWriter(int headerSize, boolean bigEndian) {
         m_writeBuffers = null;

@@ -14,24 +14,12 @@ import java.net.UnknownHostException;
  * Created by HUI on 2016-04-16.
  */
 public class UDPSocket implements Runnable {
-    public interface OnUdpReadListener {
-        void processMsg(String hostName, byte[] packet);
-    }
+    private static boolean isRunning;
     private final String TAG = "UDPSocket";
     private DatagramSocket DataSocket;
     private OnUdpReadListener udpReadListener;
-    private static boolean isRunning;
-
     private UDPSocket() {
-        isRunning  = false;
-    }
-
-    /**
-     * 单例模型
-     */
-    private static class SingletonHolder {
-        private static UDPSocket udpSocket = new UDPSocket();
-        private static Thread workThread = new Thread(udpSocket);
+        isRunning = false;
     }
 
     public static UDPSocket getInstance() {
@@ -43,7 +31,7 @@ public class UDPSocket implements Runnable {
         return getInstance();
     }
 
-    public UDPSocket bind(int port){
+    public UDPSocket bind(int port) {
         try {
             DataSocket = new DatagramSocket(NetConstant.UDP_PORT);
         } catch (SocketException e) {
@@ -52,23 +40,23 @@ public class UDPSocket implements Runnable {
         return getInstance();
     }
 
-    public UDPSocket start(){
+    public UDPSocket start() {
         SingletonHolder.workThread.start();
         return getInstance();
     }
 
-    public UDPSocket stop(){
+    public UDPSocket stop() {
         isRunning = false;
         return getInstance();
 
     }
 
-    public UDPSocket close(){
+    public UDPSocket close() {
         DataSocket.close();
         return getInstance();
     }
 
-    public UDPSocket send(String host, byte[] data){
+    public UDPSocket send(String host, byte[] data) {
         InetAddress address;
         try {
             address = InetAddress.getByName(host);
@@ -86,7 +74,6 @@ public class UDPSocket implements Runnable {
         return getInstance();
     }
 
-
     @Override
     public void run() {
         while (isRunning) {
@@ -103,6 +90,18 @@ public class UDPSocket implements Runnable {
                 System.out.print(TAG + e.toString());
             }
         }
+    }
+
+    public interface OnUdpReadListener {
+        void processMsg(String hostName, byte[] packet);
+    }
+
+    /**
+     * 单例模型
+     */
+    private static class SingletonHolder {
+        private static UDPSocket udpSocket = new UDPSocket();
+        private static Thread workThread = new Thread(udpSocket);
     }
 
 }

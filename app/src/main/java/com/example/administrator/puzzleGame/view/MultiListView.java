@@ -1,11 +1,5 @@
 package com.example.administrator.puzzleGame.view;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import com.example.administrator.puzzleGame.R;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -25,26 +19,18 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.administrator.puzzleGame.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * 可下拉刷新的listView
  *
  * @author copy from other
  */
 public class MultiListView extends ListView implements OnScrollListener {
-
-    /**
-     * 加载更多监听接口
-     */
-    public interface OnLoadMoreListener {
-        public void onLoadMore();
-    }
-
-    /**
-     * 下拉刷新监听接口
-     */
-    public interface OnRefreshListener {
-        public void onRefresh();
-    }
 
     /**
      * 显示格式化日期模板
@@ -63,60 +49,45 @@ public class MultiListView extends ListView implements OnScrollListener {
      * 手动完成刷新
      */
     private final static int ENDINT_MANUAL_LOAD_DONE = 2;
-
     private final static int LOADING = 4;
     private final static int PULL_TO_REFRESH = 1;
     /**
      * 实际的padding的距离与界面上偏移距离的比例
      */
     private final static int RATIO = 3;
-
     private final static int REFRESHING = 2;
-
     private final static int RELEASE_TO_REFRESH = 0;
-
-    // ================================= 功能设置Flag
-    // ================================
-
     /**
      * headView动画
      */
     private RotateAnimation mArrowAnim;
-
     private ImageView mArrowImageView;
 
+    // ================================= 功能设置Flag
+    // ================================
     /**
      * headView反转动画
      */
     private RotateAnimation mArrowReverseAnim;
-
     /**
      * 可以加载更多？
      */
     private boolean mCanLoadMore = false;
-
     /**
      * 可以下拉刷新？
      */
     private boolean mCanRefresh = false;
-
     private int mCount;
-
     private ProgressBar mEndLoadProgressBar;
-
     private TextView mEndLoadTipsTextView;
-
     private View mEndRootView;
-
     /**
      * 0:完成/等待刷新 ;
      * <p/>
      * 1:加载中
      */
     private int mEndState;
-
     private int mFirstItemIndex;
-
     /**
      * 0:RELEASE_TO_REFRESH;
      * <p/>
@@ -129,10 +100,7 @@ public class MultiListView extends ListView implements OnScrollListener {
      * 4:LOADING
      */
     private int mHeadState;
-
-
     private LinearLayout mHeadView;
-
     private int mHeadViewHeight;
     private LayoutInflater mInflater;
     /**
@@ -144,21 +112,16 @@ public class MultiListView extends ListView implements OnScrollListener {
      * 下拉刷新后是否显示第一条Item
      */
     private boolean mIsMoveToFirstItemAfterRefresh = false;
-
     /**
      * 用于保证startY的值在一个完整的touch事件中只被记录一次
      */
     private boolean mIsRecored;
     private int mLastItemIndex;
     private TextView mLastUpdatedTextView;
-
     private OnLoadMoreListener mLoadMoreListener;
     private ProgressBar mProgressBar;
-
     private OnRefreshListener mRefreshListener;
-
     private int mStartY;
-
     private TextView mTipsTextView;
 
     public MultiListView(Context pContext) {
@@ -400,16 +363,35 @@ public class MultiListView extends ListView implements OnScrollListener {
         return mIsAutoLoadMore;
     }
 
+    public void setAutoLoadMore(boolean pIsAutoLoadMore) {
+        mIsAutoLoadMore = pIsAutoLoadMore;
+    }
+
     public boolean isCanLoadMore() {
         return mCanLoadMore;
+    }
+
+    public void setCanLoadMore(boolean pCanLoadMore) {
+        mCanLoadMore = pCanLoadMore;
+        if (mCanLoadMore && getFooterViewsCount() == 0) {
+            addFooterView();
+        }
     }
 
     public boolean isCanRefresh() {
         return mCanRefresh;
     }
 
+    public void setCanRefresh(boolean pCanRefresh) {
+        mCanRefresh = pCanRefresh;
+    }
+
     public boolean isMoveToFirstItemAfterRefresh() {
         return mIsMoveToFirstItemAfterRefresh;
+    }
+
+    public void setMoveToFirstItemAfterRefresh(boolean pIsMoveToFirstItemAfterRefresh) {
+        mIsMoveToFirstItemAfterRefresh = pIsMoveToFirstItemAfterRefresh;
     }
 
     /**
@@ -654,25 +636,6 @@ public class MultiListView extends ListView implements OnScrollListener {
         super.setAdapter(adapter);
     }
 
-    public void setAutoLoadMore(boolean pIsAutoLoadMore) {
-        mIsAutoLoadMore = pIsAutoLoadMore;
-    }
-
-    public void setCanLoadMore(boolean pCanLoadMore) {
-        mCanLoadMore = pCanLoadMore;
-        if (mCanLoadMore && getFooterViewsCount() == 0) {
-            addFooterView();
-        }
-    }
-
-    public void setCanRefresh(boolean pCanRefresh) {
-        mCanRefresh = pCanRefresh;
-    }
-
-    public void setMoveToFirstItemAfterRefresh(boolean pIsMoveToFirstItemAfterRefresh) {
-        mIsMoveToFirstItemAfterRefresh = pIsMoveToFirstItemAfterRefresh;
-    }
-
     public void setOnLoadListener(OnLoadMoreListener pLoadMoreListener) {
         if (pLoadMoreListener != null) {
             mLoadMoreListener = pLoadMoreListener;
@@ -688,6 +651,20 @@ public class MultiListView extends ListView implements OnScrollListener {
             mRefreshListener = pRefreshListener;
             mCanRefresh = true;
         }
+    }
+
+    /**
+     * 加载更多监听接口
+     */
+    public interface OnLoadMoreListener {
+        public void onLoadMore();
+    }
+
+    /**
+     * 下拉刷新监听接口
+     */
+    public interface OnRefreshListener {
+        public void onRefresh();
     }
 
 }

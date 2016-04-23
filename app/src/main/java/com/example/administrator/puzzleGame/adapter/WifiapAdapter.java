@@ -1,13 +1,5 @@
 package com.example.administrator.puzzleGame.adapter;
 
-import java.util.List;
-import java.util.Locale;
-
-import com.example.administrator.puzzleGame.constant.WifiApConst;
-import com.example.administrator.puzzleGame.util.WifiUtils;
-
-import com.squareup.picasso.Picasso;
-
 import android.content.Context;
 import android.net.wifi.ScanResult;
 import android.view.LayoutInflater;
@@ -18,21 +10,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.administrator.puzzleGame.R;
+import com.example.administrator.puzzleGame.constant.WifiApConst;
+import com.example.administrator.puzzleGame.util.WifiUtils;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by HUI on 2016-04-04.
  */
 public class WifiapAdapter extends BaseAdapter {
-    public static class ViewHolder {
-        public TextView desc;
-        public ImageView rssi;
-        public TextView ssid;
-    }
-
     private boolean isWifiConnected;
     private Context mContext;
     private List<ScanResult> mDatas;
-
     private LayoutInflater mInflater;
 
     public WifiapAdapter(Context context, List<ScanResult> list) {
@@ -139,6 +130,12 @@ public class WifiapAdapter extends BaseAdapter {
     // 新加的一个函数，用来更新数据
     public void setData(List<ScanResult> list) {
         this.mDatas = list;
+    }
+
+    public static class ViewHolder {
+        public TextView desc;
+        public ImageView rssi;
+        public TextView ssid;
     }
 }
 

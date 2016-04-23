@@ -1,35 +1,32 @@
 package com.example.administrator.puzzleGame.activity;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Message;
 import android.os.Handler;
+import android.os.Message;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
-
 
 import com.example.administrator.puzzleGame.R;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.example.administrator.puzzleGame.adapter.WifiapAdapter;
 import com.example.administrator.puzzleGame.base.BaseDialog;
 import com.example.administrator.puzzleGame.base.ConnWifiDialog;
 import com.example.administrator.puzzleGame.base.WifiapBroadcast;
 import com.example.administrator.puzzleGame.constant.WifiApConst;
 import com.example.administrator.puzzleGame.util.WifiUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by HUI on 2016-04-04.
@@ -178,6 +175,79 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
         super.onDestroy();
     }
 
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        switch (scrollState) {
+            case OnScrollListener.SCROLL_STATE_IDLE:
+                setRespondFlag(true);
+                break;
+            case OnScrollListener.SCROLL_STATE_FLING:
+                setRespondFlag(false); // 滚动时不刷新列表
+                break;
+            case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+                setRespondFlag(false); // 滚动时不刷新列表
+                break;
+        }
+    }
+
+    public void setRespondFlag(boolean flag) {
+        isRespond = flag;
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+    }
+
+    public void refreshAdapter(List<ScanResult> list) {
+        mWifiApAdapter.setData(list);
+        mWifiApAdapter.notifyDataSetChanged();
+    }
+
+    private void getWifiList() {
+//        mWifiList.clear();
+//        WifiUtils.startScan();
+//        List<ScanResult> scanResults = WifiUtils.getScanResults();
+//        mWifiList.addAll(scanResults);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+
+            // 返回按钮
+            case R.id.wifiap_btn_back:
+//                if (mHintDialog.isShowing()) {
+//                    mHintDialog.dismiss();
+//                }
+                finish();
+                break;
+
+            // 下一步按钮
+            case R.id.wifiap_btn_next:
+//                if (mHintDialog.isShowing()) {
+//                    mHintDialog.dismiss();
+//                }
+                doLogin();
+                break;
+
+        }
+    }
+
+    /**
+     * 短暂显示Toast提示(来自res)
+     **/
+    protected void showShortToast(int resId) {
+        Toast.makeText(this, getString(resId), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 短暂显示Toast提示(来自String)
+     **/
+    protected void showShortToast(String text) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    }
+
     /**
      * 定时刷新Wifi列表信息
      */
@@ -259,81 +329,5 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
                     break;
             }
         }
-    }
-
-
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-        switch (scrollState) {
-            case OnScrollListener.SCROLL_STATE_IDLE:
-                setRespondFlag(true);
-                break;
-            case OnScrollListener.SCROLL_STATE_FLING:
-                setRespondFlag(false); // 滚动时不刷新列表
-                break;
-            case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-                setRespondFlag(false); // 滚动时不刷新列表
-                break;
-        }
-    }
-
-    public void setRespondFlag(boolean flag) {
-        isRespond = flag;
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-    }
-
-    public void refreshAdapter(List<ScanResult> list) {
-        mWifiApAdapter.setData(list);
-        mWifiApAdapter.notifyDataSetChanged();
-    }
-
-    private void getWifiList() {
-//        mWifiList.clear();
-//        WifiUtils.startScan();
-//        List<ScanResult> scanResults = WifiUtils.getScanResults();
-//        mWifiList.addAll(scanResults);
-    }
-
-
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-
-            // 返回按钮
-            case R.id.wifiap_btn_back:
-//                if (mHintDialog.isShowing()) {
-//                    mHintDialog.dismiss();
-//                }
-                finish();
-                break;
-
-            // 下一步按钮
-            case R.id.wifiap_btn_next:
-//                if (mHintDialog.isShowing()) {
-//                    mHintDialog.dismiss();
-//                }
-                doLogin();
-                break;
-
-        }
-    }
-
-
-    /**
-     * 短暂显示Toast提示(来自res)
-     **/
-    protected void showShortToast(int resId) {
-        Toast.makeText(this, getString(resId), Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * 短暂显示Toast提示(来自String)
-     **/
-    protected void showShortToast(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 }

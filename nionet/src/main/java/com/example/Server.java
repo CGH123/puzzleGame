@@ -7,6 +7,7 @@ import com.example.nioFrame.ServerSocketObserver;
 public interface Server {
     /**
      * 绑定线程
+     *
      * @param port 端口
      * @return 服务器instance
      */
@@ -15,37 +16,43 @@ public interface Server {
 
     /**
      * 开启线程
+     *
      * @return 服务器instance
      */
     Server start();
 
     /**
      * 停止线程
+     *
      * @return 服务器instance
      */
     Server stop();
 
     /**
      * 开启线程
+     *
      * @return 服务器instance
      */
     Server startUdp(int port);
 
     /**
      * 停止线程
+     *
      * @return 服务器instance
      */
     Server stopUdp();
 
     /**
      * 关闭线程
+     *
      * @return 服务器instance
      */
     Server close();
 
     /**
      * 发送数据给服务器
-     * @param content 数据
+     *
+     * @param content   数据
      * @param nioSocket 客户端socket
      * @return 服务器instance
      */
@@ -53,7 +60,8 @@ public interface Server {
 
     /**
      * 发送数据给服务器
-     * @param content 数据
+     *
+     * @param content   数据
      * @param nioSocket 客户端socket
      * @return 服务器instance
      */
@@ -61,6 +69,7 @@ public interface Server {
 
     /**
      * 发送数据给服务器
+     *
      * @param content 数据
      * @return 服务器instance
      */
@@ -68,6 +77,7 @@ public interface Server {
 
     /**
      * 设置socket事件监听
+     *
      * @param serverSocketObserver 监听接口
      * @return 服务器instance
      */
@@ -75,6 +85,7 @@ public interface Server {
 
     /**
      * 添加服务器回调读数据监听
+     *
      * @param mlistener 监听接口
      * @return 服务器instance
      */
@@ -82,6 +93,7 @@ public interface Server {
 
     /**
      * 删除服务器回调写数据监听
+     *
      * @param mlistener 监听接口
      * @return 服务器instance
      */
@@ -89,13 +101,15 @@ public interface Server {
 
     /**
      * 删除服务器回调写数据监听
+     *
      * @param key key
-     * @param o 数据
+     * @param o   数据
      */
     void putData(String key, Object o);
 
     /**
      * 删除服务器回调写数据监听
+     *
      * @param key key
      * @return 数据
      */
