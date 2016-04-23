@@ -26,6 +26,18 @@ public interface Server {
     Server stop();
 
     /**
+     * 开启线程
+     * @return 服务器instance
+     */
+    Server startUdp(int port);
+
+    /**
+     * 停止线程
+     * @return 服务器instance
+     */
+    Server stopUdp();
+
+    /**
      * 关闭线程
      * @return 服务器instance
      */
@@ -88,4 +100,6 @@ public interface Server {
      * @return 数据
      */
     Object putData(String key);
+
+
 }
