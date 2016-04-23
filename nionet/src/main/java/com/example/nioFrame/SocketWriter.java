@@ -103,7 +103,7 @@ class SocketWriter
             {
                 m_currentBuffer = i;
                 break;
-            } 
+            }
             m_writeBuffers[i] = null;
         }
 
