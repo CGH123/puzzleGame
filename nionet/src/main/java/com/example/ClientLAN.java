@@ -1,6 +1,7 @@
 package com.example;
 
 
+import com.example.msgbean.Entity;
 import com.example.nioFrame.NIOService;
 import com.example.nioFrame.NIOSocket;
 import com.example.nioFrame.SocketObserver;
@@ -22,9 +23,9 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
     private NIOService service;
     private NIOSocket socket;
     private SocketObserver socketObserver;
+    private UDPSocket udpSocket;
     private String host;
     private int port;
-    private UDPSocket udpSocket;
     private List<OnClientReadListener> clientReadListeners; //设置监听器的回调函数
     private Map<String, Object> clientDataMap;
     private boolean isRunning;
@@ -46,6 +47,9 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
     private static class SingletonHolder {
         private static ClientLAN client = new ClientLAN();
         private static Thread workThread = new Thread(client);
+        static{
+            Entity.registerBeanTypes();
+        }
     }
 
     public static Client getInstance() {

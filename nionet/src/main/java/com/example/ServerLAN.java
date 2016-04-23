@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.msgbean.Entity;
 import com.example.nioFrame.ConnectionAcceptor;
 import com.example.nioFrame.NIOServerSocket;
 import com.example.nioFrame.NIOService;
@@ -26,12 +27,12 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
     private NIOService service;
     private NIOServerSocket serverSocket;
     private ServerSocketObserver serverSocketObserver;
+    private UDPSocket udpSocket;
     private List<OnServerReadListener> serverReadListeners; //设置监听器的回调函数
     private Map<String, Object> serverDataMap;
     private List<NIOSocket> socketList;
     private boolean isRunning;
     private int port;
-    private UDPSocket udpSocket;
 
 
     private ServerLAN() {
@@ -59,6 +60,9 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
     private static class SingletonHolder {
         private static ServerLAN server = new ServerLAN();
         private static Thread workThread = new Thread(server);
+        static{
+            Entity.registerBeanTypes();
+        }
     }
 
     public static Server getInstance() {

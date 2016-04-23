@@ -1,36 +1,38 @@
 package com.example.serialization;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
+import java.util.List;
 
-/**
- * 序列化实现
- */
-public class SerializerFastJson implements Serializer{
-
-    /**
-     * 反序列化
-     * @param inputBytes
-     * @param paramCls
-     * @param <T>
-     * @return
-     */
-    @Override
-    public  <T> T deserialize(byte[] inputBytes, Class<T> paramCls) {
-        T t = JSON.parseObject(inputBytes, paramCls);
-        return t;
+public class SerializerFastJson implements Serializer {
+    private SerializerFastJson(){
+        JSON.DEFAULT_GENERATE_FEATURE |= SerializerFeature.DisableCircularReferenceDetect.getMask();
     }
 
     /**
-     * 序列化
-     * @param paramObject
-     * @param <T>
-     * @return
+     * 单例模型
      */
-    @Override
-    public <T> byte[] serialize(T paramObject) {
-        return JSON.toJSONBytes(paramObject);
+    private static class SingletonHolder {
+        private static Serializer serializer = new SerializerFastJson();
     }
 
+    public static Serializer getInstance() {
+        return SingletonHolder.serializer;
+    }
 
+    @Override
+    public <T> T parseObject(String jsonString, Class<T> paramCls) {
+        return JSON.parseObject(jsonString, paramCls);
+    }
+
+    @Override
+    public <T> List<T> parseArray(String jsonString, Class<T> paramCls) {
+        return JSON.parseArray(jsonString, paramCls);
+    }
+
+    @Override
+    public String serialize(Object paramObject) {
+        return JSON.toJSONString(paramObject);
+    }
 }
