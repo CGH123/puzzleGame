@@ -4,7 +4,6 @@ import com.example.msgbean.Entity;
 import com.example.msgbean.GameProcess;
 import com.example.msgbean.Message;
 import com.example.msgbean.User;
-import com.example.msgbean.UserList;
 import com.example.serialization.SerializerFastJson;
 
 import org.json.JSONException;
@@ -28,10 +27,10 @@ public class MSGProtocol {
 
     public enum ADDTION_TYPE {
         //待写，根据游戏中需要传递的数据来判断
-        GAMEPROCESS,USER,USERLIST,MESSAGE
+        GAMEPROCESS,USER,MESSAGE
     }
 
-    private final String NAME = "IMEI";
+    private final String NAME = "senderName";
     private final String COMMAND = "command";
     private final String OPTION = "option";
     private final String ADDTYPE = "addType";
@@ -45,6 +44,7 @@ public class MSGProtocol {
 
     public  MSGProtocol(){
     }
+
 
     public MSGProtocol(byte[] paramProtocolJSON) throws JSONException{
         JSONObject protocolJSON = new JSONObject(paramProtocolJSON);
@@ -74,9 +74,6 @@ public class MSGProtocol {
                     break;
                 case USER:
                     addObject = new SerializerFastJson().deserialize(objectData, User.class);
-                    break;
-                case USERLIST:
-                    addObject = new SerializerFastJson().deserialize(objectData, UserList.class);
                     break;
             }
         }
