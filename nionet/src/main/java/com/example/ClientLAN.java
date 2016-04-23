@@ -22,9 +22,9 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
     private NIOService service;
     private NIOSocket socket;
     private SocketObserver socketObserver;
+    private UDPSocket udpSocket;
     private String host;
     private int port;
-    private UDPSocket udpSocket;
     private List<OnClientReadListener> clientReadListeners; //设置监听器的回调函数
     private Map<String, Object> clientDataMap;
     private boolean isRunning;

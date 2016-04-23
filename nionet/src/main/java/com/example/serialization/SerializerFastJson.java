@@ -5,8 +5,7 @@ import com.alibaba.fastjson.JSON;
 public class SerializerFastJson implements Serializer{
     @Override
     public <T> T deserialize(byte[] inputBytes, Class<T> paramCls) {
-        T t = JSON.parseObject(inputBytes, paramCls);
-        return t;
+        return JSON.parseObject(inputBytes, paramCls);
     }
 
     @Override

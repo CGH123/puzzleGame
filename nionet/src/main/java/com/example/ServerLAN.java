@@ -26,12 +26,12 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
     private NIOService service;
     private NIOServerSocket serverSocket;
     private ServerSocketObserver serverSocketObserver;
+    private UDPSocket udpSocket;
     private List<OnServerReadListener> serverReadListeners; //设置监听器的回调函数
     private Map<String, Object> serverDataMap;
     private List<NIOSocket> socketList;
     private boolean isRunning;
     private int port;
-    private UDPSocket udpSocket;
 
 
     private ServerLAN() {
