@@ -16,9 +16,14 @@ public class SerializerFastJson implements Serializer {
     }
 
     @Override
-    public <T extends Entity> MSGProtocol<T> parse(String jsonString, Class<T> paramCls) {
+    public <T extends Entity> MSGProtocol<T> parseObject(String jsonString, Class<T> paramCls) {
         return JSON.parseObject(jsonString, new TypeReference<MSGProtocol<T>>(paramCls) {
         });
+    }
+
+    @Override
+    public <T> T parseNull(String jsonString, Class<T> paramCls) {
+        return JSON.parseObject(jsonString, paramCls);
     }
 
     @Override

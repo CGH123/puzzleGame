@@ -35,8 +35,8 @@ public class User extends Entity {
         System.out.println(s1);
         String s2 = serializer.serialize(msgProtocol2);
         System.out.println(s2);
-        msgProtocol1 = serializer.parse(s1, User.class);
-        msgProtocol2 = serializer.parse(s2, User.class);
+        msgProtocol1 = serializer.parseObject(s1, User.class);
+        msgProtocol2 = serializer.parseObject(s2, User.class);
         if (msgProtocol1.getSetType() == MSGProtocol.SET_TYPE.BEAN)
             user = msgProtocol1.getAddObject();
         if (msgProtocol2.getSetType() == MSGProtocol.SET_TYPE.LIST)

@@ -5,6 +5,8 @@ import com.example.nioFrame.NIOService;
 import com.example.nioFrame.NIOSocket;
 import com.example.nioFrame.SocketObserver;
 import com.example.nioFrame.UDPSocket;
+import com.example.protocol.MSGProtocol;
+import com.example.serialization.SerializerFastJson;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -57,11 +59,12 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
                 .bind("localhost", NetConstant.TCP_PORT)
                 .start();
 
-        client.sendToServer("hello".getBytes());
+        for (int i = 0; i < 100; i++) {
+            MSGProtocol msgProtocol = new MSGProtocol("hello server", i);
+            String msgString = SerializerFastJson.getInstance().serialize(msgProtocol);
+            client.sendToServer(msgString.getBytes());
+        }
 
-        client.removeClientReadListener(clientReadListener)
-                .stop()
-                .close();
     }
 
     public Client setSocketObserver(SocketObserver mSocketObserver) {
@@ -167,7 +170,7 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
      * 由于客户端只有一个管道，所以不用socketChannel的参数
      */
     private void write(byte[] content) {
-        if (socket == null || socket.isOpen() || service.isOpen() || !isRunning) {
+        if (socket == null || !isRunning) {
             System.out.println(TAG + "write socket wrong");
             stop();
             close();
@@ -238,18 +241,12 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
     }
 
     public void packetReceived(NIOSocket socket, byte[] packet) {
-        try {
-            //处理返回得到的数据,用观察者(监听器)模式来处理
-            if (!clientReadListeners.isEmpty())
-                for (OnClientReadListener clientReadListener : clientReadListeners)
-                    clientReadListener.processMsg(packet);
-            else
-                System.out.println(TAG + "Client listener is empty");
-        } catch (Exception e) {
-            this.stop();
-            this.close();
-            e.printStackTrace();
-        }
+        //处理返回得到的数据,用观察者(监听器)模式来处理
+        if (!clientReadListeners.isEmpty())
+            for (OnClientReadListener clientReadListener : clientReadListeners)
+                clientReadListener.processMsg(packet);
+        else
+            System.out.println(TAG + "Client listener is empty");
     }
 
     public void connectionBroken(NIOSocket nioSocket, Exception exception) {
