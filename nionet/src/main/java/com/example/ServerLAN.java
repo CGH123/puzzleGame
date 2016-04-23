@@ -1,6 +1,5 @@
 package com.example;
 
-import com.example.msgbean.Entity;
 import com.example.nioFrame.ConnectionAcceptor;
 import com.example.nioFrame.NIOServerSocket;
 import com.example.nioFrame.NIOService;
@@ -8,6 +7,7 @@ import com.example.nioFrame.NIOSocket;
 import com.example.nioFrame.ServerSocketObserver;
 import com.example.nioFrame.SocketObserver;
 import com.example.nioFrame.UDPSocket;
+import com.example.protocol.Entity;
 
 
 import java.io.IOException;
@@ -60,9 +60,6 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
     private static class SingletonHolder {
         private static ServerLAN server = new ServerLAN();
         private static Thread workThread = new Thread(server);
-        static{
-            Entity.registerBeanTypes();
-        }
     }
 
     public static Server getInstance() {
