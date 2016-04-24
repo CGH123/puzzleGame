@@ -205,10 +205,12 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
     }
 
     private void getWifiList() {
-//        mWifiList.clear();
-//        WifiUtils.startScan();
-//        List<ScanResult> scanResults = WifiUtils.getScanResults();
-//        mWifiList.addAll(scanResults);
+        mWifiList.clear();
+        WifiUtils temp = new WifiUtils(this);
+        temp.startScan();
+        List<ScanResult> scanResults = temp.getScanResults();
+        mWifiList.addAll(scanResults);
+
     }
 
     @Override
@@ -287,7 +289,7 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
             try {
                 this.running = false;
                 this.thread = null;
-            } finally {
+            } finally { 
             }
         }
     }

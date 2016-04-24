@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -12,14 +11,9 @@ import android.widget.TextView;
 import com.example.Client;
 import com.example.ClientLAN;
 import com.example.NetConstant;
-import com.example.OnClientReadListener;
-import com.example.OnServerReadListener;
 import com.example.Server;
 import com.example.ServerLAN;
 import com.example.administrator.puzzleGame.R;
-import com.example.nioFrame.NIOSocket;
-import com.example.protocol.MSGProtocol;
-import com.example.serialization.SerializerFastJson;
 
 /**
  * 未在.xml中登记
@@ -31,8 +25,6 @@ public class GameRoomActivity extends Activity implements View.OnClickListener {
 
     Server server;
     Client client;
-    boolean isServer;
-    String TAG = "GameRoom";
 
 
     Button game_build;
@@ -73,9 +65,15 @@ public class GameRoomActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onStart() {
         super.onStart();
-        isServer = false;
         server = ServerLAN.getInstance();
         client = ClientLAN.getInstance();
+        client.startUdp(NetConstant.UDP_PORT);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        client.stopUdp();
     }
 
 
@@ -84,46 +82,40 @@ public class GameRoomActivity extends Activity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.button_build:
                 //TODO 创建UDP服务端
-                isServer = true;
                 server.startUdp(9788);
                 break;
             case R.id.button_refresh:
                 //TODO 用来接收房主信息
-                if(!isServer){
-                    detail_show.setText("test");
-                    DownTask task = new DownTask();
-                    task.execute();
-                }
+                detail_show.setText("test");
+                new DownTask().execute();
                 break;
             case R.id.button_ready:
                 //TODO 建立TCP链接准备,暂时用来测试关闭UDP
-                if(isServer)
-                    server.stopUdp();
+                server.stopUdp();
                 break;
             case R.id.button_start:
                 //TODO 开始进行TCP连接游戏对战
                 //待写，用来判断已经进入房间，用来测试UDP的
                 //目前用于跳转到游戏界面
-                Intent intent = new Intent(GameRoomActivity.this,GameActivity.class);
+                Intent intent = new Intent(GameRoomActivity.this, GameActivity.class);
                 startActivity(intent);
-
         }
     }
 
-    private class DownTask extends AsyncTask<Void,Void,String>{
+    private class DownTask extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... params) {
-            String ip = "ip为";
             String temp = client.findServerIP(2000);
-            if(temp.equals("")) ip+=":找不到";
-            else ip+=temp;
+            String ip = "ip为";
+            if (temp.equals("")) ip += ":找不到";
+            else ip += temp;
             return ip;
         }
 
         @Override
         protected void onPostExecute(String ip) {
-            detail_show.setText("内容如下"+ip);
+            detail_show.setText("内容如下" + ip);
         }
 
     }

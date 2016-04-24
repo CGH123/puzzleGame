@@ -3,4 +3,35 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="white">#ffffffff</color>
+    <color name="red">#ffff0000</color>
+    <color name="blue2">#ff0000ff</color>
+    <color name="green">#ff00ff00</color>
+    <color name="yellow">#ffffff00</color>
+    <color name="black">#ff000000</color>
+    <color name="gray">#ff7f7f7f</color>
+    <color name="blue">#ff0f81d9</color>
+    <color name="transparent">#00000000</color>
+    <color name="round_corner_filter_green">#ff66ccff</color>
+    <color name="dialog_divider">#ffbfcbd3</color>
+    <color name="dialog_listitem_press">#ffd0dce4</color>
+    <color name="dialog_backgroud_full">#6d000000</color>
+    <color name="background_normal">#fffffbf0</color>
+    <color name="background_normal_press">#ffece7da</color>
+    <color name="devideline">#ffd0c9b8</color>
+    <color name="devideline_listview">#ffe5e2d4</color>
+    <color name="timestampline">#ffe5e1de</color>
+    <color name="bg_sitespan">#ffece7d9</color>
+    <color name="bg_sitespan_press">#ffe0dbce</color>
+    <color name="font_attribute">#ff000000</color>
+    <color name="font_value">#ff888271</color>
+    <color name="link_color">#ff4abad7</color>
+    <color name="notes_color">#ff777777</color>
+    <color name="light_notes_color">#ff999999</color>
+    <color name="text_color">#ff434343</color>
+    <color name="gender_male">#ff65b1ea</color>
+    <color name="gender_famal">#ffffaed8</color>
+    <color name="transparent_background">#00ffffff</color>
+    <color name="gray_f0f0f0">#f0f0f0</color>
 </resources>

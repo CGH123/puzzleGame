@@ -37,6 +37,19 @@ public interface Client {
      */
     String findServerIP(int timeout);
 
+    /**
+     * 开启线程
+     *
+     * @return 服务器instance
+     */
+    Client startUdp(int port);
+
+    /**
+     * 停止线程
+     *
+     * @return 服务器instance
+     */
+    Client stopUdp();
 
     /**
      * 停止线程

@@ -35,8 +35,6 @@ public class GameActivity extends Activity implements View.OnClickListener {
     Server server;
     Client client;
 
-    boolean isServer = false;
-    boolean isClient = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,17 +66,22 @@ public class GameActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.test_send:
-                MSGProtocol msgProtocol = new MSGProtocol("hello server", 20);
-                String msgString = SerializerFastJson.getInstance().serialize(msgProtocol);
-                client.sendToServer(msgString.getBytes());
+                MSGProtocol msgProtocol = new MSGProtocol("Hi", 1);
+                String temp = SerializerFastJson.getInstance().serialize(msgProtocol);
+                client.sendToServer(temp.getBytes());
+
+                Message msg = new Message();
+                msg.what = NetConstant.Message_Sen;
+                Bundle bundle = new Bundle();
+                bundle.putString("name", msgProtocol.getSenderName());
+                msg.setData(bundle);
+                myHandler.sendMessage(msg);
                 break;
             case R.id.server_init:
-                if (isServer) break;
-                new NetStartTask(server).execute();
+                new NetStartTask(ServerLAN.getInstance()).execute();
                 break;
             case R.id.client_init:
-                if (isClient) break;
-                new NetStartTask(client).execute();
+                new NetStartTask(ClientLAN.getInstance()).execute();
                 break;
         }
     }
@@ -107,7 +110,6 @@ public class GameActivity extends Activity implements View.OnClickListener {
         }
     }
 
-
     class NetStartTask extends AsyncTask<Void,Void,String> {
         Server server;
         Client client;
@@ -126,7 +128,7 @@ public class GameActivity extends Activity implements View.OnClickListener {
                         MSGProtocol msgProtocol = SerializerFastJson.getInstance().parseNull(new String(packet), MSGProtocol.class);
 
                         Message msg = new Message();
-                        msg.what = NetConstant.Message_Sen;
+                        msg.what = NetConstant.Message_Rec;
                         Bundle bundle = new Bundle();
                         bundle.putString("name", msgProtocol.getSenderName());
                         msg.setData(bundle);
@@ -165,4 +167,6 @@ public class GameActivity extends Activity implements View.OnClickListener {
         }
 
     }
+
+
 }
