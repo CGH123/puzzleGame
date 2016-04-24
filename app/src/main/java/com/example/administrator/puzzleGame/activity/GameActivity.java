@@ -131,7 +131,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
 
         @Override
         public void handleMessage(Message msg) {
-            Bundle bundle;
+            Bundle bundle; 
             String name;
             switch(msg.what){
                 case NetConstant.Message_Rec:

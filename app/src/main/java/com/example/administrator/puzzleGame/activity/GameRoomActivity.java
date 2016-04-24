@@ -97,7 +97,7 @@ public class GameRoomActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.button_ready:
                 //TODO 建立TCP链接准备,暂时用来测试关闭UDP
-                if(isServer) 
+                if(isServer)
                     server.stopUdp();
                 break;
             case R.id.button_start:
