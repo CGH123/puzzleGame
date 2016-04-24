@@ -7,7 +7,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 
 /**
  * 用于UDP进行泛洪寻找玩家
@@ -21,6 +20,7 @@ public class UDPSocket implements Runnable {
     private UDPSocket() {
         isRunning = false;
     }
+    private int port;
 
     public static UDPSocket getInstance() {
         return SingletonHolder.udpSocket;
@@ -33,7 +33,8 @@ public class UDPSocket implements Runnable {
 
     public UDPSocket bind(int port) {
         try {
-            DataSocket = new DatagramSocket(NetConstant.UDP_PORT);
+            this.port = port;
+            DataSocket = new DatagramSocket(port);
         } catch (SocketException e) {
             System.out.print(TAG + "UDPSocket new failed");
         }
@@ -61,12 +62,8 @@ public class UDPSocket implements Runnable {
         InetAddress address;
         try {
             address = InetAddress.getByName(host);
-            DatagramPacket dataPacket = new DatagramPacket(data, data.length, address, NetConstant.UDP_PORT);
+            DatagramPacket dataPacket = new DatagramPacket(data, data.length, address, port);
             DataSocket.send(dataPacket);
-        } catch (UnknownHostException e) {
-            stop();
-            close();
-            e.printStackTrace();
         } catch (IOException e) {
             stop();
             close();
