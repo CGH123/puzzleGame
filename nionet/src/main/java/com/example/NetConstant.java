@@ -11,11 +11,19 @@ public class NetConstant {
     /**
      * 主机TCP端口
      */
-    public static final int TCP_PORT = 4447;
+    public static final int TCP_PORT = 9047;
     /**
      * 主机UDP端口
      */
-    public static final int UDP_PORT = 3647;
+    public static final int UDP_PORT = 9547;
 
+    /**
+     * 收到消息
+     */
+    public static final int Message_Rec = 10;
 
+    /**
+     * 发送消息
+     */
+    public static final int Message_Sen = 11;
 }

@@ -41,6 +41,7 @@ public class UDPSocket implements Runnable {
     }
 
     public UDPSocket start() {
+        isRunning = true;
         SingletonHolder.workThread.start();
         return getInstance();
     }

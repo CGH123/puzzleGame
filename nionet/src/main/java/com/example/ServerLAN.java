@@ -1,4 +1,4 @@
-package com.example; 
+package com.example;
 
 import com.example.nioFrame.ConnectionAcceptor;
 import com.example.nioFrame.NIOServerSocket;
@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap; 
 import java.util.Vector;
+
 
 /**
  * TCP连接的服务端
@@ -74,6 +75,7 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
                 .start();
 
     }
+
 
     public Server setServerSocketObserver(ServerSocketObserver serverSocketObserver) {
         this.serverSocketObserver = serverSocketObserver;

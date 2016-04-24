@@ -38,6 +38,8 @@
         <activity android:name="com.example.administrator.puzzleGame.activity.ConnectModeActivtiy"></activity>
         <activity android:name="com.example.administrator.puzzleGame.activity.WifiapActivity"></activity>
         <activity android:name="com.example.administrator.puzzleGame.activity.Game3DActivity"></activity>
+        <activity android:name="com.example.administrator.puzzleGame.activity.GameRoomActivity"></activity>
+        <activity android:name="com.example.administrator.puzzleGame.activity.GameActivity"></activity>
 
         <service android:name="com.example.administrator.puzzleGame.game2DModel.bg_music">
             <intent-filter>

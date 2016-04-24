@@ -67,6 +67,7 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
 
     }
 
+
     public Client setSocketObserver(SocketObserver mSocketObserver) {
         this.socketObserver = mSocketObserver;
         return getInstance();

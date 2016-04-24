@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="323dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.84">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试显示内容"
+            android:id="@+id/textView2"
+            android:textSize="30sp"
+            android:layout_marginTop="54dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="创房"
+            android:id="@+id/button_build"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="房间信息如下"
+            android:textSize="20sp"
+            android:id="@+id/test_gameroom"
+            android:layout_below="@+id/textView2"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="测试刷新"
+            android:id="@+id/button_refresh"
+            android:layout_above="@+id/button_build"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="false">
+
+            <Button
+                android:layout_width="183dp"
+                android:layout_height="match_parent"
+                android:text="开始（目前用于跳转）"
+                android:id="@+id/button_start"
+                android:layout_weight="0.48" />
+
+            <Button
+                android:layout_width="183dp"
+                android:layout_height="match_parent"
+                android:text="准备"
+                android:id="@+id/button_ready" />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

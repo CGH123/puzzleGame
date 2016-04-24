@@ -1,6 +1,7 @@
 package com.example.administrator.puzzleGame.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
@@ -119,9 +120,9 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
 
     //进入游戏界面
     private void doLogin() {
-        /*Intent intent = new Intent();
+        Intent intent = new Intent();
         intent.setClass(WifiapActivity.this, GameRoomActivity.class);
-        startActivity(intent);*/
+        startActivity(intent);
     }
 
     /**
