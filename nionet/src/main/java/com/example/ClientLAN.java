@@ -34,6 +34,7 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
     private String serverIp;
 
     private ClientLAN() {
+        udpSocket = UDPSocket.getInstance();
         clientReadListeners = new LinkedList<>();
         clientDataMap = new TreeMap<>();
         socketObserver = this;
@@ -110,8 +111,21 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
         return getInstance();
     }
 
+    @Override
+    public Client startUdp(int port) {
+        udpSocket.bind(port).start();
+        return getInstance();
+    }
+
+    @Override
+    public Client stopUdp() {
+        udpSocket.stop();
+        udpSocket.close();
+        return getInstance();
+    }
+
+    @Override
     public String findServerIP(int timeout) {
-        udpSocket = UDPSocket.getInstance();
         udpSocket.setUdpReadListener(new UDPSocket.OnUdpReadListener() {
             @Override
             public void processMsg(String hostName, byte[] packet) {
@@ -123,7 +137,6 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
                 }
             }
         });
-        udpSocket.bind(NetConstant.UDP_PORT).start();
         int time = 0;
         int sleepTime = 300;
         while (time < timeout && !isFindServer) {

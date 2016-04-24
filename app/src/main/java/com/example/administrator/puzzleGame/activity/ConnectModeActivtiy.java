@@ -29,7 +29,7 @@ public class ConnectModeActivtiy extends Activity {
         wifi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ConnectModeActivtiy.this, WifiapActivity.class);
+                Intent intent = new Intent(ConnectModeActivtiy.this, GameRoomActivity.class);
                 startActivity(intent);
             }
         });
