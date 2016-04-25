@@ -24,6 +24,8 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
     private NIOService service;
     private NIOSocket socket;
     private SocketObserver socketObserver;
+
+
     private UDPSocket udpSocket;
     private String host;
     private int port;
@@ -42,6 +44,7 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
         isFindServer = false;
         serverIp = "";
     }
+
 
     public static Client getInstance() {
         return SingletonHolder.client;
@@ -113,7 +116,8 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
 
     @Override
     public Client startUdp(int port) {
-        udpSocket.bind(port).start();
+        //udpSocket.bind(port).start();
+        udpSocket.bind(port);
         return getInstance();
     }
 
@@ -137,6 +141,9 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
                 }
             }
         });
+
+        udpSocket.start();
+
         int time = 0;
         int sleepTime = 300;
         while (time < timeout && !isFindServer) {
@@ -145,7 +152,7 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
                 udpSocket.send(NetConstant.BROADCAST_HOST, data);
                 Thread.sleep(sleepTime);
                 time += sleepTime;
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 udpSocket.stop();
                 udpSocket.close();
                 System.out.print(TAG + e.toString());

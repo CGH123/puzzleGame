@@ -41,29 +41,7 @@
             android:textSize="30sp" />
 
 
-        <LinearLayout
-            android:id="@+id/gameroom_layout_gender"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/gameroom_my_name"
-            android:layout_marginBottom="4dp"
-            android:layout_marginRight="20dp"
-            android:layout_toRightOf="@+id/gameroom_my_name"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingBottom="4dip"
-            android:paddingLeft="4dip"
-            android:paddingRight="4dip"
-            android:paddingTop="4dip">
 
-            <ImageView
-                android:id="@+id/gameroom_my_gender"
-                android:layout_width="12dip"
-                android:layout_height="12dip"
-                android:contentDescription="@string/app_name"
-                android:scaleType="fitXY" />
-
-        </LinearLayout>
 
         <TextView
             android:id="@+id/gameroom_my_order"

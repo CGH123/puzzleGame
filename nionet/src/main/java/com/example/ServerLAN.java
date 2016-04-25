@@ -28,6 +28,11 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
     private NIOService service;
     private NIOServerSocket serverSocket;
     private ServerSocketObserver serverSocketObserver;
+
+    public UDPSocket getUdpSocket() {
+        return udpSocket;
+    }
+
     private UDPSocket udpSocket;
     private List<OnServerReadListener> serverReadListeners; //设置监听器的回调函数
     private Map<String, Object> serverDataMap;
@@ -134,7 +139,8 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
 
     @Override
     public Server startUdp(int port) {
-        udpSocket.bind(port).start();
+        //udpSocket.bind(port).start();
+        udpSocket.start();
         return getInstance();
     }
 

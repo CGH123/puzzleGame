@@ -121,7 +121,7 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
     //进入游戏界面
     private void doLogin() {
         Intent intent = new Intent();
-        intent.setClass(WifiapActivity.this, GameRoomActivity.class);
+        intent.setClass(WifiapActivity.this, GameRoomTestActivity.class);
         startActivity(intent);
     }
 
@@ -289,7 +289,7 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
             try {
                 this.running = false;
                 this.thread = null;
-            } finally { 
+            } finally {
             }
         }
     }
