@@ -1,7 +1,7 @@
 package com.example.administrator.puzzleGame.util;
 
 
-import com.example.administrator.puzzleGame.game3DModel.Vector2f;
+import com.example.administrator.puzzleGame.gameModel.Vector2f;
 
 public class BitmapUtil {
 

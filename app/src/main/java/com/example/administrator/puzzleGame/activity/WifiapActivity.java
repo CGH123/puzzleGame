@@ -206,7 +206,7 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
 
     private void getWifiList() {
 //        mWifiList.clear();
-//        WifiUtils.startScan();
+//        WifiUtil.startScan();
 //        List<ScanResult> scanResults = WifiUtils.getScanResults();
 //        mWifiList.addAll(scanResults);
     }
