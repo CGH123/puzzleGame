@@ -92,6 +92,7 @@ public class GameActivity extends Activity implements BaseHandler.OnMessageListe
         for (User user : users) {
             listDatas.add((new GameProgressAdapter.ListData(user.getName(), user.getName().substring(0, 1))));
         }*/
+        //test数据需要删除
         for (int i = 0; i < 5; i++) {
             listDatas.add((new GameProgressAdapter.ListData("玩家" + i, String.valueOf(i))));
         }
