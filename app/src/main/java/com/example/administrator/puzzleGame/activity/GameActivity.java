@@ -1,6 +1,7 @@
 package com.example.administrator.puzzleGame.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +26,8 @@ import com.example.serialization.SerializerFastJson;
  * Created by HUI on 2016-04-24.
  */
 public class GameActivity extends Activity implements View.OnClickListener {
+
+    Button temp;
 
     Button sent;
     Button server_init;
@@ -51,6 +54,8 @@ public class GameActivity extends Activity implements View.OnClickListener {
         client_init = (Button) findViewById(R.id.client_init);
         content = (TextView) findViewById(R.id.text_show);
         myHandler = new MyHandler();
+
+        temp = (Button)findViewById(R.id.button_temp);
     }
 
     private void initEvent() {
@@ -59,6 +64,8 @@ public class GameActivity extends Activity implements View.OnClickListener {
         client_init.setOnClickListener(this);
         server = ServerLAN.getInstance();
         client = ClientLAN.getInstance();
+
+        temp.setOnClickListener(this);
     }
 
 
@@ -83,6 +90,9 @@ public class GameActivity extends Activity implements View.OnClickListener {
             case R.id.client_init:
                 new NetStartTask(ClientLAN.getInstance()).execute();
                 break;
+            case R.id.button_temp:
+                Intent intent = new Intent(GameActivity.this,GameRoomActivity.class);
+                startActivity(intent);
         }
     }
 

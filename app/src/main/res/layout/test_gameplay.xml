@@ -44,5 +44,14 @@
             android:id="@+id/client_init"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="去游戏房间"
+            android:id="@+id/button_temp"
+            android:layout_below="@+id/client_init"
+            android:layout_alignEnd="@+id/client_init"
+            android:layout_marginTop="43dp" />
     </RelativeLayout>
 </LinearLayout>

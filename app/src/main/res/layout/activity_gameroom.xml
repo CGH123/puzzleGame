@@ -127,20 +127,6 @@
             android:textColor="@drawable/profile_bottom_text_color"
             android:textSize="14sp" />
 
-        <Button
-            android:id="@+id/gameroom_ready"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="42dp"
-            android:layout_marginRight="9dip"
-            android:layout_weight="1"
-            android:background="@drawable/btn_bottombar_red"
-            android:gravity="center"
-            android:text="@string/gameroom_ready"
-            android:textColor="@drawable/profile_bottom_text_color"
-            android:textSize="14sp"
-            android:visibility="gone" />
-
 
         <Button
             android:id="@+id/gameroom_start"
