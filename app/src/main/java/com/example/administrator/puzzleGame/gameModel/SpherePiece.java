@@ -5,7 +5,7 @@ import com.example.administrator.puzzleGame.constant.GameConstant;
 
 import java.util.List;
 
-public class SpherePiece extends PieceBody {
+public class SpherePiece extends PieceAbstract {
     int num;
     int texId;
     int cutNum;

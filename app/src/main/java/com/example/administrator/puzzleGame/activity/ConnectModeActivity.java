@@ -7,16 +7,16 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.administrator.puzzleGame.R;
-import com.example.administrator.puzzleGame.util.WifiUtils;
+import com.example.administrator.puzzleGame.util.WifiUtil;
 
 /**
  * Created by HUI on 2016-04-03.
  */
-public class ConnectModeActivtiy extends Activity {
+public class ConnectModeActivity extends Activity {
 
     Button wifi;
     Button bluetooth;
-    private WifiUtils temp;
+    private WifiUtil temp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class ConnectModeActivtiy extends Activity {
         wifi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ConnectModeActivtiy.this, GameRoomActivity.class);
+                Intent intent = new Intent(ConnectModeActivity.this, GameRoomActivity.class);
                 startActivity(intent);
             }
         });
@@ -38,7 +38,7 @@ public class ConnectModeActivtiy extends Activity {
             @Override
             public void onClick(View v) {
                 //Indo 跳转到另外一个蓝牙页面
-                Intent intent = new Intent(ConnectModeActivtiy.this, Game3DActivity.class);
+                Intent intent = new Intent(ConnectModeActivity.this, GameActivity.class);
                 startActivity(intent);
 
             }

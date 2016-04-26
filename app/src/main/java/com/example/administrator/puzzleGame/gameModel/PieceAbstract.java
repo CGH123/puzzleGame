@@ -1,13 +1,13 @@
 package com.example.administrator.puzzleGame.gameModel;
 
 
-public abstract class PieceBody extends BaseBody implements Piece {
+public abstract class PieceAbstract extends BaseBody implements Piece {
 
     PieceFillBody pieceFill;
     PieceLineBody pieceLine;
     Boolean isDrawLine = true;
 
-    public PieceBody() {
+    public PieceAbstract() {
     }
 
     public abstract PieceLineData getPieceLineData(float scale);
@@ -17,7 +17,7 @@ public abstract class PieceBody extends BaseBody implements Piece {
     public abstract void PieceLineTransForm();
 
     @Override
-    public void swap(PieceBody piece) {
+    public void swap(PieceAbstract piece) {
         this.pieceFill.swap(piece.pieceFill);
     }
 

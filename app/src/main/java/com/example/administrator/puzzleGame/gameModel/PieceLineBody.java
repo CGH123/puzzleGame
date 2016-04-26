@@ -22,7 +22,7 @@ public class PieceLineBody extends BaseBody implements PieceLine {
     int vCount;
 
 
-    public PieceLineBody(PieceBody.PieceLineData pieceLineData) {
+    public PieceLineBody(PieceAbstract.PieceLineData pieceLineData) {
         this.vertices = pieceLineData.vertices;
         this.textures = pieceLineData.textures;
         vCount = vertices.length / 3;

@@ -3,7 +3,7 @@ package com.example.administrator.puzzleGame.gameModel;
 
 import java.util.ArrayList;
 
-public class Quad extends WholeBody {
+public class Quad extends ObjectAbstract {
     int row, col;
     Vector2f[] points;
     int texId;

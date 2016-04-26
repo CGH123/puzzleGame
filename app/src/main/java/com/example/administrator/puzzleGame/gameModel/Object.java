@@ -1,6 +1,6 @@
 package com.example.administrator.puzzleGame.gameModel;
 
-public interface Whole extends Draw {
+public interface Object extends Draw {
     void initPieces();
 
     /**
@@ -33,7 +33,7 @@ public interface Whole extends Draw {
     /**
      * @return 拼图是否完成
      */
-    Boolean isCompleted();
+    float getCompletedProgress();
 
     /**
      * 高亮拼图块

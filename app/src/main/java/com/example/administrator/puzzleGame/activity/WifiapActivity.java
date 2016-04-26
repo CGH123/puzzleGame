@@ -24,7 +24,7 @@ import com.example.administrator.puzzleGame.base.BaseDialog;
 import com.example.administrator.puzzleGame.base.ConnWifiDialog;
 import com.example.administrator.puzzleGame.base.WifiapBroadcast;
 import com.example.administrator.puzzleGame.constant.WifiApConst;
-import com.example.administrator.puzzleGame.util.WifiUtils;
+import com.example.administrator.puzzleGame.util.WifiUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +79,7 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
 
     protected void initEvent() {
         mWifiList = new ArrayList<ScanResult>();
-        WifiUtils temp = new WifiUtils(this);
+        WifiUtil temp = new WifiUtil(this);
         temp.startScan();
         List<ScanResult> scanResults = temp.getScanResults();
         mWifiList.addAll(scanResults);
@@ -100,30 +100,24 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
      **/
     protected void initAction() {
 
-        if (!WifiUtils.isWifiConnect() && !WifiUtils.isWifiApEnabled()) { // 无开启热点无连接WIFI
-            WifiUtils.OpenWifi();
+        if (!WifiUtil.isWifiConnect() && !WifiUtil.isWifiApEnabled()) { // 无开启热点无连接WIFI
+            WifiUtil.OpenWifi();
         }
 
-        if (WifiUtils.isWifiConnect()) { // Wifi已连接
+        if (WifiUtil.isWifiConnect()) { // Wifi已连接
             mTvStatusInfo.setText(getString(R.string.wifiap_text_wifi_connected)
-                    + WifiUtils.getSSID());
+                    + WifiUtil.getSSID());
 
         }
 
 
-        if (WifiUtils.isWifiEnabled() && !WifiUtils.isWifiConnect()) { // Wifi已开启，未连接
+        if (WifiUtil.isWifiEnabled() && !WifiUtil.isWifiConnect()) { // Wifi已开启，未连接
             mTvStatusInfo.setText(getString(R.string.wifiap_text_wifi_1_0));
         }
 
         mSearchWifiThread.start();
     }
 
-    //进入游戏界面
-    private void doLogin() {
-        Intent intent = new Intent();
-        intent.setClass(WifiapActivity.this, GameRoomActivity.class);
-        startActivity(intent);
-    }
 
     /**
      * 动态注册广播
@@ -145,13 +139,13 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
         if (ap.SSID.startsWith(WifiApConst.WIFI_AP_HEADER)) {
             mTvStatusInfo.setText(getString(R.string.wifiap_btn_connecting) + ap.SSID);
             // 连接网络
-            boolean connFlag = WifiUtils.connectWifi(ap.SSID, WifiApConst.WIFI_AP_PASSWORD,
-                    WifiUtils.WifiCipherType.WIFICIPHER_WPA);
+            boolean connFlag = WifiUtil.connectWifi(ap.SSID, WifiApConst.WIFI_AP_PASSWORD,
+                    WifiUtil.WifiCipherType.WIFICIPHER_WPA);
             if (!connFlag) {
                 mTvStatusInfo.setText(getString(R.string.wifiap_toast_connectap_error_1));
                 mHandler.sendEmptyMessage(WifiApConst.WiFiConnectError);
             }
-        } else if (!WifiUtils.isWifiConnect() || !ap.BSSID.equals(WifiUtils.getBSSID())) {
+        } else if (!WifiUtil.isWifiConnect() || !ap.BSSID.equals(WifiUtil.getBSSID())) {
             mConnWifiDialog.setTitle(ap.SSID);
             mConnWifiDialog.setScanResult(ap);
             mConnWifiDialog.show();
@@ -206,7 +200,7 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
 
     private void getWifiList() {
         mWifiList.clear();
-        WifiUtils temp = new WifiUtils(this);
+        WifiUtil temp = new WifiUtil(this);
         temp.startScan();
         List<ScanResult> scanResults = temp.getScanResults();
         mWifiList.addAll(scanResults);
@@ -220,18 +214,14 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
 
             // 返回按钮
             case R.id.wifiap_btn_back:
-//                if (mHintDialog.isShowing()) {
-//                    mHintDialog.dismiss();
-//                }
                 finish();
                 break;
 
             // 下一步按钮
             case R.id.wifiap_btn_next:
-//                if (mHintDialog.isShowing()) {
-//                    mHintDialog.dismiss();
-//                }
-                doLogin();
+                Intent intent = new Intent();
+                intent.setClass(WifiapActivity.this, ConnectModeActivity.class);
+                startActivity(intent);
                 break;
 
         }
@@ -265,7 +255,7 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
 
         @Override
         public void run() {
-            while (!WifiUtils.isWifiApEnabled()) {
+            while (!WifiUtil.isWifiApEnabled()) {
                 if (!this.running)
                     return;
                 try {
@@ -311,7 +301,7 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
 
                 case WifiApConst.WiFiConnectSuccess: // 连接热点成功
                     String str = getString(R.string.wifiap_text_wifi_connected)
-                            + WifiUtils.getSSID();
+                            + WifiUtil.getSSID();
                     mTvStatusInfo.setText(str);
                     showShortToast(str);
                     break;
@@ -321,7 +311,7 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
                     break;
 
                 case WifiApConst.NetworkChanged: // Wifi状态变化
-                    if (WifiUtils.isWifiEnabled()) {
+                    if (WifiUtil.isWifiEnabled()) {
                         mTvStatusInfo.setText(getString(R.string.wifiap_text_wifi_1_0));
                     } else {
                         mTvStatusInfo.setText(getString(R.string.wifiap_text_wifi_0));

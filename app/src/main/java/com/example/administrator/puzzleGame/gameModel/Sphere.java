@@ -4,7 +4,7 @@ import com.example.administrator.puzzleGame.util.VectorUtil;
 
 import java.util.ArrayList;
 
-public class Sphere extends WholeBody {
+public class Sphere extends ObjectAbstract {
     float scale = 0;
     float aHalf = 0, bHalf = 0;//黄金长方形的宽
     float r = 0;//球的半径

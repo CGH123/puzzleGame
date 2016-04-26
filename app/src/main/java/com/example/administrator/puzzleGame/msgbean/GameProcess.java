@@ -7,4 +7,20 @@ import com.example.protocol.Entity;
  * Created by HUI on 2016-04-23.
  */
 public class GameProcess extends Entity {
+    private float progress;
+
+    public GameProcess() {
+    }
+
+    public GameProcess(float progress) {
+        this.progress = progress;
+    }
+
+    public float getProgress() {
+        return progress;
+    }
+
+    public void setProgress(float progress) {
+        this.progress = progress;
+    }
 }

@@ -4,11 +4,11 @@ package com.example.administrator.puzzleGame.gameModel;
 import java.util.List;
 
 //物体基类
-public abstract class WholeBody extends BaseBody implements Whole {
+public abstract class ObjectAbstract extends BaseBody implements Object {
 
-    List<PieceBody> pieces;
+    List<PieceAbstract> pieces;
 
-    public WholeBody(float x, float y, float z) {
+    public ObjectAbstract(float x, float y, float z) {
         super.setBox(x, y, z);
     }
 
@@ -21,12 +21,13 @@ public abstract class WholeBody extends BaseBody implements Whole {
     }
 
     @Override
-    public Boolean isCompleted() {
+    public float getCompletedProgress() {
+        int count = 0;
         for (int i = 0; i < pieces.size(); i++) {
-            if (!pieces.get(i).isEqualNum(i))
-                return false;
+            if (pieces.get(i).isEqualNum(i))
+                count++;
         }
-        return true;
+        return count / pieces.size();
     }
 
     @Override

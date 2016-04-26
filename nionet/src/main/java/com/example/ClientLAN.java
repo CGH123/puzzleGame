@@ -204,7 +204,7 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
         clientDataMap.put(key, o);
     }
 
-    public Object putData(String key) {
+    public Object getData(String key) {
         if (key.isEmpty()) {
             stop();
             close();

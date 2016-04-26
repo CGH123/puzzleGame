@@ -43,15 +43,6 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
         serverSocketObserver = this;
         isRunning = false;
         udpSocket = UDPSocket.getInstance();
-        udpSocket.setUdpReadListener(new UDPSocket.OnUdpReadListener() {
-            @Override
-            public void processMsg(String hostName, byte[] packet) {
-                String s = new String(packet);
-                if (s.equals(NetConstant.FIND_SERVER)) {
-                    udpSocket.send(hostName, NetConstant.RETURN_HOST.getBytes());
-                }
-            }
-        });
     }
 
     public static Server getInstance() {
@@ -99,7 +90,7 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
         serverDataMap.put(key, o);
     }
 
-    public synchronized Object putData(String key) {
+    public synchronized Object getData(String key) {
         if (key.isEmpty())
             throw new NullPointerException();
         return serverDataMap.get(key);
@@ -133,17 +124,19 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
     }
 
     @Override
-    public Server startUdp(int port) {
-        udpSocket.bind(port).start();
+    public Server initUdp() {
+        udpSocket.setUdpReadListener(new UDPSocket.OnUdpReadListener() {
+            @Override
+            public void processMsg(String hostName, byte[] packet) {
+                String s = new String(packet);
+                if (s.equals(NetConstant.FIND_SERVER)) {
+                    udpSocket.send(hostName, NetConstant.RETURN_HOST.getBytes());
+                }
+            }
+        });
         return getInstance();
     }
 
-    @Override
-    public Server stopUdp() {
-        udpSocket.stop();
-        udpSocket.close();
-        return getInstance();
-    }
 
     /**
      * 关闭线程

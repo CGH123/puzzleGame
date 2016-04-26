@@ -3,7 +3,7 @@ package com.example.administrator.puzzleGame.gameModel;
 
 import com.example.administrator.puzzleGame.constant.GameConstant;
 
-public class QuadPiece extends PieceBody {
+public class QuadPiece extends PieceAbstract {
     Vector2f[] points;
     Vector2f[] texturePoints;
     int texId;

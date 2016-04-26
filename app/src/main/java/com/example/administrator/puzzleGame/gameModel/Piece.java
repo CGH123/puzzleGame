@@ -7,7 +7,7 @@ public interface Piece extends Draw {
      *
      * @param body 拼图块2
      */
-    void swap(PieceBody body);
+    void swap(PieceAbstract body);
 
     /**
      * @param x 屏幕坐标X

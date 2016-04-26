@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.example.administrator.puzzleGame.R;
 import com.example.administrator.puzzleGame.constant.WifiApConst;
-import com.example.administrator.puzzleGame.util.WifiUtils;
+import com.example.administrator.puzzleGame.util.WifiUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -111,15 +111,10 @@ public class WifiapAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        if (ap.BSSID.equals(WifiUtils.getBSSID())) {
+        if (ap.BSSID.equals(WifiUtil.getBSSID())) {
             isWifiConnected = true;
         }
 
-        /*
-        if (WifiUtils.isWifiConnect() && ap.BSSID.equals(WifiUtils.getBSSID())) {
-            isWifiConnected = true;
-        }
-        */
 
         viewHolder.ssid.setText(ap.SSID);
         viewHolder.desc.setText(getDesc(ap));

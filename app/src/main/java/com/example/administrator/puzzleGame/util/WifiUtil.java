@@ -18,7 +18,7 @@ import java.util.List;
  * 封装了Wifi的基础操作方法，方便获取Wifi连接信息以及操作Wifi
  * Created by HUI on 2016-04-03.
  */
-public class WifiUtils {
+public class WifiUtil {
     //获得当前的Context
     private static Context mContext;
     // 定义WifiManager对象
@@ -30,7 +30,7 @@ public class WifiUtils {
     // 网络连接列表
     private List<WifiConfiguration> mWifiConfiguration;
     // 构造器
-    public WifiUtils(Context context) {
+    public WifiUtil(Context context) {
         this.mContext = context;
         // 取得WifiManager对象
         mWifiManager = (WifiManager) context
@@ -331,41 +331,5 @@ public class WifiUtils {
     public static enum WifiCipherType {
         WIFICIPHER_INVALID, WIFICIPHER_NOPASS, WIFICIPHER_WEP, WIFICIPHER_WPA
     }
-
-    /*
-    private List<ScanResult> mWifiList;
-    private List<WifiConfiguration> mWifiConfiguration;
-
-    //WiFi加密的模式
-    public static enum WifiCipherType {
-        WIFICIPHER_INVALID, WIFICIPHER_NOPASS, WIFICIPHER_WEP, WIFICIPHER_WPA
-    }
-
-    private WifiManager mWifiManager;
-    private WifiInfo    mWifiInfo;
-
-
-    public WifiUtils(Context context) {
-        // 取得WifiManager对象
-        mWifiManager = (WifiManager) context
-                .getSystemService(Context.WIFI_SERVICE);
-        // 取得WifiInfo对象
-        mWifiInfo = mWifiManager.getConnectionInfo();
-    }
-
-    public  void startScan() {
-        if (!mWifiManager.isWifiEnabled()) {
-            mWifiManager.setWifiEnabled(true);
-        }
-        mWifiManager.startScan();
-        mWifiList = mWifiManager.getScanResults();
-//        mWifiConfiguration = mWifiManager.getConfiguredNetworks();
-    }
-
-    public List<ScanResult> getScanResults() {
-        return mWifiList;
-    }
-    */
-
 
 }

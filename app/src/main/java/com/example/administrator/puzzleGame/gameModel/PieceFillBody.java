@@ -35,7 +35,7 @@ public class PieceFillBody extends BaseBody implements PieceFill {
     int isCheck = 0;
     Boolean cantChoose = true;
 
-    public PieceFillBody(PieceBody.PieceFillData pieceFillData) {
+    public PieceFillBody(PieceAbstract.PieceFillData pieceFillData) {
         this.num = pieceFillData.num;
         this.texId = pieceFillData.texId;
         this.cantChoose = pieceFillData.cantChoose;

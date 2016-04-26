@@ -4,7 +4,7 @@ package com.example.administrator.puzzleGame.gameModel;
 import com.example.administrator.puzzleGame.constant.GameConstant;
 
 //纹理矩形单面
-public class CubePiece extends PieceBody {
+public class CubePiece extends PieceAbstract {
     Vector2f[] points;
     Vector2f[] texturePoints;
     int texId;

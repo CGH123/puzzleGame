@@ -3,7 +3,7 @@ package com.example.administrator.puzzleGame.gameModel;
 
 import java.util.ArrayList;
 
-public class Cube extends WholeBody {
+public class Cube extends ObjectAbstract {
     int cutNum;
     int squareNum;
     int faceNum;
@@ -32,8 +32,7 @@ public class Cube extends WholeBody {
                             new Vector2f(points[startPos + 1]),
                             new Vector2f(points[startPos + cutNum + 1]),
                             new Vector2f(points[startPos + cutNum + 2])};
-
-                    PieceBody piece = new CubePiece(i * squareNum + j * cutNum + k, quadPoints, texIds[i]);
+                    PieceAbstract piece = new CubePiece(i * squareNum + j * cutNum + k, quadPoints, texIds[i]);
                     pieces.add(piece);
                 }
             }
