@@ -23,23 +23,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.ConnectModeActivity">
-        </activity>
-        <activity android:name="com.example.administrator.puzzleGame.activity.WifiapActivity">
+        <activity android:name="com.example.administrator.puzzleGame.activity.ConnectModeActivtiy">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.GameActivity">
+        <activity android:name="com.example.administrator.puzzleGame.activity.WifiapActivity"></activity>
+        <activity android:name="com.example.administrator.puzzleGame.activity.Game3DActivity"></activity>
+        <activity android:name="com.example.administrator.puzzleGame.activity.GameActivity"></activity>
+        <activity android:name=".activity.GameRoomActivity"></activity>
 
-        </activity>
-        <activity android:name="com.example.administrator.puzzleGame.activity.GameRoomActivity">
-
-        </activity>
-        <activity android:name=".activity.GameTestActivity">
-
-        </activity>
 
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->

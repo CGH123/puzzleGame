@@ -279,7 +279,7 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
             try {
                 this.running = false;
                 this.thread = null;
-            } finally { 
+            } finally {
             }
         }
     }

@@ -57,4 +57,5 @@
     <string name="lv_refresh_doing_head_refresh">正在刷新&#8230;</string>
     <string name="lv_refresh_doing_end_refresh">加载中&#8230;</string>
     <string name="lv_refresh_refresh_lasttime">最近更新&#160;&#058;&#160;</string>
+
 </resources>
