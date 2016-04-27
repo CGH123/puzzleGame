@@ -100,7 +100,7 @@ public interface Server {
      * @param key key
      * @param o   数据
      */
-    void putData(String key, Object o);
+    <T> void putData(String key, T o);
 
     /**
      * 删除服务器回调写数据监听
@@ -108,7 +108,7 @@ public interface Server {
      * @param key key
      * @return 数据
      */
-    Object getData(String key);
+    <T> T getData(String key);
 
 
 }

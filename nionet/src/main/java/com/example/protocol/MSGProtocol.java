@@ -1,6 +1,8 @@
 package com.example.protocol;
 
 
+import com.alibaba.fastjson.annotation.JSONType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class MSGProtocol<T extends Entity> {
     private int option;  //附加数据对象 选项内容待定
     private int command;    //包的命令
     private SET_TYPE setType; //附加的对象的集合类型
+
     private T addObject;   //附加的对象
     private List<T> addObjects = new ArrayList<>();   //附加的对象
     public MSGProtocol() {
@@ -114,7 +117,7 @@ public class MSGProtocol<T extends Entity> {
         this.addObject = addObject;
     }
 
-    public List<T> getAddObjects() {
+    public List getAddObjects() {
         return addObjects;
     }
 

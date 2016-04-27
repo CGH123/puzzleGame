@@ -23,6 +23,7 @@ import com.example.administrator.puzzleGame.adapter.WifiapAdapter;
 import com.example.administrator.puzzleGame.base.BaseDialog;
 import com.example.administrator.puzzleGame.base.ConnWifiDialog;
 import com.example.administrator.puzzleGame.base.WifiapBroadcast;
+import com.example.administrator.puzzleGame.constant.GameConstant;
 import com.example.administrator.puzzleGame.constant.WifiApConst;
 import com.example.administrator.puzzleGame.util.WifiUtil;
 
@@ -219,6 +220,7 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
 
             // 下一步按钮
             case R.id.wifiap_btn_next:
+                GameConstant.IP = WifiUtil.getLocalIPAddress();
                 Intent intent = new Intent();
                 intent.setClass(WifiapActivity.this, ConnectModeActivity.class);
                 startActivity(intent);

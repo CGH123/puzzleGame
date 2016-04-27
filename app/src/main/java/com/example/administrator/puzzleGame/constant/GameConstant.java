@@ -18,4 +18,8 @@ public class GameConstant {
     public static int HEIGHT;
     //水面换帧线程工作标志
     public static boolean threadFlag = true;
+
+    public static String NAME;
+    public static String PHONE;
+    public static String IP;
 }

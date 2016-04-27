@@ -55,7 +55,7 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
             @Override
             public void processMsg(byte[] packet, NIOSocket nioSocket) {
                 System.out.println(new String(packet));
-                MSGProtocol msgProtocol = SerializerFastJson.getInstance().parseNull(new String(packet), MSGProtocol.class);
+                MSGProtocol msgProtocol = SerializerFastJson.getInstance().parse(new String(packet), MSGProtocol.class);
                 msgProtocol = new MSGProtocol("hello client",msgProtocol.getCommand());
                 String msgString = SerializerFastJson.getInstance().serialize(msgProtocol);
                 server.sendToClient(msgString.getBytes(), nioSocket);
@@ -84,16 +84,16 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
         return getInstance();
     }
 
-    public synchronized void putData(String key, Object o) {
+    public synchronized <T> void putData(String key, T o) {
         if (key.isEmpty())
             throw new NullPointerException();
         serverDataMap.put(key, o);
     }
 
-    public synchronized Object getData(String key) {
+    public synchronized <T> T getData(String key) {
         if (key.isEmpty())
             throw new NullPointerException();
-        return serverDataMap.get(key);
+        return (T) serverDataMap.get(key);
     }
 
     /**
