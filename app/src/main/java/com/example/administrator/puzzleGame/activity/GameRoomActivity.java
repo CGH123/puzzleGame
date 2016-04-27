@@ -258,7 +258,7 @@ public class GameRoomActivity extends Activity implements
      * 用于显示房主信息的
      */
     private class FindServerTask extends AsyncTask<Void, Void, String> {
-
+  
         @Override
         protected String doInBackground(Void... params) {
             String ip = client.findServerIP(2000);

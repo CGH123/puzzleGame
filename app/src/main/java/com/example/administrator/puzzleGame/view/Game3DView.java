@@ -174,6 +174,7 @@ public class Game3DView extends GLSurfaceView {
 
                             GameProcess gameProcess = new GameProcess(progress);
                             MSGProtocol<GameProcess> msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.PROGRESS, gameProcess);
+                            System.out.println("TCP ="+gameProcess.getProgress());
                             msgSender.sendMsgProtocol(msgProtocol);
                             // TODO: 2016/4/15 发送进度给服务器
                             if (progress == 1.0f) {
