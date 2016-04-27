@@ -60,6 +60,7 @@ public class GameActivity extends Activity implements
         serializer = SerializerFastJson.getInstance();
         handler = new BaseHandler.UnleakHandler(this);
 
+
         if (this.getIntent().getBooleanExtra("isServer", false)) {
             server = ServerLAN.getInstance();
             List<User> users = client.getData("users");

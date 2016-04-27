@@ -50,6 +50,8 @@ public class User extends Entity {
         return name;
     }
 
+
+
     public void setName(String name) {
         this.name = name;
     }
