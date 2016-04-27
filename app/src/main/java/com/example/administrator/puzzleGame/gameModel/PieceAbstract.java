@@ -6,8 +6,9 @@ public abstract class PieceAbstract extends BaseBody implements Piece {
     PieceFillBody pieceFill;
     PieceLineBody pieceLine;
     Boolean isDrawLine = true;
-
-    public PieceAbstract() {
+    float scale;
+    public PieceAbstract(float scale) {
+        this.scale = scale;
     }
 
     public abstract PieceLineData getPieceLineData(float scale);
@@ -49,6 +50,7 @@ public abstract class PieceAbstract extends BaseBody implements Piece {
         MatrixState.popMatrix();
 
         if (isDrawLine) {
+            pieceFill.setBody();
             MatrixState.pushMatrix();
             PieceLineTransForm();
             pieceLine.drawSelf();

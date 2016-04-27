@@ -5,18 +5,17 @@ import com.example.administrator.puzzleGame.util.VectorUtil;
 import java.util.ArrayList;
 
 public class Sphere extends ObjectAbstract {
-    float scale = 0;
     float aHalf = 0, bHalf = 0;//黄金长方形的宽
     float r = 0;//球的半径
     int n = 0;
     int texId;
 
-    public Sphere(int n, float scale, float aHalf, int texId) {
-        super(2 * (float) Math.sqrt(aHalf * aHalf + aHalf * 0.618034f * aHalf * 0.618034f),
-                2 * (float) Math.sqrt(aHalf * aHalf + aHalf * 0.618034f * aHalf * 0.618034f),
-                2 * (float) Math.sqrt(aHalf * aHalf + aHalf * 0.618034f * aHalf * 0.618034f));
+    public Sphere(float scale, int n, float aHalf, int texId) {
+        super(scale * (float) Math.sqrt(aHalf * aHalf + aHalf * 0.618034f * aHalf * 0.618034f),
+                scale * (float) Math.sqrt(aHalf * aHalf + aHalf * 0.618034f * aHalf * 0.618034f),
+                scale * (float) Math.sqrt(aHalf * aHalf + aHalf * 0.618034f * aHalf * 0.618034f));
         this.scale = scale;
-        this.aHalf = aHalf;
+        this.aHalf = aHalf * scale;
         this.n = n;
         int piecesNum = 20;
         this.texId = texId;
@@ -25,12 +24,12 @@ public class Sphere extends ObjectAbstract {
     }
 
 
+
     //大小，黄金长方形长边的一半，分段数
     @Override
     public void initPieces() {
-        aHalf *= scale;        //长边的一半
-        bHalf = aHalf * 0.618034f;        //短边的一半
-        r = (float) Math.sqrt(aHalf * aHalf + bHalf * bHalf);
+        this.bHalf = aHalf * 0.618034f;        //短边的一半
+        this.r = (float) Math.sqrt(aHalf * aHalf + bHalf * bHalf);
         //正20面体坐标数据初始化
         ArrayList<Float> alVertex20 = new ArrayList<>();//正20面体的顶点列表（未卷绕）
         ArrayList<Integer> alFaceIndex20 = new ArrayList<>();//正20面体组织成面的顶点的索引值列表（按逆时针卷绕）
@@ -156,7 +155,7 @@ public class Sphere extends ObjectAbstract {
             //计算卷绕后纹理坐标
             float[] textures = VectorUtil.cullTexCoor(alST, alFaceIndex);
 
-            SpherePiece spherePiece = new SpherePiece(pieces.size(), n, alVertex, vertices, vertices, textures, texId);
+            SpherePiece spherePiece = new SpherePiece(scale, pieces.size(), n, alVertex, vertices, vertices, textures, texId);
             pieces.add(spherePiece);
         }
     }

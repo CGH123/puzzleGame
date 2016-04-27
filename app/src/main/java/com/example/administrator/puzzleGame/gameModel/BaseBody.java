@@ -5,6 +5,7 @@ package com.example.administrator.puzzleGame.gameModel;
 public abstract class BaseBody implements Draw {
     float[] matrix = new float[16];//仿射变换的矩阵
     Bound box;//仿射变换之前的包围盒
+    Boolean setMatrix = false;
 
     //设置包围盒
     public void setBox(float x, float y, float z) {
@@ -18,7 +19,9 @@ public abstract class BaseBody implements Draw {
 
     //复制变换矩阵
     public void setBody() {
-        copyMatrix();
+        if(!setMatrix)
+            copyMatrix();
+        setMatrix = true;
     }
 
     //复制变换矩阵

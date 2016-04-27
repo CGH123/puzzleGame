@@ -10,7 +10,8 @@ public class CubePiece extends PieceAbstract {
     int texId;
     int num;
 
-    public CubePiece(int num, Vector2f[] points, int texId) {
+    public CubePiece(float scale, int num, Vector2f[] points, int texId) {
+        super(scale);
         this.points = points;
         this.texId = texId;
         this.num = num;
@@ -38,8 +39,8 @@ public class CubePiece extends PieceAbstract {
 
         //顶点坐标数据的初始化================begin============================
         float[] vertices = new float[]{
-                points[0].x * 2, points[0].y * 2, 0, points[1].x * 2, points[1].y * 2, 0, points[2].x * 2, points[2].y * 2, 0,
-                points[3].x * 2, points[3].y * 2, 0, points[2].x * 2, points[2].y * 2, 0, points[1].x * 2, points[1].y * 2, 0,
+                points[0].x * scale, points[0].y * scale, 0, points[1].x * scale, points[1].y * scale, 0, points[2].x * scale, points[2].y * scale, 0,
+                points[3].x * scale, points[3].y * scale, 0, points[2].x * scale, points[2].y * scale, 0, points[1].x * scale, points[1].y * scale, 0,
         };
 
 

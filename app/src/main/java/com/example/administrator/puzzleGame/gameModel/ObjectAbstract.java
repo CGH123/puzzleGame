@@ -7,6 +7,7 @@ import java.util.List;
 public abstract class ObjectAbstract extends BaseBody implements Object {
 
     List<PieceAbstract> pieces;
+    float scale;
 
     public ObjectAbstract(float x, float y, float z) {
         super.setBox(x, y, z);
@@ -27,7 +28,7 @@ public abstract class ObjectAbstract extends BaseBody implements Object {
             if (pieces.get(i).isEqualNum(i))
                 count++;
         }
-        return count / pieces.size();
+        return 1.0f * count / pieces.size();
     }
 
     @Override

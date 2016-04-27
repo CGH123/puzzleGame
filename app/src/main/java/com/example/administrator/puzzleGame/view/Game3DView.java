@@ -73,7 +73,7 @@ public class Game3DView extends GLSurfaceView {
         setRenderer(mRenderer);                //设置渲染器
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);   //设置渲染模式为主动渲染
         //创建摄像机
-        float cameraDistance = 20f;
+        float cameraDistance = 15f;
         camera = new Camera(cameraDistance);
         //初始化光源
         MatrixState.setLightLocation(0, 0, 0);
@@ -220,15 +220,15 @@ public class Game3DView extends GLSurfaceView {
             cloud = new SkyCloud(cloudId);
             switch (objectType) {
                 case CUBE:
-                    object = new Cube(cutNum, points, texIds);
+                    object = new Cube(2, cutNum, points, texIds);
                     break;
                 case SPHERE:
-                    object = new Sphere(cutNum, 2, 1.6f, texIds[0]);
+                    object = new Sphere(3, cutNum, 1.6f, texIds[0]);
                     break;
                 case QUAD_PLANE:
-                    object = new Quad(cutNum, points, texIds[0]);
+                    object = new Quad(3, cutNum, points, texIds[0]);
                     break;
-            }
+            }/*
             //随机打乱初始开局
             Random rand = new Random();
             int randTime = 200;
@@ -237,7 +237,7 @@ public class Game3DView extends GLSurfaceView {
                 int randNum1 = rand.nextInt(range);
                 int randNum2 = rand.nextInt(range);
                 object.swapPiece(randNum1, randNum2);
-            }
+            }*/
         }
 
 
@@ -266,7 +266,6 @@ public class Game3DView extends GLSurfaceView {
                 MatrixState.pushMatrix();
 
                 MatrixState.pushMatrix();    //进栈
-                MatrixState.scale(2, 2, 2);
                 object.setDrawLine(true);
                 object.drawSelf();
                 MatrixState.popMatrix();//出栈
@@ -320,7 +319,6 @@ public class Game3DView extends GLSurfaceView {
 
             MatrixState.pushMatrix();    //进栈
             MatrixState.translate(0, 35f, 0);
-            MatrixState.scale(2, 2, 2);
             object.setDrawLine(false);
             object.drawSelf();
             MatrixState.popMatrix();//出栈
@@ -479,9 +477,9 @@ public class Game3DView extends GLSurfaceView {
                     texIds[0] = TextureUtil.initTexture(src);//设置纹理ID
                     quadPositions = new Vector2f[]{
                             new Vector2f(0.0f, 0.0f),
-                            new Vector2f(1.0f, 0.0f),
+                            new Vector2f(0.7f, 0.0f),
                             new Vector2f(1.0f, 1.0f),
-                            new Vector2f(0.8f, 0.2f),
+                            new Vector2f(0.0f, 0.7f),
                     };
                     points = BitmapUtil.cutBitmapToQuads(quadPositions, cutNum, cutNum);
                     break;
