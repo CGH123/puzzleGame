@@ -20,15 +20,20 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.administrator.puzzleGame.activity.ConnectModeActivity">
+        <activity
+            android:name="com.example.administrator.puzzleGame.activity.ConnectModeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.administrator.puzzleGame.activity.WifiapActivity"></activity>
-        <activity android:name="com.example.administrator.puzzleGame.activity.GameActivity"></activity>
-        <activity android:name=".activity.GameRoomActivity"></activity>
+        <activity
+            android:name="com.example.administrator.puzzleGame.activity.WifiapActivity"/>
+        <activity
+            android:name="com.example.administrator.puzzleGame.activity.GameActivity"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name=".activity.GameRoomActivity"/>
 
 
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for

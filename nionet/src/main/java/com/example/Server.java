@@ -84,15 +84,8 @@ public interface Server {
      * @param mlistener 监听接口
      * @return 服务器instance
      */
-    Server addServerReadListener(OnServerReadListener mlistener);
+    Server setServerReadListener(OnServerReadListener mlistener);
 
-    /**
-     * 删除服务器回调写数据监听
-     *
-     * @param mlistener 监听接口
-     * @return 服务器instance
-     */
-    Server removeServerReadListener(OnServerReadListener mlistener);
 
     /**
      * 删除服务器回调写数据监听

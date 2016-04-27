@@ -29,7 +29,7 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
     private UDPSocket udpSocket;
     private String host;
     private int port;
-    private List<OnClientReadListener> clientReadListeners; //设置监听器的回调函数
+    private OnClientReadListener clientReadListener; //设置监听器的回调函数
     private Map<String, Object> clientDataMap;
     private boolean isRunning;
     private volatile boolean isFindServer;
@@ -37,7 +37,6 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
 
     private ClientLAN() {
         udpSocket = UDPSocket.getInstance();
-        clientReadListeners = new LinkedList<>();
         clientDataMap = new TreeMap<>();
         socketObserver = this;
         isRunning = false;
@@ -59,7 +58,7 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
             }
         };
 
-        client.addClientReadListener(clientReadListener)
+        client.setClientReadListener(clientReadListener)
                 .bind("localhost", NetConstant.TCP_PORT)
                 .start();
 
@@ -77,13 +76,8 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
         return getInstance();
     }
 
-    public Client addClientReadListener(OnClientReadListener mlistener) {
-        this.clientReadListeners.add(mlistener);
-        return getInstance();
-    }
-
-    public Client removeClientReadListener(OnClientReadListener mlistener) {
-        this.clientReadListeners.remove(mlistener);
+    public Client setClientReadListener(OnClientReadListener mlistener) {
+        this.clientReadListener = mlistener;
         return getInstance();
     }
 
@@ -255,9 +249,8 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
 
     public void packetReceived(NIOSocket socket, byte[] packet) {
         //处理返回得到的数据,用观察者(监听器)模式来处理
-        if (!clientReadListeners.isEmpty())
-            for (OnClientReadListener clientReadListener : clientReadListeners)
-                clientReadListener.processMsg(packet);
+        if (clientReadListener != null)
+            clientReadListener.processMsg(packet);
         else
             System.out.println(TAG + "Client listener is empty");
     }
