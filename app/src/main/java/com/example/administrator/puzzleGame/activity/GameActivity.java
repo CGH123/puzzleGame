@@ -60,6 +60,7 @@ public class GameActivity extends Activity implements
         serializer = SerializerFastJson.getInstance();
         handler = new BaseHandler.UnleakHandler(this);
 
+        client = ClientLAN.getInstance();
         if (this.getIntent().getBooleanExtra("isServer", false)) {
             server = ServerLAN.getInstance();
             List<User> users = client.getData("users");
@@ -82,14 +83,13 @@ public class GameActivity extends Activity implements
         mGLSurfaceView.requestFocus();//获取焦点
         mGLSurfaceView.setFocusableInTouchMode(true);//设置为可触控
 
-
     }
 
     private void newGame(){
         //TODO 初始化游戏模式
-        //mGLSurfaceView.init(5, Game3DView.ObjectType.QUAD_PLANE, false, msgSender);
-        mGLSurfaceView.init(5, Game3DView.ObjectType.CUBE, true, this);
-        //mGLSurfaceView.init(8, Game3DView.ObjectType.SPHERE, true, msgSender);
+        //mGLSurfaceView.init(5, Game3DView.ObjectType.QUAD_PLANE, false, this);
+        //mGLSurfaceView.init(5, Game3DView.ObjectType.CUBE, true, this);
+        mGLSurfaceView.init(8, Game3DView.ObjectType.SPHERE, true, this);
     }
 
     private void initProgressView() {
@@ -114,7 +114,6 @@ public class GameActivity extends Activity implements
     }
 
     private void initNet() {
-        client = ClientLAN.getInstance();
         final Serializer serializer = SerializerFastJson.getInstance();
         client.addClientReadListener(new OnClientReadListener() {
             @Override
@@ -147,7 +146,7 @@ public class GameActivity extends Activity implements
                                     gameProcess1.setProgress(gameProcess.getProgress());
                             }
                             msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.PROGRESS, gameProcesses);
-                            client.putData("processes", gameProcess);
+                            server.putData("processes", gameProcess);
                             break;
                     }
                     server.sendAllClient(serializer.serialize(msgProtocol).getBytes());

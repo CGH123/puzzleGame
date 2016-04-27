@@ -99,7 +99,6 @@ public class PieceFillBody extends BaseBody implements PieceFill {
 
     @Override
     public void drawSelf() {
-        setBody();
 
         //制定使用某套shader程序
         GLES20.glUseProgram(mProgram);
@@ -183,12 +182,12 @@ public class PieceFillBody extends BaseBody implements PieceFill {
         for (int i = 0; i < vertices.length; i += 9) {
             float[][] triangle = new float[3][3];
             for (int j = 0; j < 3; j++) {
-                float[] coordinate = new float[4];
+                float[] coordinate = new float[]{vertices[i + j * 3], vertices[i + j * 3 + 1], vertices[i + j * 3 + 2], 1};
                 //求变换前的点
                 Matrix.multiplyMV(
                         coordinate, 0,
                         super.getMatrix(), 0,
-                        new float[]{vertices[i + j * 3], vertices[i + j * 3 + 1], vertices[i + j * 3 + 2], 1}, 0
+                        coordinate, 0
                 );
                 triangle[j][0] = coordinate[0];
                 triangle[j][1] = coordinate[1];

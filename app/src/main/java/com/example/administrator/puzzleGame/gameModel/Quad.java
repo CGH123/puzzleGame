@@ -9,19 +9,20 @@ public class Quad extends ObjectAbstract {
     int texId;
     float size;
 
-    public Quad(float size, Vector2f[] points, int texId) {
-        super(size, size, 0);
+    public Quad(float scale, float size, Vector2f[] points, int texId) {
+        super(size * scale / 2, size * scale / 2, 0);
         row = (int) points[points.length - 1].x;
         col = (int) points[points.length - 1].y;
         this.size = size;
         this.points = points;
         this.texId = texId;
+        this.scale = scale;
         initPieces();
     }
 
     @Override
     public void initPieces() {
-        pieces = new ArrayList<>(row * col);
+        pieces = new ArrayList<>();
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
                 int startPos = i * (col + 1) + j;
@@ -32,6 +33,11 @@ public class Quad extends ObjectAbstract {
                         new Vector2f(points[startPos + col + 2])};
                 Boolean isOutPlane = false, isAllOutPlane = true;
                 float range = size / 2;
+                for (int k = 0; k < 4; k++) {
+                    if (!(quadPoints[k].x >= range || quadPoints[k].y >= range || quadPoints[k].x <= -range || quadPoints[k].y <= -range)) {
+                        isAllOutPlane = false;
+                    }
+                }
                 for (int k = 0; k < 4; k++) {
                     if (quadPoints[k].x > range || quadPoints[k].y > range || quadPoints[k].x < -range || quadPoints[k].y < -range) {
                         isOutPlane = true;
@@ -47,7 +53,7 @@ public class Quad extends ObjectAbstract {
                         isAllOutPlane = false;
                 }
                 if (!isAllOutPlane) {
-                    QuadPiece temp = new QuadPiece(pieces.size(), quadPoints, texId, !isOutPlane);
+                    QuadPiece temp = new QuadPiece(scale, pieces.size(), quadPoints, texId, !isOutPlane);
                     pieces.add(temp);
                 }
             }

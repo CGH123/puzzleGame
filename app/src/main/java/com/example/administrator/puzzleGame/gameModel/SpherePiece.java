@@ -15,7 +15,8 @@ public class SpherePiece extends PieceAbstract {
     Float[] alVetex;
     Vector3f translateV;
 
-    public SpherePiece(int num, int cutNum, List<Float> alVetex, float[] vertices, float[] normals, float[] textures, int texId) {
+    public SpherePiece(float scale, int num, int cutNum, List<Float> alVetex, float[] vertices, float[] normals, float[] textures, int texId) {
+        super(scale);
         this.num = num;
         this.texId = texId;
         this.vertices = vertices;
