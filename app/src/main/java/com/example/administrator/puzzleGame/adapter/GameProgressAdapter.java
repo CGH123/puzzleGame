@@ -35,7 +35,7 @@ public class GameProgressAdapter extends RecyclerView.Adapter<GameProgressAdapte
         if(progress == 1.0f)
             dataList.get(position).progress = "完成";
         else
-            dataList.get(position).progress = progress * 100 + "%";
+            dataList.get(position).progress = Math.round(progress * 100 )+ "%";
     }
 
     public interface OnClickListener {

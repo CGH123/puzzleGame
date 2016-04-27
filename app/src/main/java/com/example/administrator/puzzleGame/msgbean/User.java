@@ -18,7 +18,7 @@ import java.util.List;
 public class User extends Entity {
     public String name;
 
-    User() {
+    public User() {
     }
 
     public User(String name) {

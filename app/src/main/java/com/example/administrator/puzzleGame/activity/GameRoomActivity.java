@@ -1,6 +1,8 @@
 package com.example.administrator.puzzleGame.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.opengl.Visibility;
 import android.os.AsyncTask;
@@ -156,8 +158,39 @@ public class GameRoomActivity extends Activity implements
         MSGProtocol<User> msgProtocol;
         switch (v.getId()) {
             case R.id.gameroom_start:
-                msgProtocol = new MSGProtocol<>(GameConstant.NAME, CmdConstant.START);
-                client.sendToServer(serializer.serialize(msgProtocol).getBytes());
+                //进行游戏难度设置dialog
+                new AlertDialog.Builder(this).setTitle("游戏开始设置").setIcon(R.drawable.app_icon).setMessage("拼图模型选择")
+                        .setPositiveButton("矩形", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                GameConstant.GAME_DIFFICULTY = GameConstant.GAME_CUBE;
+                                GameConstant.GAME_START = true;
+                                MSGProtocol<User> msgProtocol = new MSGProtocol<>(GameConstant.NAME, CmdConstant.START);
+                                client.sendToServer(serializer.serialize(msgProtocol).getBytes());
+                            }
+                        })
+                        .setNeutralButton("不规则图形", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                GameConstant.GAME_DIFFICULTY = GameConstant.GAME_QUAD_PLANE;
+                                GameConstant.GAME_START = true;
+                                MSGProtocol<User> msgProtocol = new MSGProtocol<>(GameConstant.NAME, CmdConstant.START);
+                                client.sendToServer(serializer.serialize(msgProtocol).getBytes());
+                            }
+                        })
+                        .setNegativeButton("球", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                GameConstant.GAME_DIFFICULTY = GameConstant.GAME_SPHERE;
+                                GameConstant.GAME_START = true;
+                                MSGProtocol<User> msgProtocol = new MSGProtocol<>(GameConstant.NAME, CmdConstant.START);
+                                client.sendToServer(serializer.serialize(msgProtocol).getBytes());
+                            }
+                        }).create().show();
+
+                //TODO 设置游戏设置界面,用来放入新界面
+                //msgProtocol = new MSGProtocol<>(GameConstant.NAME, CmdConstant.START);
+                //client.sendToServer(serializer.serialize(msgProtocol).getBytes());
 
                 break;
             case R.id.gameroom_create:
@@ -175,8 +208,7 @@ public class GameRoomActivity extends Activity implements
     public void onRefresh() {
         if (server != null || isFind) {
             mListView.onRefreshComplete();
-        }
-        else {
+        } else {
             findServerTask = new FindServerTask();
             findServerTask.execute();
         }
@@ -251,7 +283,7 @@ public class GameRoomActivity extends Activity implements
             case CmdConstant.START:
                 client.stopUdp();
                 Intent intent = new Intent(GameRoomActivity.this, GameActivity.class);
-                if(server != null) {
+                if (server != null) {
                     intent.putExtra("isServer", true);
                 }
                 startActivity(intent);
@@ -263,7 +295,7 @@ public class GameRoomActivity extends Activity implements
      * 用于显示房主信息的
      */
     private class FindServerTask extends AsyncTask<Void, Void, String> {
-  
+
         @Override
         protected String doInBackground(Void... params) {
             String ip = client.findServerIP(2000);

@@ -8,6 +8,7 @@ import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import com.example.NetConstant;
 import com.example.administrator.puzzleGame.R;
 import com.example.administrator.puzzleGame.constant.CmdConstant;
 import com.example.administrator.puzzleGame.constant.GameConstant;
@@ -65,6 +66,10 @@ public class Game3DView extends GLSurfaceView {
     private SkyTree tree;
     private SkyCloud cloud;
 
+    public void setLoad(boolean hasLoad){
+        this.hasLoad = hasLoad;
+    }
+
     public Game3DView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
@@ -93,7 +98,7 @@ public class Game3DView extends GLSurfaceView {
         float locationXBeginP1 = e.getX();    //记录每次touch时间触发开始时的Y坐标
         float locationYBeginP1 = e.getY();    //记录每次touch时间触发开始时的X坐标
 
-        switch (e.getAction() & MotionEvent.ACTION_MASK) {
+        switch (e.getAction() & MotionEvent.ACTION_MASK ) {
             case MotionEvent.ACTION_DOWN:
                 mode = 1;//设置为单点模式
 
@@ -172,14 +177,18 @@ public class Game3DView extends GLSurfaceView {
                             firstPickNum = -1;
                             float progress = object.getCompletedProgress();
 
-                            GameProcess gameProcess = new GameProcess(progress);
-                            MSGProtocol<GameProcess> msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.PROGRESS, gameProcess);
-                            System.out.println("TCP ="+gameProcess.getProgress());
-                            msgSender.sendMsgProtocol(msgProtocol);
+
                             // TODO: 2016/4/15 发送进度给服务器
                             if (progress == 1.0f) {
                                 // TODO: 2016/4/15 获胜UI
+                                GameProcess gameProcess = new GameProcess(progress);
+                                MSGProtocol<GameProcess> msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.FINISH,gameProcess);
+                                msgSender.sendMsgProtocol(msgProtocol);
                                 LogUtil.d(TAG, "win!");
+                            }else{
+                                GameProcess gameProcess = new GameProcess(progress);
+                                MSGProtocol<GameProcess> msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.PROGRESS, gameProcess);
+                                msgSender.sendMsgProtocol(msgProtocol);
                             }
                         }
                     }
@@ -214,6 +223,67 @@ public class Game3DView extends GLSurfaceView {
 
         private boolean isBegin = true;
 
+        //重新初始化，在里面重用了渲染管的onCreate方法
+        public void init_again(){
+            float cameraDistance = 15f;
+            camera = new Camera(cameraDistance);
+
+            //初始化变换矩阵
+            MatrixState.setInitStack();
+
+            Bitmap src;
+            Vector2f[] quadPositions;
+            //初始化纹理
+            waterId = TextureUtil.initTexture(context, R.drawable.water);
+            treeId = TextureUtil.initTexture(context, R.drawable.sky_tree);
+            cloudId = TextureUtil.initTexture(context, R.drawable.sky_cloud);
+
+
+            switch (objectType) {
+                case CUBE:
+                    int[] pictureIds = new int[]{
+                            R.mipmap.ic_launcher,
+                            R.mipmap.ic_launcher,
+                            R.mipmap.ic_launcher,
+                            R.mipmap.ic_launcher,
+                            R.mipmap.ic_launcher,
+                            R.mipmap.ic_launcher
+                    };
+                    texIds = new int[pictureIds.length];
+                    quadPositions = new Vector2f[]{
+                            new Vector2f(0, 0),
+                            new Vector2f(1, 0),
+                            new Vector2f(1, 1),
+                            new Vector2f(0, 1),
+                    };
+                    for (int i = 0; i < pictureIds.length; i++) {
+                        src = TextureUtil.loadTexture(context, pictureIds[i]);//设置纹理图片
+                        texIds[i] = TextureUtil.initTexture(src);//设置纹理ID
+                    }
+                    points = BitmapUtil.cutBitmapToCubes(quadPositions, cutNum, cutNum);
+
+                    break;
+                case SPHERE:
+                    src = TextureUtil.loadTexture(context, R.mipmap.android_robot);//设置纹理图片
+                    texIds = new int[1];
+                    texIds[0] = TextureUtil.initTexture(src);//设置纹理ID
+                    break;
+                case QUAD_PLANE:
+                    src = TextureUtil.loadTexture(context, R.mipmap.ic_launcher);//设置纹理图片
+                    texIds = new int[1];
+                    texIds[0] = TextureUtil.initTexture(src);//设置纹理ID
+                    quadPositions = new Vector2f[]{
+                            new Vector2f(0.0f, 0.0f),
+                            new Vector2f(0.7f, 0.0f),
+                            new Vector2f(1.0f, 1.0f),
+                            new Vector2f(0.0f, 0.7f),
+                    };
+                    points = BitmapUtil.cutBitmapToQuads(quadPositions, cutNum, cutNum);
+                    break;
+            }
+        }
+
+
         private void initTaskReal() {
 
             water = new Water(shadowId, waterId, GameConstant.WIDTH, GameConstant.HEIGHT);
@@ -245,6 +315,7 @@ public class Game3DView extends GLSurfaceView {
         @Override
         public void onDrawFrame(GL10 gl) {
             if (!hasLoad) {
+                init_again(); //暂时用来开始新游戏时，把obejct全部清空使用的
                 initTaskReal();
                 hasLoad = true;
             } else {
