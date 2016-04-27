@@ -146,7 +146,7 @@ public class GameActivity extends Activity implements
                                     gameProcess1.setProgress(gameProcess.getProgress());
                             }
                             msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.PROGRESS, gameProcesses);
-                            client.putData("processes", gameProcess);
+                            server.putData("processes", gameProcess);
                             break;
                     }
                     server.sendAllClient(serializer.serialize(msgProtocol).getBytes());

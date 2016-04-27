@@ -28,7 +28,7 @@ public abstract class ObjectAbstract extends BaseBody implements Object {
             if (pieces.get(i).isEqualNum(i))
                 count++;
         }
-        return count / pieces.size();
+        return 1.0f * count / pieces.size();
     }
 
     @Override
