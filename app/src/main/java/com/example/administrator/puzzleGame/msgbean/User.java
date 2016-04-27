@@ -28,8 +28,8 @@ public class User extends Entity {
     public static void main(String args[]) {
         Serializer serializer = SerializerFastJson.getInstance();
         User user = new User("gj");
-        List<User> users = new ArrayList<>();
         User user2 = new User("cgh");
+        List<User> users = new ArrayList<>();
         users.add(user);
         users.add(user2);
         MSGProtocol<User> msgProtocol1 = new MSGProtocol<>("guojun", 1, user);
@@ -38,12 +38,12 @@ public class User extends Entity {
         System.out.println(s1);
         String s2 = serializer.serialize(msgProtocol2);
         System.out.println(s2);
-        msgProtocol1 = serializer.parseObject(s1, User.class);
-        msgProtocol2 = serializer.parseObject(s2, User.class);
-        if (msgProtocol1.getSetType() == MSGProtocol.SET_TYPE.BEAN)
-            user = msgProtocol1.getAddObject();
-        if (msgProtocol2.getSetType() == MSGProtocol.SET_TYPE.LIST)
-            users = msgProtocol2.getAddObjects();
+
+
+        MSGProtocol msgProtocol3 = serializer.parse(s1, MSGProtocol.class);
+        MSGProtocol msgProtocol4 = serializer.parse(s2, MSGProtocol.class);
+        user =  (User) msgProtocol3.getAddObject();
+        List userList = msgProtocol4.getAddObjects();
     }
 
     public String getName() {

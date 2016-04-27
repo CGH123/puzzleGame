@@ -19,6 +19,10 @@ import com.example.ServerLAN;
 import com.example.administrator.puzzleGame.R;
 import com.example.administrator.puzzleGame.adapter.GameProgressAdapter;
 import com.example.administrator.puzzleGame.base.BaseHandler;
+import com.example.administrator.puzzleGame.constant.CmdConstant;
+import com.example.administrator.puzzleGame.constant.GameConstant;
+import com.example.administrator.puzzleGame.msgbean.GameProcess;
+import com.example.administrator.puzzleGame.msgbean.User;
 import com.example.administrator.puzzleGame.util.DrawbalBuilderUtil;
 import com.example.administrator.puzzleGame.view.Game3DView;
 import com.example.nioFrame.NIOSocket;
@@ -29,7 +33,9 @@ import com.example.serialization.SerializerFastJson;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameActivity extends Activity implements BaseHandler.OnMessageListener {
+public class GameActivity extends Activity implements
+        BaseHandler.OnMessageListener,
+        Game3DView.MsgSender {
     private Game3DView mGLSurfaceView;
     private RecyclerView mRecyclerView;
     private GameProgressAdapter mAdapter;
@@ -54,13 +60,20 @@ public class GameActivity extends Activity implements BaseHandler.OnMessageListe
         serializer = SerializerFastJson.getInstance();
         handler = new BaseHandler.UnleakHandler(this);
 
-        if(this.getIntent().getBooleanExtra("isServer", false)){
+        if (this.getIntent().getBooleanExtra("isServer", false)) {
             server = ServerLAN.getInstance();
+            List<User> users = client.getData("users");
+            List<GameProcess> gameProcesses = new ArrayList<>();
+            for (int i = 0; i < users.size(); i++) {
+                gameProcesses.add(new GameProcess(0f));
+            }
+            server.putData("processes", gameProcesses);
         }
         initNet();
         initGmaeView();
         initProgressView();
 
+        newGame();
     }
 
     private void initGmaeView() {
@@ -69,15 +82,13 @@ public class GameActivity extends Activity implements BaseHandler.OnMessageListe
         mGLSurfaceView.requestFocus();//获取焦点
         mGLSurfaceView.setFocusableInTouchMode(true);//设置为可触控
 
-        Game3DView.MsgSender msgSender = new Game3DView.MsgSender() {
-            @Override
-            public void sendMsgProtocol(MSGProtocol msgProtocol) {
-                client.sendToServer(serializer.serialize(msgProtocol).getBytes());
-            }
-        };
+
+    }
+
+    private void newGame(){
         //TODO 初始化游戏模式
         //mGLSurfaceView.init(5, Game3DView.ObjectType.QUAD_PLANE, false, msgSender);
-        mGLSurfaceView.init(5, Game3DView.ObjectType.CUBE, true, msgSender);
+        mGLSurfaceView.init(5, Game3DView.ObjectType.CUBE, true, this);
         //mGLSurfaceView.init(8, Game3DView.ObjectType.SPHERE, true, msgSender);
     }
 
@@ -86,17 +97,11 @@ public class GameActivity extends Activity implements BaseHandler.OnMessageListe
         mRecyclerView.setHasFixedSize(true);
         List<GameProgressAdapter.ListData> listDatas = new ArrayList<>();
 
-
         //TODO 插入玩家数据
-        /*List<User> users = (List<User>) client.getData("userList");
+        List<User> users = client.getData("users");
         for (User user : users) {
             listDatas.add((new GameProgressAdapter.ListData(user.getName(), user.getName().substring(0, 1))));
-        }*/
-        //test数据需要删除
-        for (int i = 0; i < 5; i++) {
-            listDatas.add((new GameProgressAdapter.ListData("玩家" + i, String.valueOf(i))));
         }
-
         mAdapter = new GameProgressAdapter(
                 this,
                 R.layout.listitem_game_progress,
@@ -114,12 +119,15 @@ public class GameActivity extends Activity implements BaseHandler.OnMessageListe
         client.addClientReadListener(new OnClientReadListener() {
             @Override
             public void processMsg(byte[] packet) {
-                MSGProtocol msgProtocol = serializer.parseNull(new String(packet), MSGProtocol.class);
-                int command = msgProtocol.getCommand();
+                MSGProtocol msgProtocol = serializer.parse(new String(packet), MSGProtocol.class);
                 Message message = new Message();
-                message.what = command;
-                switch (command){
-
+                int cmd = msgProtocol.getCommand();
+                message.what = cmd;
+                switch (cmd) {
+                    case CmdConstant.PROGRESS:
+                        List<GameProcess> gameProcess = (List<GameProcess>) msgProtocol.getAddObjects();
+                        client.putData("processes", gameProcess);
+                        break;
                 }
                 handler.sendMessage(message);
             }
@@ -128,7 +136,21 @@ public class GameActivity extends Activity implements BaseHandler.OnMessageListe
             server.addServerReadListener(new OnServerReadListener() {
                 @Override
                 public void processMsg(byte[] packet, NIOSocket nioSocket) {
-
+                    MSGProtocol msgProtocol = serializer.parse(new String(packet), MSGProtocol.class);
+                    int cmd = msgProtocol.getCommand();
+                    switch (cmd) {
+                        case CmdConstant.PROGRESS:
+                            GameProcess gameProcess = (GameProcess) msgProtocol.getAddObject();
+                            List<GameProcess> gameProcesses = (List<GameProcess>) server.getData("processes");
+                            for (GameProcess gameProcess1 : gameProcesses) {
+                                if (gameProcess1.equals(gameProcess))
+                                    gameProcess1.setProgress(gameProcess.getProgress());
+                            }
+                            msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.PROGRESS, gameProcesses);
+                            client.putData("processes", gameProcess);
+                            break;
+                    }
+                    server.sendAllClient(serializer.serialize(msgProtocol).getBytes());
                 }
             });
         }
@@ -151,7 +173,19 @@ public class GameActivity extends Activity implements BaseHandler.OnMessageListe
     @Override
     public void processMessage(Message message) {
         switch (message.what) {
+            case CmdConstant.PROGRESS:
+                List<GameProcess> gameProcesses = client.getData("processes");
+                for (int i = 0; i < gameProcesses.size(); i++) {
+                    mAdapter.setGameProgress(i, gameProcesses.get(i).getProgress());
+                }
+                mAdapter.notifyDataSetChanged();
+                break;
 
         }
+    }
+
+    @Override
+    public void sendMsgProtocol(MSGProtocol msgProtocol) {
+        client.sendToServer(serializer.serialize(msgProtocol).getBytes());
     }
 }

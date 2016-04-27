@@ -173,7 +173,7 @@ public class Game3DView extends GLSurfaceView {
                             float progress = object.getCompletedProgress();
 
                             GameProcess gameProcess = new GameProcess(progress);
-                            MSGProtocol<GameProcess> msgProtocol = new MSGProtocol<>("hehe", CmdConstant.PROGRESS, gameProcess);
+                            MSGProtocol<GameProcess> msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.PROGRESS, gameProcess);
                             msgSender.sendMsgProtocol(msgProtocol);
                             // TODO: 2016/4/15 发送进度给服务器
                             if (progress == 1.0f) {

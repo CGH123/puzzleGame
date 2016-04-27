@@ -117,14 +117,13 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
     @Override
     public Client startUdp(int port) {
         udpSocket.bind(port).start();
-//        udpSocket.bind(port);
         return getInstance();
     }
 
     @Override
     public Client stopUdp() {
-        udpSocket.close();
         udpSocket.stop();
+        udpSocket.close();
         return getInstance();
     }
 
@@ -133,7 +132,8 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
         udpSocket.setUdpReadListener(new UDPSocket.OnUdpReadListener() {
             @Override
             public void processMsg(String hostName, byte[] packet) {
-                if (new String(packet).equals(NetConstant.RETURN_HOST)) {
+                String s = new String(packet);
+                if (s.equals(NetConstant.RETURN_HOST)) {
                     isFindServer = true;
                     serverIp = hostName;
                     udpSocket.stop();
@@ -146,12 +146,12 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
         int sleepTime = 300;
         while (time < timeout && !isFindServer) {
             try {
-                byte[] data = "find_server".getBytes();
+                byte[] data = NetConstant.FIND_SERVER.getBytes();
                 udpSocket.send(NetConstant.BROADCAST_HOST, data);
                 Thread.sleep(sleepTime);
                 time += sleepTime;
             } catch (Exception e) {
-//                udpSocket.stop();
+                udpSocket.stop();
                 udpSocket.close();
                 System.out.print(TAG + e.toString());
             }
@@ -183,7 +183,7 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
         write(content);
         return getInstance();
     }
-  
+
     /**
      * 需要序列化功能实现,建议在回调函数Listener中使用
      * 由于客户端只有一个管道，所以不用socketChannel的参数
@@ -200,22 +200,16 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
     }
 
 
-    public void putData(String key, Object o) {
-        if (key.isEmpty()) {
-            stop();
-            close();
+    public <T> void putData(String key, T o) {
+        if (key.isEmpty())
             throw new NullPointerException();
-        }
         clientDataMap.put(key, o);
     }
 
-    public Object getData(String key) {
-        if (key.isEmpty()) {
-            stop();
-            close();
+    public <T> T getData(String key) {
+        if (key.isEmpty())
             throw new NullPointerException();
-        }
-        return clientDataMap.get(key);
+        return (T) clientDataMap.get(key);
     }
 
 

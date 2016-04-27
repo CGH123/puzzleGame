@@ -98,18 +98,18 @@ public interface Client {
     Client removeClientReadListener(OnClientReadListener mlistener);
 
     /**
-     * 删除客户端回调写数据监听
+     * 删除服务器回调写数据监听
      *
      * @param key key
      * @param o   数据
      */
-    void putData(String key, Object o);
+    <T> void putData(String key, T o);
 
     /**
-     * 删除客户端回调写数据监听
+     * 删除服务器回调写数据监听
      *
      * @param key key
      * @return 数据
      */
-    Object getData(String key);
+    <T> T getData(String key);
 }

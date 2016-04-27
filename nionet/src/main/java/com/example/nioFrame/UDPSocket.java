@@ -42,8 +42,9 @@ public class UDPSocket implements Runnable {
     }
 
     public UDPSocket start() {
+        Thread workThread = new Thread(SingletonHolder.udpSocket);
         isRunning = true;
-        SingletonHolder.workThread.start();
+        workThread.start();
         return getInstance();
     }
 
@@ -98,7 +99,6 @@ public class UDPSocket implements Runnable {
      */
     private static class SingletonHolder {
         private static UDPSocket udpSocket = new UDPSocket();
-        private static Thread workThread = new Thread(udpSocket);
     }
 
 }

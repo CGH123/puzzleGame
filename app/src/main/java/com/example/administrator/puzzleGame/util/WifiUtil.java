@@ -24,7 +24,7 @@ public class WifiUtil {
     // 定义WifiManager对象
     private static WifiManager mWifiManager;
     // 定义WifiInfo对象 设计为用mWifiManager来获取wifiinfo
-//    private WifiInfo mWifiInfo;
+    private WifiInfo mWifiInfo;
     // 扫描出的网络连接列表
     private List<ScanResult> mWifiList;
     // 网络连接列表
@@ -36,7 +36,7 @@ public class WifiUtil {
         mWifiManager = (WifiManager) context
                 .getSystemService(Context.WIFI_SERVICE);
         // 取得WifiInfo对象
-//        mWifiInfo = mWifiManager.getConnectionInfo();
+        mWifiInfo = mWifiManager.getConnectionInfo();
     }
 
     /**
@@ -326,6 +326,17 @@ public class WifiUtil {
             stringBuilder.append("/n");
         }
         return stringBuilder;
+    }
+
+
+    private static String intToIp(int i) {
+        return (i & 0xFF) + "." + ((i >> 8) & 0xFF) + "." + ((i >> 16) & 0xFF) + "."
+                + ((i >> 24) & 0xFF);
+    }
+
+    public static String getLocalIPAddress() {
+        WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
+        return intToIp(wifiInfo.getIpAddress());
     }
 
     public static enum WifiCipherType {
