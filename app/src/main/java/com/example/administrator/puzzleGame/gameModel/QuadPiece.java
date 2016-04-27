@@ -10,13 +10,14 @@ public class QuadPiece extends PieceAbstract {
     int num;
     Boolean canChoose;
 
-    public QuadPiece(int num, Vector2f[] points, int texId, Boolean canChoose) {
+    public QuadPiece(float scale, int num, Vector2f[] points, int texId, Boolean canChoose) {
+        super(scale);
         this.points = points;
         this.texId = texId;
         this.num = num;
         this.canChoose = canChoose;
-        pieceFill = new PieceFillBody(getPieceFillData(2.0f));
-        pieceLine = new PieceLineBody(getPieceLineData(2.0f));
+        pieceFill = new PieceFillBody(getPieceFillData(3.0f));
+        pieceLine = new PieceLineBody(getPieceLineData(3.0f));
     }
 
 
@@ -33,8 +34,8 @@ public class QuadPiece extends PieceAbstract {
 
         //顶点坐标数据的初始化================begin============================
         float[] vertices = new float[]{
-                points[0].x * 2, points[0].y * 2, 0, points[1].x * 2, points[1].y * 2, 0, points[2].x * 2, points[2].y * 2, 0,
-                points[3].x * 2, points[3].y * 2, 0, points[2].x * 2, points[2].y * 2, 0, points[1].x * 2, points[1].y * 2, 0,
+                points[0].x * scale, points[0].y * scale, 0, points[1].x * scale, points[1].y * scale, 0, points[2].x * scale, points[2].y * scale, 0,
+                points[3].x * scale, points[3].y * scale, 0, points[2].x * scale, points[2].y * scale, 0, points[1].x * scale, points[1].y * scale, 0,
         };
 
 

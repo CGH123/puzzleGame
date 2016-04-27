@@ -10,8 +10,9 @@ public class Cube extends ObjectAbstract {
     Vector2f[] points;
     int[] texIds;
 
-    public Cube(int cutNum, Vector2f[] points, int[] texIds) {
-        super(cutNum, cutNum, cutNum);
+    public Cube(float scale, int cutNum, Vector2f[] points, int[] texIds) {
+        super(cutNum * scale / 2, cutNum * scale / 2, cutNum * scale / 2);
+        this.scale = scale;
         this.cutNum = cutNum;
         this.squareNum = cutNum * cutNum;
         this.faceNum = 6;
@@ -32,7 +33,7 @@ public class Cube extends ObjectAbstract {
                             new Vector2f(points[startPos + 1]),
                             new Vector2f(points[startPos + cutNum + 1]),
                             new Vector2f(points[startPos + cutNum + 2])};
-                    PieceAbstract piece = new CubePiece(i * squareNum + j * cutNum + k, quadPoints, texIds[i]);
+                    PieceAbstract piece = new CubePiece(scale, i * squareNum + j * cutNum + k, quadPoints, texIds[i]);
                     pieces.add(piece);
                 }
             }

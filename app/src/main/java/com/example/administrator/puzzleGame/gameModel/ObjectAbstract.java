@@ -7,6 +7,7 @@ import java.util.List;
 public abstract class ObjectAbstract extends BaseBody implements Object {
 
     List<PieceAbstract> pieces;
+    float scale;
 
     public ObjectAbstract(float x, float y, float z) {
         super.setBox(x, y, z);

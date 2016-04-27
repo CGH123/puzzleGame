@@ -90,7 +90,7 @@ public class GameRoomActivity extends Activity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gameroom);
 
-        GameConstant.NAME = Build.ID;
+        GameConstant.NAME = Build.MANUFACTURER;
         GameConstant.PHONE = ((TelephonyManager) this.getSystemService(TELEPHONY_SERVICE)).getDeviceId();
         initNet();
         initViews();
@@ -241,7 +241,9 @@ public class GameRoomActivity extends Activity implements
 
                 mListView.onRefreshComplete();
                 mOrder.setText(String.valueOf(message.getData().getInt("order") + 1));
-                mBtnCreate.setVisibility(View.INVISIBLE);
+
+                mBtnCreate.setVisibility(View.GONE);
+
                 break;
             case CmdConstant.START:
                 client.stopUdp();
