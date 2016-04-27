@@ -59,17 +59,12 @@
             android:layout_alignParentStart="false">
 
             <Button
-                android:layout_width="183dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="开始（目前用于跳转）"
                 android:id="@+id/button_start"
                 android:layout_weight="0.48" />
 
-            <Button
-                android:layout_width="183dp"
-                android:layout_height="match_parent"
-                android:text="准备"
-                android:id="@+id/button_ready" />
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

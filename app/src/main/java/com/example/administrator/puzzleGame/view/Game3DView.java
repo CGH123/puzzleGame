@@ -9,22 +9,25 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 import com.example.administrator.puzzleGame.R;
+import com.example.administrator.puzzleGame.constant.CmdConstant;
 import com.example.administrator.puzzleGame.constant.GameConstant;
-import com.example.administrator.puzzleGame.game3DModel.Camera;
-import com.example.administrator.puzzleGame.game3DModel.Cube;
-import com.example.administrator.puzzleGame.game3DModel.MatrixState;
-import com.example.administrator.puzzleGame.game3DModel.Quad;
-import com.example.administrator.puzzleGame.game3DModel.ShaderManager;
-import com.example.administrator.puzzleGame.game3DModel.SkyCloud;
-import com.example.administrator.puzzleGame.game3DModel.SkyTree;
-import com.example.administrator.puzzleGame.game3DModel.Sphere;
-import com.example.administrator.puzzleGame.game3DModel.Vector2f;
-import com.example.administrator.puzzleGame.game3DModel.Water;
-import com.example.administrator.puzzleGame.game3DModel.Whole;
+import com.example.administrator.puzzleGame.gameModel.Camera;
+import com.example.administrator.puzzleGame.gameModel.Cube;
+import com.example.administrator.puzzleGame.gameModel.MatrixState;
+import com.example.administrator.puzzleGame.gameModel.Object;
+import com.example.administrator.puzzleGame.gameModel.Quad;
+import com.example.administrator.puzzleGame.gameModel.ShaderManager;
+import com.example.administrator.puzzleGame.gameModel.SkyCloud;
+import com.example.administrator.puzzleGame.gameModel.SkyTree;
+import com.example.administrator.puzzleGame.gameModel.Sphere;
+import com.example.administrator.puzzleGame.gameModel.Vector2f;
+import com.example.administrator.puzzleGame.gameModel.Water;
+import com.example.administrator.puzzleGame.msgbean.GameProcess;
 import com.example.administrator.puzzleGame.util.BitmapUtil;
 import com.example.administrator.puzzleGame.util.LogUtil;
 import com.example.administrator.puzzleGame.util.TextureUtil;
 import com.example.administrator.puzzleGame.util.VectorUtil;
+import com.example.protocol.MSGProtocol;
 
 import java.util.Random;
 
@@ -33,10 +36,16 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class Game3DView extends GLSurfaceView {
     private static final String TAG = "Game3DView";
+
+    public interface MsgSender {
+        void sendMsgProtocol(MSGProtocol msgProtocol);
+    }
+
     //手指触控数
     private static int mode = 0;
     private Camera camera;
     private Context context;
+    private MsgSender msgSender;
 
     //单指时touch时间结束位置
     private float locationXEndP1, locationYEndP1;
@@ -51,10 +60,11 @@ public class Game3DView extends GLSurfaceView {
     private ObjectType objectType;
     private int cutNum;
     private int firstPickNum = -1;
-    private Whole object;
+    private Object object;
     private Water water;
     private SkyTree tree;
     private SkyCloud cloud;
+
     public Game3DView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
@@ -69,10 +79,11 @@ public class Game3DView extends GLSurfaceView {
         MatrixState.setLightLocation(0, 0, 0);
     }
 
-    public void init(int cutNum, ObjectType objectType, Boolean canMoveCamera) {
+    public void init(int cutNum, ObjectType objectType, Boolean canMoveCamera, MsgSender msgSender) {
         this.objectType = objectType;
         this.cutNum = cutNum;
         this.canMoveCamera = canMoveCamera;
+        this.msgSender = msgSender;
     }
 
     //触摸事件回调方法
@@ -159,7 +170,13 @@ public class Game3DView extends GLSurfaceView {
                             object.swapPiece(firstPickNum, pieceNum);
                             object.hintPiece(firstPickNum);
                             firstPickNum = -1;
-                            if (object.isCompleted()) {
+                            float progress = object.getCompletedProgress();
+
+                            GameProcess gameProcess = new GameProcess(progress);
+                            MSGProtocol<GameProcess> msgProtocol = new MSGProtocol<>("hehe", CmdConstant.PROGRESS, gameProcess);
+                            msgSender.sendMsgProtocol(msgProtocol);
+                            // TODO: 2016/4/15 发送进度给服务器
+                            if (progress == 1.0f) {
                                 // TODO: 2016/4/15 获胜UI
                                 LogUtil.d(TAG, "win!");
                             }

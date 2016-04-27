@@ -33,14 +33,9 @@ public interface Server {
      *
      * @return 服务器instance
      */
-    Server startUdp(int port);
+    Server initUdp();
 
-    /**
-     * 停止线程
-     *
-     * @return 服务器instance
-     */
-    Server stopUdp();
+
 
     /**
      * 关闭线程
@@ -113,7 +108,7 @@ public interface Server {
      * @param key key
      * @return 数据
      */
-    Object putData(String key);
+    Object getData(String key);
 
 
 }

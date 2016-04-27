@@ -17,8 +17,8 @@ import android.widget.EditText;
 
 import com.example.administrator.puzzleGame.R;
 import com.example.administrator.puzzleGame.constant.WifiApConst;
-import com.example.administrator.puzzleGame.util.WifiUtils;
-import com.example.administrator.puzzleGame.util.WifiUtils.WifiCipherType;
+import com.example.administrator.puzzleGame.util.WifiUtil;
+import com.example.administrator.puzzleGame.util.WifiUtil.WifiCipherType;
 
 /**
  * WIFI的消息提醒对话框
@@ -78,7 +78,7 @@ public class ConnWifiDialog extends BaseDialog {
                     }
 
                     // 连接网络
-                    boolean connFlag = WifiUtils.connectWifi(mScanResult.SSID, pwd, type);
+                    boolean connFlag = WifiUtil.connectWifi(mScanResult.SSID, pwd, type);
                     ConnWifiDialog.this.setButton1Text(mContext.getString(R.string.btn_yes));
                     ConnWifiDialog.this.setButton1Clickable(true);
                     ConnWifiDialog.this.setButton2Clickable(true);
