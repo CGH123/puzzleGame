@@ -1,182 +1,157 @@
 package com.example.administrator.puzzleGame.activity;
 
+
 import android.app.Activity;
-import android.content.Intent;
-import android.os.AsyncTask;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.example.Client;
 import com.example.ClientLAN;
-import com.example.NetConstant;
 import com.example.OnClientReadListener;
 import com.example.OnServerReadListener;
 import com.example.Server;
 import com.example.ServerLAN;
 import com.example.administrator.puzzleGame.R;
+import com.example.administrator.puzzleGame.adapter.GameProgressAdapter;
+import com.example.administrator.puzzleGame.base.BaseHandler;
+import com.example.administrator.puzzleGame.util.DrawbalBuilderUtil;
+import com.example.administrator.puzzleGame.view.Game3DView;
 import com.example.nioFrame.NIOSocket;
 import com.example.protocol.MSGProtocol;
+import com.example.serialization.Serializer;
 import com.example.serialization.SerializerFastJson;
 
-/**
- * Created by HUI on 2016-04-24.
- */
-public class GameActivity extends Activity implements View.OnClickListener {
+import java.util.ArrayList;
+import java.util.List;
 
-    Button temp;
+public class GameActivity extends Activity implements BaseHandler.OnMessageListener {
+    private Game3DView mGLSurfaceView;
+    private RecyclerView mRecyclerView;
+    private GameProgressAdapter mAdapter;
+    private BaseHandler.UnleakHandler handler;
+    private Serializer serializer;
+    private Client client;
+    private Server server;
 
-    Button sent;
-    Button server_init;
-    Button client_init;
-    TextView content;
-    MyHandler myHandler;
-
-    Server server;
-    Client client;
-
- 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test_gameplay);
+        //设置为全屏
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // 设置为横屏模式
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        //切换到主界面
+        setContentView(R.layout.activity_game3d);
 
-        initView();
-        initEvent();
+        serializer = SerializerFastJson.getInstance();
+        handler = new BaseHandler.UnleakHandler(this);
+
+        if(this.getIntent().getBooleanExtra("isServer", false)){
+            server = ServerLAN.getInstance();
+        }
+        initNet();
+        initGmaeView();
+        initProgressView();
+
     }
 
-    private void initView() {
-        sent = (Button) findViewById(R.id.test_send);
-        server_init = (Button) findViewById(R.id.server_init);
-        client_init = (Button) findViewById(R.id.client_init);
-        content = (TextView) findViewById(R.id.text_show);
-        myHandler = new MyHandler();
+    private void initGmaeView() {
+        //初始化GLSurfaceView
+        mGLSurfaceView = (Game3DView) findViewById(R.id.game_3d_view);
+        mGLSurfaceView.requestFocus();//获取焦点
+        mGLSurfaceView.setFocusableInTouchMode(true);//设置为可触控
 
-        temp = (Button)findViewById(R.id.button_temp);
+        Game3DView.MsgSender msgSender = new Game3DView.MsgSender() {
+            @Override
+            public void sendMsgProtocol(MSGProtocol msgProtocol) {
+                client.sendToServer(serializer.serialize(msgProtocol).getBytes());
+            }
+        };
+        //TODO 初始化游戏模式
+        //mGLSurfaceView.init(5, Game3DView.ObjectType.QUAD_PLANE, false, msgSender);
+        mGLSurfaceView.init(5, Game3DView.ObjectType.CUBE, true, msgSender);
+        //mGLSurfaceView.init(8, Game3DView.ObjectType.SPHERE, true, msgSender);
     }
 
-    private void initEvent() {
-        sent.setOnClickListener(this);
-        server_init.setOnClickListener(this);
-        client_init.setOnClickListener(this);
-        server = ServerLAN.getInstance();
+    private void initProgressView() {
+        mRecyclerView = (RecyclerView) findViewById(R.id.list_game_progress_view);
+        mRecyclerView.setHasFixedSize(true);
+        List<GameProgressAdapter.ListData> listDatas = new ArrayList<>();
+
+
+        //TODO 插入玩家数据
+        /*List<User> users = (List<User>) client.getData("userList");
+        for (User user : users) {
+            listDatas.add((new GameProgressAdapter.ListData(user.getName(), user.getName().substring(0, 1))));
+        }*/
+        //test数据需要删除
+        for (int i = 0; i < 5; i++) {
+            listDatas.add((new GameProgressAdapter.ListData("玩家" + i, String.valueOf(i))));
+        }
+
+        mAdapter = new GameProgressAdapter(
+                this,
+                R.layout.listitem_game_progress,
+                listDatas,
+                DrawbalBuilderUtil.getDrawbalBuilder(DrawbalBuilderUtil.DRAWABLE_TYPE.SAMPLE_ROUND_RECT_BORDER)
+        );
+
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext()));
+    }
+
+    private void initNet() {
         client = ClientLAN.getInstance();
+        final Serializer serializer = SerializerFastJson.getInstance();
+        client.addClientReadListener(new OnClientReadListener() {
+            @Override
+            public void processMsg(byte[] packet) {
+                MSGProtocol msgProtocol = serializer.parseNull(new String(packet), MSGProtocol.class);
+                int command = msgProtocol.getCommand();
+                Message message = new Message();
+                message.what = command;
+                switch (command){
 
-        temp.setOnClickListener(this);
+                }
+                handler.sendMessage(message);
+            }
+        });
+        if (server != null) {
+            server.addServerReadListener(new OnServerReadListener() {
+                @Override
+                public void processMsg(byte[] packet, NIOSocket nioSocket) {
+
+                }
+            });
+        }
+
     }
 
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.test_send:
-                MSGProtocol msgProtocol = new MSGProtocol("Hi", 1);
-                String temp = SerializerFastJson.getInstance().serialize(msgProtocol);
-                client.sendToServer(temp.getBytes());
-
-                Message msg = new Message();
-                msg.what = NetConstant.Message_Sen;
-                Bundle bundle = new Bundle();
-                bundle.putString("name", msgProtocol.getSenderName());
-                msg.setData(bundle);
-                myHandler.sendMessage(msg);
-                break;
-            case R.id.server_init:
-                new NetStartTask(ServerLAN.getInstance()).execute();
-                break;
-            case R.id.client_init:
-                new NetStartTask(ClientLAN.getInstance()).execute();
-                break;
-            case R.id.button_temp:
-                Intent intent = new Intent(GameActivity.this,GameRoomActivity.class);
-                startActivity(intent);
-        }
+    protected void onResume() {
+        super.onResume();
+        mGLSurfaceView.onResume();
     }
 
-    private class MyHandler extends Handler {
-
-        @Override
-        public void handleMessage(Message msg) {
-            Bundle bundle;
-            String name;
-            switch (msg.what) {
-                case NetConstant.Message_Rec:
-                    //TODO 处理收到的消息
-                    bundle = msg.getData();
-                    name = "我收到消息" + bundle.getString("name") + "\n";
-                    content.setText(content.getText() + name);
-                    break;
-                case NetConstant.Message_Sen:
-                    //TODO 处理发送的消息
-
-                    bundle = msg.getData();
-                    name = "我发送消息" + bundle.getString("name") + "\n";
-                    content.setText(content.getText() + name);
-                    break;
-            }
-        }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mGLSurfaceView.onPause();
     }
 
-    class NetStartTask extends AsyncTask<Void,Void,String> {
-        Server server;
-        Client client;
-        NetStartTask(Server server){
-            this.server = server;
-        }
-        NetStartTask(Client client){
-            this.client = client;
-        }
-        @Override
-        protected String doInBackground(Void... params) {
-            if(server != null) {
-                OnServerReadListener serverReadListener = new OnServerReadListener() {
-                    @Override
-                    public void processMsg(byte[] packet, NIOSocket nioSocket) {
-                        MSGProtocol msgProtocol = SerializerFastJson.getInstance().parseNull(new String(packet), MSGProtocol.class);
-
-                        Message msg = new Message();
-                        msg.what = NetConstant.Message_Rec;
-                        Bundle bundle = new Bundle();
-                        bundle.putString("name", msgProtocol.getSenderName());
-                        msg.setData(bundle);
-                        myHandler.sendMessage(msg);
-
-                        MSGProtocol temp = new MSGProtocol("hello", msgProtocol.getCommand());
-                        String msgString = SerializerFastJson.getInstance().serialize(temp);
-                        server.sendAllClient(msgString.getBytes());
-                    }
-                };
-                server.addServerReadListener(serverReadListener).bind(NetConstant.TCP_PORT).start();
-            }
-            else if(client != null){
-                OnClientReadListener clientReadListener = new OnClientReadListener() {
-                    @Override
-                    public void processMsg(byte[] packet) {
-                        MSGProtocol msgProtocol = SerializerFastJson.getInstance().parseNull(new String(packet), MSGProtocol.class);
-
-                        Message msg = new Message();
-                        msg.what = NetConstant.Message_Rec;
-                        Bundle bundle = new Bundle();
-                        bundle.putString("name", msgProtocol.getSenderName());
-                        msg.setData(bundle);
-                        myHandler.sendMessage(msg);
-
-                    }
-                };
-                client.addClientReadListener(clientReadListener).bind("localhost", NetConstant.TCP_PORT).start();
-            }
-            return "Success";
-        }
-
-        @Override
-        protected void onPostExecute(String ip) {
+    @Override
+    public void processMessage(Message message) {
+        switch (message.what) {
 
         }
-
     }
-
-
 }

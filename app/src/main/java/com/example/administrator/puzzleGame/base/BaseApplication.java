@@ -13,7 +13,6 @@ import com.example.administrator.puzzleGame.util.LogUtil;
  * Created by HUI on 2016-04-04.
  */
 public class BaseApplication extends Application {
-
     public static boolean isDebugmode = false;
     private static BaseApplication instance;
     /**
@@ -43,23 +42,6 @@ public class BaseApplication extends Application {
         return instance;
     }
 
-    /* 设置声音提醒 */
-    public static boolean getSoundFlag() {
-        return !isSlient;
-    }
-
-    public static void setSoundFlag(boolean pIsSlient) {
-        isSlient = pIsSlient;
-    }
-
-    /* 设置震动提醒 */
-    public static boolean getVibrateFlag() {
-        return isVibrate;
-    }
-
-    public static void setVibrateFlag(boolean pIsvibrate) {
-        isVibrate = pIsvibrate;
-    }
 
     /**
      * 新消息提醒 - 声音提醒、振动提醒
@@ -88,7 +70,6 @@ public class BaseApplication extends Application {
             instance = this;
         }
 
-//        ActivitiesManager.init(getApplicationContext()); // 初始化活动管理器
         LogUtil.setLogStatus(isPrintLog); // 设置是否显示日志
 
         initNotification();

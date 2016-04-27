@@ -111,5 +111,5 @@ public interface Client {
      * @param key key
      * @return 数据
      */
-    Object putData(String key);
+    Object getData(String key);
 }
