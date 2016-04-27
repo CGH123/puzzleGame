@@ -29,7 +29,7 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
     private NIOServerSocket serverSocket;
     private ServerSocketObserver serverSocketObserver;
     private UDPSocket udpSocket;
-    private List<OnServerReadListener> serverReadListeners; //设置监听器的回调函数
+    private OnServerReadListener serverReadListener; //设置监听器的回调函数
     private Map<String, Object> serverDataMap;
     private List<NIOSocket> socketList;
     private boolean isRunning;
@@ -37,7 +37,6 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
 
 
     private ServerLAN() {
-        serverReadListeners = new LinkedList<>();
         serverDataMap = new TreeMap<>();
         socketList = new Vector<>();
         serverSocketObserver = this;
@@ -61,7 +60,7 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
                 server.sendToClient(msgString.getBytes(), nioSocket);
             }
         };
-        server.addServerReadListener(serverReadListener)
+        server.setServerReadListener(serverReadListener)
                 .bind(NetConstant.TCP_PORT)
                 .start();
 
@@ -74,15 +73,11 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
     }
 
 
-    public Server addServerReadListener(OnServerReadListener mlistener) {
-        this.serverReadListeners.add(mlistener);
+    public Server setServerReadListener(OnServerReadListener mlistener) {
+        this.serverReadListener = mlistener;
         return getInstance();
     }
 
-    public Server removeServerReadListener(OnServerReadListener mlistener) {
-        this.serverReadListeners.remove(mlistener);
-        return getInstance();
-    }
 
     public synchronized <T> void putData(String key, T o) {
         if (key.isEmpty())
@@ -250,9 +245,8 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
 
             public void packetReceived(NIOSocket socket, byte[] packet) {
                 //把其中一个客户端发送的信息，在服务端更新了之后，传递给其他每一个的客户端
-                if (!serverReadListeners.isEmpty())
-                    for (OnServerReadListener serverReadListener : serverReadListeners)
-                        serverReadListener.processMsg(packet, socket);
+                if (serverReadListener != null)
+                    serverReadListener.processMsg(packet, socket);
                 else
                     System.out.print(TAG + "Server listener is empty");
             }

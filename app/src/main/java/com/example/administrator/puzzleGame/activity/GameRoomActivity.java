@@ -197,7 +197,7 @@ public class GameRoomActivity extends Activity implements
         message.what = cmd;
         switch (cmd) {
             case CmdConstant.CONNECT:
-                List<User> users = msgProtocol.getAddObjects();
+                List<User> users = (ArrayList<User>) msgProtocol.getAddObjects();
                 for (int i = 0; i < users.size(); i++)
                     if ((users.get(i)).getName().equals(GameConstant.NAME))
                         message.getData().putInt("order", i);
@@ -220,8 +220,11 @@ public class GameRoomActivity extends Activity implements
         switch (cmd) {
             case CmdConstant.CONNECT:
                 User user = (User) msgProtocol.getAddObject();
+                String name = msgProtocol.getSenderName();
                 List<User> users = server.getData("users");
                 users.add(user);
+                List<String> names = server.getData("clients");
+                names.add(name);
                 msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.CONNECT, users);
                 break;
             case CmdConstant.START:
@@ -248,7 +251,9 @@ public class GameRoomActivity extends Activity implements
             case CmdConstant.START:
                 client.stopUdp();
                 Intent intent = new Intent(GameRoomActivity.this, GameActivity.class);
-                intent.putExtra("isServer", true);
+                if(server != null) {
+                    intent.putExtra("isServer", true);
+                }
                 startActivity(intent);
                 break;
         }
@@ -266,7 +271,7 @@ public class GameRoomActivity extends Activity implements
                 isFind = true;
                 client.bind(ip, NetConstant.TCP_PORT)
                         .start()
-                        .addClientReadListener(GameRoomActivity.this);
+                        .setClientReadListener(GameRoomActivity.this);
 
                 MSGProtocol<User> msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.CONNECT, new User(GameConstant.NAME));
                 client.sendToServer(serializer.serialize(msgProtocol).getBytes());
@@ -295,13 +300,15 @@ public class GameRoomActivity extends Activity implements
             server.initUdp();
             List<User> userList = new ArrayList<>();
             server.putData("users", userList);
+            List<String> nameList = new ArrayList<>();
+            server.putData("clients", nameList);
             server.bind(NetConstant.TCP_PORT)
                     .start()
-                    .addServerReadListener(GameRoomActivity.this);
+                    .setServerReadListener(GameRoomActivity.this);
 
             client.bind(GameConstant.IP, NetConstant.TCP_PORT)
                     .start()
-                    .addClientReadListener(GameRoomActivity.this);
+                    .setClientReadListener(GameRoomActivity.this);
 
             MSGProtocol<User> msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.CONNECT, new User(GameConstant.NAME));
             client.sendToServer(serializer.serialize(msgProtocol).getBytes());
