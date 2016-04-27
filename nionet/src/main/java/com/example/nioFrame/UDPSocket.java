@@ -82,8 +82,8 @@ public class UDPSocket implements Runnable {
                 String result = new String(dataPacket.getData(), dataPacket.getOffset(), dataPacket.getLength());
                 udpReadListener.processMsg(dataPacket.getAddress().getHostName(), result.getBytes());
             } catch (Exception e) {
-                stop();
                 close();
+                stop();
                 System.out.print(TAG + e.toString());
             }
         }

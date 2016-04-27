@@ -38,7 +38,7 @@ public class GameActivity extends Activity implements View.OnClickListener {
     Server server;
     Client client;
 
-
+ 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

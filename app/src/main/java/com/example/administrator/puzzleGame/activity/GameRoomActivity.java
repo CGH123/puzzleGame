@@ -1,8 +1,10 @@
 package com.example.administrator.puzzleGame.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -60,6 +62,7 @@ public class GameRoomActivity extends Activity implements View.OnClickListener,M
     private Client client;
 
     private boolean isServer = false;
+    private boolean isFound  = false;
 
     private String roomOwner;
 
@@ -76,11 +79,19 @@ public class GameRoomActivity extends Activity implements View.OnClickListener,M
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ClientLAN.getInstance().stopUdp();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         isMeReady = false;
         haveFind = false;
+        ClientLAN.getInstance().startUdp(NetConstant.UDP_PORT);
     }
+
 
     private void initViews(){
         mIvAvatar = (ImageView) findViewById(R.id.gameroom_my_avatar);
@@ -93,6 +104,9 @@ public class GameRoomActivity extends Activity implements View.OnClickListener,M
         mBtnCreate = (Button) findViewById(R.id.gameroom_create);
 
         mListView = (MultiListView) findViewById(R.id.friends_list);
+
+
+        mName.setText(android.os.Build.MODEL);
 
         mIvAvatar.setImageDrawable(getResources().getDrawable(R.drawable.water));
         mPlayersNum.setText(R.string.gameroom_emptyplayer);
@@ -114,9 +128,7 @@ public class GameRoomActivity extends Activity implements View.OnClickListener,M
 
         server = ServerLAN.getInstance();
         client = ClientLAN.getInstance();
-        //初始化Bind
-        client.startUdp(NetConstant.UDP_PORT);
- 
+
     }
 
     /**
@@ -149,7 +161,7 @@ public class GameRoomActivity extends Activity implements View.OnClickListener,M
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        //用来选择房间，暂时不用这个功能，默认第一个房间
     }
 
     /**
@@ -168,13 +180,16 @@ public class GameRoomActivity extends Activity implements View.OnClickListener,M
             if(!ip.equals("")){
                 roomOwner = ip;
                 User roomHost = new User(roomOwner);
+                mLocalUsersList.clear();
                 mLocalUsersList.add(roomHost);
                 mAdapter.setmData(mLocalUsersList); // Adapter加载List数据
                 mAdapter.notifyDataSetChanged();
+
+                mBtnCreate.setVisibility(View.GONE);
+                mBtnStart.setVisibility(View.VISIBLE);
             }else{
                 System.out.println("UDP not found roomOwner");
             }
-
             mListView.onRefreshComplete();
         }
 

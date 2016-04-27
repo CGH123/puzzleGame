@@ -139,15 +139,23 @@ public class ServerLAN implements Runnable, Server, ServerSocketObserver {
 
     @Override
     public Server startUdp(int port) {
-        //udpSocket.bind(port).start();
-        udpSocket.start();
+//        udpSocket.bind(port).start();
+        udpSocket.setUdpReadListener(new UDPSocket.OnUdpReadListener() {
+            @Override
+            public void processMsg(String hostName, byte[] packet) {
+                String s = new String(packet);
+                if (s.equals(NetConstant.FIND_SERVER)) {
+                    udpSocket.send(hostName, NetConstant.RETURN_HOST.getBytes());
+                }
+            }
+        });
         return getInstance();
     }
 
     @Override
     public Server stopUdp() {
-        udpSocket.stop();
         udpSocket.close();
+        udpSocket.stop();
         return getInstance();
     }
 

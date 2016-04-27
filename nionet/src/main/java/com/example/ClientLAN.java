@@ -116,15 +116,15 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
 
     @Override
     public Client startUdp(int port) {
-        //udpSocket.bind(port).start();
-        udpSocket.bind(port);
+        udpSocket.bind(port).start();
+//        udpSocket.bind(port);
         return getInstance();
     }
 
     @Override
     public Client stopUdp() {
-        udpSocket.stop();
         udpSocket.close();
+        udpSocket.stop();
         return getInstance();
     }
 
@@ -142,8 +142,6 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
             }
         });
 
-        udpSocket.start();
-
         int time = 0;
         int sleepTime = 300;
         while (time < timeout && !isFindServer) {
@@ -153,7 +151,7 @@ public class ClientLAN implements Runnable, Client, SocketObserver {
                 Thread.sleep(sleepTime);
                 time += sleepTime;
             } catch (Exception e) {
-                udpSocket.stop();
+//                udpSocket.stop();
                 udpSocket.close();
                 System.out.print(TAG + e.toString());
             }
