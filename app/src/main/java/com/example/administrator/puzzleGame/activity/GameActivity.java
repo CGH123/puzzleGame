@@ -44,7 +44,6 @@ public class GameActivity extends Activity implements
     private Client client;
     private Server server;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -76,10 +75,7 @@ public class GameActivity extends Activity implements
         initProgressView();
 
         newGame();
-
-        System.out.println("TCP onCreate");
     }
-
 
     private void initGmaeView() {
         //初始化GLSurfaceView
@@ -119,17 +115,17 @@ public class GameActivity extends Activity implements
 
     private void initNet() {
         final Serializer serializer = SerializerFastJson.getInstance();
-        client.addClientReadListener(new OnClientReadListener() {
+        client.setClientReadListener(new OnClientReadListener() {
             @Override
             public void processMsg(byte[] packet) {
-                MSGProtocol msgProtocol = serializer.parse(new String(packet), MSGProtocol.class);
+                String s = new String(packet);
+                MSGProtocol msgProtocol = serializer.parse(s, MSGProtocol.class);
                 Message message = new Message();
                 int cmd = msgProtocol.getCommand();
                 message.what = cmd;
                 switch (cmd) {
                     case CmdConstant.PROGRESS:
-                        List<GameProcess> gameProcess = (List<GameProcess>) msgProtocol.getAddObjects();
-                        System.out.println("TCP client receive ="+gameProcess.get(0).getProgress());
+                        List<GameProcess> gameProcess = (ArrayList<GameProcess>) msgProtocol.getAddObjects();
                         client.putData("processes", gameProcess);
                         break;
                 }
@@ -137,25 +133,22 @@ public class GameActivity extends Activity implements
             }
         });
         if (server != null) {
-            server.addServerReadListener(new OnServerReadListener() {
+            server.setServerReadListener(new OnServerReadListener() {
                 @Override
                 public void processMsg(byte[] packet, NIOSocket nioSocket) {
                     MSGProtocol msgProtocol = serializer.parse(new String(packet), MSGProtocol.class);
                     int cmd = msgProtocol.getCommand();
+                    int pos = ((List) server.getData("clients")).indexOf(msgProtocol.getSenderName());
                     switch (cmd) {
                         case CmdConstant.PROGRESS:
                             GameProcess gameProcess = (GameProcess) msgProtocol.getAddObject();
                             List<GameProcess> gameProcesses = (List<GameProcess>) server.getData("processes");
-                            for (GameProcess gameProcess1 : gameProcesses) {
-                                if (gameProcess1.equals(gameProcess))
-                                    gameProcess1.setProgress(gameProcess.getProgress());
-                            }
+                            gameProcesses.get(pos).setProgress(gameProcess.getProgress());
                             msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.PROGRESS, gameProcesses);
-                            server.putData("processes", gameProcess);
-                            System.out.println("TCP server receive="+gameProcess.getProgress());
                             break;
                     }
-                    server.sendAllClient(serializer.serialize(msgProtocol).getBytes());
+                    String s = serializer.serialize(msgProtocol);
+                    server.sendAllClient(s.getBytes());
                 }
             });
         }
@@ -191,8 +184,6 @@ public class GameActivity extends Activity implements
 
     @Override
     public void sendMsgProtocol(MSGProtocol msgProtocol) {
-        GameProcess gameProcess = (GameProcess) msgProtocol.getAddObject();
-        System.out.println("TCP client send="+gameProcess.getProgress());
         client.sendToServer(serializer.serialize(msgProtocol).getBytes());
     }
 }

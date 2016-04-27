@@ -87,15 +87,7 @@ public interface Client {
      * @param mlistener 监听接口
      * @return 客户端instance
      */
-    Client addClientReadListener(OnClientReadListener mlistener);
-
-    /**
-     * 删除客户端回调写数据监听
-     *
-     * @param mlistener 监听接口
-     * @return 客户端instance
-     */
-    Client removeClientReadListener(OnClientReadListener mlistener);
+    Client setClientReadListener(OnClientReadListener mlistener);
 
     /**
      * 删除服务器回调写数据监听

@@ -28,8 +28,8 @@ public class User extends Entity {
     public static void main(String args[]) {
         Serializer serializer = SerializerFastJson.getInstance();
         User user = new User("gj");
-        User user2 = new User("cgh");
         List<User> users = new ArrayList<>();
+        User user2 = new User("cgh");
         users.add(user);
         users.add(user2);
         MSGProtocol<User> msgProtocol1 = new MSGProtocol<>("guojun", 1, user);
@@ -42,8 +42,10 @@ public class User extends Entity {
 
         MSGProtocol msgProtocol3 = serializer.parse(s1, MSGProtocol.class);
         MSGProtocol msgProtocol4 = serializer.parse(s2, MSGProtocol.class);
-        user =  (User) msgProtocol3.getAddObject();
-        List userList = msgProtocol4.getAddObjects();
+        if (msgProtocol1.getSetType() == MSGProtocol.SET_TYPE.BEAN)
+            user =  (User)msgProtocol3.getAddObject();
+        if (msgProtocol2.getSetType() == MSGProtocol.SET_TYPE.LIST)
+            users = (List<User>) msgProtocol4.getAddObjects();
     }
 
     public String getName() {
@@ -54,21 +56,5 @@ public class User extends Entity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        User user = (User) o;
-
-        return name != null ? name.equals(user.name) : user.name == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        return name != null ? name.hashCode() : 0;
     }
 }
