@@ -3,6 +3,7 @@ uniform mat4 uMMatrix; //变换矩阵
 uniform vec3 uLightLocation;	//光源位置
 uniform vec3 uCamera;	//摄像机位置
 uniform int uIsCheck;	//是否选中
+uniform int uCanChoose;	//是否选中
 attribute vec3 aPosition;  //顶点位置
 attribute vec3 aNormal;    //顶点法向量
 attribute vec2 aTexCoor;    //顶点纹理坐标
@@ -44,13 +45,17 @@ void pointLight(					//定位光光照计算的方法
 void main()     
 {      		
    gl_Position = uMVPMatrix * vec4(aPosition,1); //根据总变换矩阵计算此次绘制此顶点位置
-   if(uIsCheck == 0)
-   {
-      pointLight(normalize(aNormal),vambient,vdiffuse,vspecular,uLightLocation,vec4(0.7,0.7,0.7,1.0),vec4(0.2,0.2,0.2,1.0),vec4(0.2,0.2,0.2,1.0));
-   }
-   else
+   if(uIsCheck == 1)
    {
       pointLight(normalize(aNormal),vambient,vdiffuse,vspecular,uLightLocation,vec4(1.0,1.0,1.0,1.0),vec4(1.0,1.0,1.0,1.0),vec4(1.0,1.0,1.0,1.0));
+   }
+   else if(uCanChoose == 0)
+   {
+      pointLight(normalize(aNormal),vambient,vdiffuse,vspecular,uLightLocation,vec4(0.5,0.5,0.5,1.0),vec4(0.2,0.2,0.2,1.0),vec4(0.2,0.2,0.2,1.0));
+   }
+   else if(uIsCheck == 0)
+   {
+      pointLight(normalize(aNormal),vambient,vdiffuse,vspecular,uLightLocation,vec4(0.7,0.7,0.7,1.0),vec4(0.2,0.2,0.2,1.0),vec4(0.2,0.2,0.2,1.0));
    }
    vTextureCoord = aTexCoor;//将接收的纹理坐标传递给片元着色器
 }                      

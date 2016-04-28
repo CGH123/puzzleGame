@@ -17,6 +17,7 @@ public class PieceFillBody extends BaseBody implements PieceFill {
     int muMMatrixHandle;
     int muMVPMatrixHandle;//总变换矩阵引用
     int muIsCheck;
+    int muCanChoose;
     int muCameraHandle; //摄像机位置属性引用
     int muLightLocationHandle;//光源位置属性引用
 
@@ -93,7 +94,9 @@ public class PieceFillBody extends BaseBody implements PieceFill {
         //获取程序中光源位置引用id
         muLightLocationHandle = GLES20.glGetUniformLocation(mProgram, "uLightLocation");
         //获取程序中光源位置引用id
-        muLightLocationHandle = GLES20.glGetUniformLocation(mProgram, "uIsCheck");
+        muIsCheck = GLES20.glGetUniformLocation(mProgram, "uIsCheck");
+        //获取程序中光源位置引用id
+        muCanChoose = GLES20.glGetUniformLocation(mProgram, "uCanChoose");
     }
 
 
@@ -112,6 +115,8 @@ public class PieceFillBody extends BaseBody implements PieceFill {
         GLES20.glUniform3fv(muLightLocationHandle, 1, MatrixState.lightPositionFB);
         //将是否选择传入shader程序
         GLES20.glUniform1i(muIsCheck, isCheck);
+        //将是否选择传入shader程序
+        GLES20.glUniform1i(muCanChoose, cantChoose ? 1 : 0);
 
         //传送顶点位置数据
         GLES20.glVertexAttribPointer(
@@ -208,6 +213,8 @@ public class PieceFillBody extends BaseBody implements PieceFill {
 
     @Override
     public void swap(PieceFillBody pieceFillBody) {
+        if(!this.cantChoose || !pieceFillBody.cantChoose)
+            return;
         int temp = this.num;
         this.num = pieceFillBody.num;
         pieceFillBody.num = temp;

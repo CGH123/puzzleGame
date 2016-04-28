@@ -59,8 +59,8 @@ public class Camera {
 
     public void scaleCamera(float scale1, float scale2, float scale3) {
         distance /= (scale1 + scale2 + scale3) / 3;
-        //distance = Math.min(distance, 30f);
-        //distance = Math.max(distance, 10f);
+        distance = Math.min(distance, 30f);
+        distance = Math.max(distance, 10f);
         distanceTotal = (float) Math.sqrt(1 + distance * distance);
         angelC = (float) Math.atan(1 / distance);
     }

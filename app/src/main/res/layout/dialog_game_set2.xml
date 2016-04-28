@@ -3,76 +3,99 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dip"
         android:layout_marginBottom="5dip"
-        android:orientation="horizontal">
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:layout_marginBottom="5dip"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/game_quad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:textColor="@color/white"
+                android:background="@drawable/button_shape"
+                android:layout_weight="1"
+                android:text="@string/game_cube"/>
+
+            <Button
+                android:id="@+id/game_cube"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:textColor="@color/white"
+                android:layout_weight="1"
+                android:background="@drawable/button_shape"
+                android:text="@string/game_quad" />
+
+
+            <Button
+                android:id="@+id/game_sphere"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:textColor="@color/white"
+                android:background="@drawable/button_shape"
+                android:layout_weight="1"
+                android:text="@string/game_sphere"/>
+        </LinearLayout>
+
 
         <Button
-            android:id="@+id/game_cube"
-            android:layout_width="0dp"
+            android:id="@+id/game_sure"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:textColor="@color/white"
             android:background="@drawable/button_shape"
-            android:layout_weight="1"
-            android:text="@string/game_quad" />
+            android:layout_marginTop="5dip"
+            android:layout_marginBottom="5dip"
+            android:text="@string/game_sure" />
 
-        <Button
-            android:id="@+id/game_quad"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:textColor="@color/white"
-            android:background="@drawable/button_shape"
-            android:layout_weight="1"
-            android:text="@string/game_cube"/>
-
-        <Button
-            android:id="@+id/game_sphere"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"dialog_game_set.xml
-            android:textColor="@color/white"
-            android:background="@drawable/button_shape"
-            android:layout_weight="1"
-            android:text="@string/game_sphere"/>
     </LinearLayout>
 
-    <Spinner
-        android:id="@+id/game_spinner"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dip"
-        android:layout_marginBottom="5dip"
-        android:entries="@array/difficulty"/>
-
-    <com.example.administrator.puzzleGame.view.QuadSetView
-        android:id="@+id/game_quad_set"
-        android:visibility="gone"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dip"
-        android:layout_marginBottom="5dip"/>
-
-    <Button
-        android:id="@+id/game_sure"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:textColor="@color/white"
-        android:background="@drawable/button_shape"
-        android:layout_marginTop="5dip"
         android:layout_marginBottom="5dip"
-        android:text="@string/game_sure" />
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Spinner
+            android:id="@+id/game_spinner"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:layout_marginBottom="5dip"
+            android:entries="@array/difficulty"/>
+
+        <com.example.administrator.puzzleGame.view.QuadSetView
+            android:id="@+id/game_quad_set"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:layout_marginBottom="5dip"/>
+
+    </LinearLayout>
 </LinearLayout>

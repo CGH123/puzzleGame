@@ -8,13 +8,15 @@ public class QuadPiece extends PieceAbstract {
     Vector2f[] texturePoints;
     int texId;
     int num;
+    int cutNum;
     Boolean canChoose;
 
-    public QuadPiece(float scale, int num, Vector2f[] points, int texId, Boolean canChoose) {
+    public QuadPiece(float scale, int num, int cutNum, Vector2f[] points, int texId, Boolean canChoose) {
         super(scale);
         this.points = points;
         this.texId = texId;
         this.num = num;
+        this.cutNum = cutNum;
         this.canChoose = canChoose;
         pieceFill = new PieceFillBody(getPieceFillData(3.0f));
         pieceLine = new PieceLineBody(getPieceLineData(3.0f));
@@ -23,7 +25,7 @@ public class QuadPiece extends PieceAbstract {
 
     @Override
     public PieceFillData getPieceFillData(float scale) {
-        float s = 1.0f / 3.0f;
+        float s = 1.0f / cutNum;
         float translate = 0.5f;
         texturePoints = new Vector2f[4];
         for (int i = 0; i < 4; i++) {

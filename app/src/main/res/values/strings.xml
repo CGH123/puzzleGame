@@ -58,4 +58,9 @@
     <string name="lv_refresh_doing_end_refresh">加载中&#8230;</string>
     <string name="lv_refresh_refresh_lasttime">最近更新&#160;&#058;&#160;</string>
 
+    <string name="game_cube">方形</string>
+    <string name="game_quad">立体</string>
+    <string name="game_sphere">球体</string>
+    <string name="game_sure">确定</string>
+
 </resources>

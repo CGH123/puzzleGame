@@ -33,11 +33,21 @@ public class Cube extends ObjectAbstract {
                             new Vector2f(points[startPos + 1]),
                             new Vector2f(points[startPos + cutNum + 1]),
                             new Vector2f(points[startPos + cutNum + 2])};
-                    PieceAbstract piece = new CubePiece(scale, i * squareNum + j * cutNum + k, quadPoints, texIds[i]);
+                    PieceAbstract piece = new CubePiece(scale, j * cutNum + k, cutNum, quadPoints, texIds[i]);
                     pieces.add(piece);
                 }
             }
         }
+    }
+
+    @Override
+    public float getCompletedProgress() {
+        int count = 0;
+        for (int i = 0; i < pieces.size(); i++) {
+            if (pieces.get(i).isEqualNum(i % 9))
+                count++;
+        }
+        return 1.0f * count / pieces.size();
     }
 
     @Override

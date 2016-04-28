@@ -1,155 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="top"
-    android:gravity="top"
-    android:paddingLeft="10dip"
-    android:paddingRight="10dip">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/dialog_generic_layout_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dip"
-        android:background="@drawable/shape_gray_round_frame_n"
-        android:clickable="true"
-        android:focusable="true"
-        android:orientation="vertical">
+        android:layout_marginTop="5dip"
+        android:layout_marginBottom="5dip"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/dialog_generic_layout_top"
-            android:layout_width="fill_parent"
-            android:layout_height="0dip"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/dialog_generic_layout_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/dialog_generic_htv_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingBottom="8dip"
-                    android:paddingLeft="10dip"
-                    android:paddingRight="10dip"
-                    android:paddingTop="8dip"
-                    android:shadowDx="0.0"
-                    android:shadowDy="-1.0"
-                    android:shadowRadius="1.0"
-                    android:soundEffectsEnabled="true"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-
-                <View
-                    android:id="@+id/dialog_generic_view_titleline"
-                    android:layout_width="match_parent"
-                    android:layout_height="0.3dp"
-                    android:layout_marginBottom="10dip"
-                    android:background="#dfdfdf" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/dialog_generic_layout_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="10dip"
-                android:paddingLeft="8dip"
-                android:paddingRight="8dip">
-
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fadingEdge="none">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingBottom="8dip"
-                        android:paddingTop="4dip">
-
-                        <TextView
-                            android:id="@+id/dialog_generic_htv_message"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/text_color"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-                </ScrollView>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.3dp"
-                android:background="#dfdfdf" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/dialog_generic_layout_bottom"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/game_quad"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/white"
+            android:background="@drawable/button_shape"
+            android:layout_weight="1"
+            android:text="@string/game_cube"/>
 
-            <Button
-                android:id="@+id/dialog_generic_btn_button1"
-                style="@style/Style_Dialog_Button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/btn_default_flat"
-                android:focusable="false"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:paddingTop="12dp"
-                android:textColor="#4ca0eb"
-                android:textSize="18sp" />
+        <Button
+            android:id="@+id/game_cube"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/white"
+            android:background="@drawable/button_shape"
+            android:layout_weight="1"
+            android:text="@string/game_quad" />
 
-            <View
-                android:layout_width="0.3dp"
-                android:layout_height="match_parent"
-                android:background="#dfdfdf" />
 
-            <Button
-                android:id="@+id/dialog_generic_btn_button2"
-                style="@style/Style_Dialog_Button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/btn_default_flat"
-                android:focusable="false"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:paddingTop="12dp"
-                android:textColor="#4ca0eb"
-                android:textSize="18sp" />
-
-            <View
-                android:layout_width="0.3dp"
-                android:layout_height="fill_parent"
-                android:background="#dfdfdf" />
-
-            <Button
-                android:id="@+id/dialog_generic_btn_button3"
-                style="@style/Style_Dialog_Button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/btn_default_flat"
-                android:focusable="false"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:paddingTop="12dp"
-                android:textColor="#4ca0eb"
-                android:textSize="18sp" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/game_sphere"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/white"
+            android:background="@drawable/button_shape"
+            android:layout_weight="1"
+            android:text="@string/game_sphere"/>
     </LinearLayout>
 
+    <Spinner
+        android:id="@+id/game_spinner"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:layout_marginBottom="5dip"
+        android:entries="@array/difficulty"/>
+
+    <com.example.administrator.puzzleGame.view.QuadSetView
+        android:id="@+id/game_quad_set"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:layout_marginBottom="5dip"/>
+
+    <Button
+        android:id="@+id/game_sure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/white"
+        android:background="@drawable/button_shape"
+        android:layout_marginTop="5dip"
+        android:layout_marginBottom="5dip"
+        android:text="@string/game_sure" />
 </LinearLayout>

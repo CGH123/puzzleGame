@@ -10,7 +10,6 @@ import java.util.List;
 
 public class SerializerFastJson implements Serializer {
     private SerializerFastJson() {
-        JSON.DEFAULT_GENERATE_FEATURE |= SerializerFeature.DisableCircularReferenceDetect.getMask();
     }
 
     public static Serializer getInstance() {

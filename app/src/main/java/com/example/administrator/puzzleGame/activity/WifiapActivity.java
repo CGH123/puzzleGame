@@ -222,10 +222,9 @@ public class WifiapActivity extends Activity implements View.OnClickListener,
             case R.id.wifiap_btn_next:
                 GameConstant.IP = WifiUtil.getLocalIPAddress();
                 Intent intent = new Intent();
-                intent.setClass(WifiapActivity.this, ConnectModeActivity.class);
+                intent.setClass(WifiapActivity.this, GameRoomActivity.class);
                 startActivity(intent);
                 break;
-
         }
     }
 

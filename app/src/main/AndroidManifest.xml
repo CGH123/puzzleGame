@@ -21,14 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.example.administrator.puzzleGame.activity.ConnectModeActivity">
+            android:name="com.example.administrator.puzzleGame.activity.WifiapActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.example.administrator.puzzleGame.activity.WifiapActivity"/>
         <activity
             android:name="com.example.administrator.puzzleGame.activity.GameActivity"
             android:configChanges="orientation|keyboardHidden"/>
