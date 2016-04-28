@@ -26,6 +26,7 @@ import com.example.administrator.puzzleGame.adapter.GameProgressAdapter;
 import com.example.administrator.puzzleGame.base.BaseHandler;
 import com.example.administrator.puzzleGame.constant.CmdConstant;
 import com.example.administrator.puzzleGame.constant.GameConstant;
+import com.example.administrator.puzzleGame.msgbean.GameModel;
 import com.example.administrator.puzzleGame.msgbean.GameProcess;
 import com.example.administrator.puzzleGame.msgbean.User;
 import com.example.administrator.puzzleGame.util.DrawbalBuilderUtil;
@@ -94,7 +95,7 @@ public class GameActivity extends Activity implements
 
     private void newGame() {
         //TODO 初始化游戏模式
-        switch (GameConstant.GAME_DIFFICULTY) {
+        switch (GameConstant.GAME_MODEL) {
             case GameConstant.GAME_CUBE:
                 mGLSurfaceView.init(5, Game3DView.ObjectType.CUBE, true, this);
                 break;
@@ -107,7 +108,8 @@ public class GameActivity extends Activity implements
         }
         //设置SurfaceView中hasLoad为false,使渲染管重新初始化object
         mGLSurfaceView.setLoad(false);
-
+        //把玩家进度清零
+        initProgressView();
         /*mGLSurfaceView.init(5, Game3DView.ObjectType.QUAD_PLANE, false, this);
         mGLSurfaceView.init(5, Game3DView.ObjectType.CUBE, true, this);
         mGLSurfaceView.init(8, Game3DView.ObjectType.SPHERE, true, this);*/
@@ -161,7 +163,9 @@ public class GameActivity extends Activity implements
                         message.getData().putBoolean("isWin", isWin);
                         break;
                     case CmdConstant.START:
-                        //不用管，交给handle的Message去处理
+                        //设置游戏模式，交给handle的Message去处理
+                        GameModel gameModel = (GameModel) msgProtocol.getAddObject();
+                        GameConstant.GAME_MODEL = gameModel.getGameModel();
                         break;
                 }
                 handler.sendMessage(message);
@@ -264,19 +268,17 @@ public class GameActivity extends Activity implements
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            dialog.cancel();
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            new AlertDialog.Builder(GameActivity.this).setTitle("游戏开始设置").setIcon(R.drawable.app_icon).setMessage("拼图模型选择")
+            new AlertDialog.Builder(GameActivity.this).setTitle("游戏开始设置").setIcon(R.drawable.app_icon).setMessage("拼图模型选择").setCancelable(false)
                     .setPositiveButton("矩形", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            GameConstant.GAME_DIFFICULTY = GameConstant.GAME_CUBE;
-                            newGame();
-                            MSGProtocol msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.START);
+                            GameModel gameModel = new GameModel(GameConstant.GAME_CUBE);
+                            MSGProtocol<GameModel> msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.START, gameModel);
                             String s = SerializerFastJson.getInstance().serialize(msgProtocol);
                             server.sendAllClient(s.getBytes());
                         }
@@ -284,9 +286,8 @@ public class GameActivity extends Activity implements
                     .setNeutralButton("不规则图形", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            GameConstant.GAME_DIFFICULTY = GameConstant.GAME_QUAD_PLANE;
-                            newGame();
-                            MSGProtocol msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.START);
+                            GameModel gameModel = new GameModel(GameConstant.GAME_QUAD_PLANE);
+                            MSGProtocol<GameModel> msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.START,gameModel);
                             String s = SerializerFastJson.getInstance().serialize(msgProtocol);
                             server.sendAllClient(s.getBytes());
                         }
@@ -294,9 +295,8 @@ public class GameActivity extends Activity implements
                     .setNegativeButton("球", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            GameConstant.GAME_DIFFICULTY = GameConstant.GAME_SPHERE;
-                            newGame();
-                            MSGProtocol msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.START);
+                            GameModel gameModel = new GameModel(GameConstant.GAME_SPHERE);
+                            MSGProtocol<GameModel> msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.START,gameModel);
                             String s = SerializerFastJson.getInstance().serialize(msgProtocol);
                             server.sendAllClient(s.getBytes());
                         }

@@ -20,16 +20,13 @@ public class GameConstant {
     public static boolean threadFlag = true;
 
     //游戏难度设置
-    public static int GAME_DIFFICULTY = -1;
+    public static int GAME_MODEL = -1;
     //拼图游戏设置为CUBE
     public static final int GAME_CUBE = 0;
     //拼图游戏设置为QUAD_PLANE
     public static final int GAME_QUAD_PLANE = 1;
     //拼图游戏设置为SPHERE
     public static final int GAME_SPHERE = 2;
-
-    //是否开始游戏
-    public static boolean GAME_START = false;
 
 
     public static String NAME;

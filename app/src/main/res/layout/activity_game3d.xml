@@ -3,25 +3,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list_game_progress_view"
+    <LinearLayout
+        android:layout_weight="2"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:scrollbarStyle="outsideOverlay"
-        android:background="@color/blue"
-        android:scrollbars="vertical" />
+        android:orientation="vertical"
+       >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/blue"
+            android:text="各玩家游戏完成度"
+            android:gravity="center"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_game_progress_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:scrollbarStyle="outsideOverlay"
+            android:background="@color/blue"
+            android:scrollbars="vertical" />
+    </LinearLayout>
 
     <com.example.administrator.puzzleGame.view.Game3DView
         android:id="@+id/game_3d_view"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="7"
+        android:layout_weight="4.98"
         android:gravity="center" />
 
 </LinearLayout>
