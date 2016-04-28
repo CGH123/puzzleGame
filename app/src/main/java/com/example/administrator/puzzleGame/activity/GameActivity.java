@@ -2,16 +2,14 @@ package com.example.administrator.puzzleGame.activity;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -26,12 +24,14 @@ import com.example.administrator.puzzleGame.adapter.GameProgressAdapter;
 import com.example.administrator.puzzleGame.base.BaseHandler;
 import com.example.administrator.puzzleGame.constant.CmdConstant;
 import com.example.administrator.puzzleGame.constant.GameConstant;
+import com.example.administrator.puzzleGame.gameModel.Vector2f;
 import com.example.administrator.puzzleGame.msgbean.GameModel;
 import com.example.administrator.puzzleGame.msgbean.GameProcess;
 import com.example.administrator.puzzleGame.msgbean.User;
 import com.example.administrator.puzzleGame.util.DrawbalBuilderUtil;
 import com.example.administrator.puzzleGame.util.LogUtil;
 import com.example.administrator.puzzleGame.view.Game3DView;
+import com.example.administrator.puzzleGame.view.GameSetDialog;
 import com.example.nioFrame.NIOSocket;
 import com.example.protocol.MSGProtocol;
 import com.example.serialization.Serializer;
@@ -50,7 +50,10 @@ public class GameActivity extends Activity implements
     private Serializer serializer;
     private Client client;
     private Server server;
-    ProgressDialog dialog;
+    private ProgressDialog dialog;
+
+    private int num, mode;
+    private Vector2f[] quadPoints;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,15 @@ public class GameActivity extends Activity implements
         handler = new BaseHandler.UnleakHandler(this);
 
         client = ClientLAN.getInstance();
+        mode = this.getIntent().getIntExtra("mode", 1);
+        num = this.getIntent().getIntExtra("num", 3);
+        float[] floats = this.getIntent().getFloatArrayExtra("points");
+
+        quadPoints = new Vector2f[4];
+        for (int i = 0; i < 4; i++) {
+            quadPoints[i] = new Vector2f(floats[i * 2], floats[i * 2 + 1]);
+        }
+
         if (this.getIntent().getBooleanExtra("isServer", false)) {
             server = ServerLAN.getInstance();
             List<User> users = client.getData("users");
@@ -78,10 +90,10 @@ public class GameActivity extends Activity implements
             }
             server.putData("processes", gameProcesses);
         }
+
         initNet();
         initGameView();
         initProgressView();
-
         newGame();
     }
 
@@ -95,24 +107,21 @@ public class GameActivity extends Activity implements
 
     private void newGame() {
         //TODO 初始化游戏模式
-        switch (GameConstant.GAME_MODEL) {
-            case GameConstant.GAME_CUBE:
-                mGLSurfaceView.init(5, Game3DView.ObjectType.CUBE, true, this);
+        switch (mode) {
+            case 1:
+                mGLSurfaceView.init(num, Game3DView.ObjectType.CUBE, quadPoints, true, this);
                 break;
-            case GameConstant.GAME_QUAD_PLANE:
-                mGLSurfaceView.init(5, Game3DView.ObjectType.QUAD_PLANE, false, this);
+            case 2:
+                mGLSurfaceView.init(num, Game3DView.ObjectType.QUAD_PLANE, quadPoints, false, this);
                 break;
-            case GameConstant.GAME_SPHERE:
-                mGLSurfaceView.init(8, Game3DView.ObjectType.SPHERE, true, this);
+            case 3:
+                mGLSurfaceView.init(num, Game3DView.ObjectType.SPHERE, quadPoints, true, this);
                 break;
         }
         //设置SurfaceView中hasLoad为false,使渲染管重新初始化object
         mGLSurfaceView.setLoad(false);
         //把玩家进度清零
         initProgressView();
-        /*mGLSurfaceView.init(5, Game3DView.ObjectType.QUAD_PLANE, false, this);
-        mGLSurfaceView.init(5, Game3DView.ObjectType.CUBE, true, this);
-        mGLSurfaceView.init(8, Game3DView.ObjectType.SPHERE, true, this);*/
     }
 
     private void initProgressView() {
@@ -165,7 +174,15 @@ public class GameActivity extends Activity implements
                     case CmdConstant.START:
                         //设置游戏模式，交给handle的Message去处理
                         GameModel gameModel = (GameModel) msgProtocol.getAddObject();
-                        GameConstant.GAME_MODEL = gameModel.getGameModel();
+                        num = gameModel.getNum();
+                        mode = gameModel.getGameModel();
+                        float[] points = gameModel.getPoints();
+                        quadPoints = new Vector2f[]{
+                                new Vector2f(points[0], points[1]),
+                                new Vector2f(points[2], points[3]),
+                                new Vector2f(points[4], points[5]),
+                                new Vector2f(points[6], points[7]),
+                        };
                         break;
                 }
                 handler.sendMessage(message);
@@ -195,6 +212,8 @@ public class GameActivity extends Activity implements
                             } else {
                                 LogUtil.d("GameActivity", "game finish error");
                             }
+                            break;
+                        case CmdConstant.START:
                             break;
                     }
                     String s = serializer.serialize(msgProtocol);
@@ -273,36 +292,24 @@ public class GameActivity extends Activity implements
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            new AlertDialog.Builder(GameActivity.this).setTitle("游戏开始设置").setIcon(R.drawable.app_icon).setMessage("拼图模型选择").setCancelable(false)
-                    .setPositiveButton("矩形", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            GameModel gameModel = new GameModel(GameConstant.GAME_CUBE);
-                            MSGProtocol<GameModel> msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.START, gameModel);
-                            String s = SerializerFastJson.getInstance().serialize(msgProtocol);
-                            server.sendAllClient(s.getBytes());
-                        }
-                    })
-                    .setNeutralButton("不规则图形", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            GameModel gameModel = new GameModel(GameConstant.GAME_QUAD_PLANE);
-                            MSGProtocol<GameModel> msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.START,gameModel);
-                            String s = SerializerFastJson.getInstance().serialize(msgProtocol);
-                            server.sendAllClient(s.getBytes());
-                        }
-                    })
-                    .setNegativeButton("球", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            GameModel gameModel = new GameModel(GameConstant.GAME_SPHERE);
-                            MSGProtocol<GameModel> msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.START,gameModel);
-                            String s = SerializerFastJson.getInstance().serialize(msgProtocol);
-                            server.sendAllClient(s.getBytes());
-                        }
-                    }).create().show();
+            GameSetDialog gameSetDialog = new GameSetDialog(GameActivity.this, new GameSetDialog.OnGameChangedListener() {
+                @Override
+                public void gameChanged(int mode, int num, Vector2f[] quadPoints) {
+                    GameModel gameModel = new GameModel(mode, num, quadPoints);
+                    MSGProtocol<GameModel> msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.START, gameModel);
+                    String s = SerializerFastJson.getInstance().serialize(msgProtocol);
+                    client.sendToServer(s.getBytes());
+                }
+            }, 2);
+            Window dialogWindow = gameSetDialog.getWindow();
+            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+
+            int width = (int) (GameConstant.WIDTH * 0.9);
+            int height = (int) (GameConstant.HEIGHT * 0.8);
+            lp.width = width; // 宽度
+            lp.height = height; // 高度
+            dialogWindow.setAttributes(lp);
+            gameSetDialog.show();
         }
-
     }
-
 }

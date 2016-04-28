@@ -9,12 +9,13 @@ public class CubePiece extends PieceAbstract {
     Vector2f[] texturePoints;
     int texId;
     int num;
-
-    public CubePiece(float scale, int num, Vector2f[] points, int texId) {
+    int cutNum;
+    public CubePiece(float scale, int num, int cutNum, Vector2f[] points, int texId) {
         super(scale);
         this.points = points;
         this.texId = texId;
         this.num = num;
+        this.cutNum = cutNum;
         pieceFill = new PieceFillBody(getPieceFillData(2.0f));
         pieceLine = new PieceLineBody(getPieceLineData(2.0f));
     }
@@ -28,7 +29,7 @@ public class CubePiece extends PieceAbstract {
 
     @Override
     public PieceFillData getPieceFillData(float scale) {
-        float s = 1.0f / 3.0f;
+        float s = 1.0f / cutNum;
         float translate = 0.5f;
         texturePoints = new Vector2f[4];
         for (int i = 0; i < 4; i++) {

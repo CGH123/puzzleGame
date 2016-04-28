@@ -53,7 +53,7 @@ public class Quad extends ObjectAbstract {
                         isAllOutPlane = false;
                 }
                 if (!isAllOutPlane) {
-                    QuadPiece temp = new QuadPiece(scale, pieces.size(), quadPoints, texId, !isOutPlane);
+                    QuadPiece temp = new QuadPiece(scale, pieces.size(), (int) size, quadPoints, texId, !isOutPlane);
                     pieces.add(temp);
                 }
             }

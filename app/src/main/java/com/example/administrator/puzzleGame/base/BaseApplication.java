@@ -7,6 +7,7 @@ import android.media.SoundPool;
 import android.os.Vibrator;
 
 import com.example.administrator.puzzleGame.R;
+import com.example.administrator.puzzleGame.constant.GameConstant;
 import com.example.administrator.puzzleGame.util.LogUtil;
 
 /**
@@ -69,7 +70,6 @@ public class BaseApplication extends Application {
         if (instance == null) {
             instance = this;
         }
-
         LogUtil.setLogStatus(isPrintLog); // 设置是否显示日志
 
         initNotification();

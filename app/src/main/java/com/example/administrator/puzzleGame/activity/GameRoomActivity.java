@@ -9,7 +9,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.telephony.TelephonyManager;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,9 +32,11 @@ import com.example.administrator.puzzleGame.adapter.RoomAdapter;
 import com.example.administrator.puzzleGame.base.BaseHandler;
 import com.example.administrator.puzzleGame.constant.CmdConstant;
 import com.example.administrator.puzzleGame.constant.GameConstant;
+import com.example.administrator.puzzleGame.gameModel.Vector2f;
 import com.example.administrator.puzzleGame.msgbean.GameModel;
 import com.example.administrator.puzzleGame.msgbean.User;
 import com.example.administrator.puzzleGame.util.DrawbalBuilderUtil;
+import com.example.administrator.puzzleGame.view.GameSetDialog;
 import com.example.administrator.puzzleGame.view.MultiListView;
 import com.example.nioFrame.NIOSocket;
 import com.example.protocol.MSGProtocol;
@@ -85,7 +90,8 @@ public class GameRoomActivity extends Activity implements
     private CreateServerTask createServerTask;
     private BaseHandler.UnleakHandler handler;
     private Serializer serializer;
-
+    private int mode, num;
+    private float[] points;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +100,10 @@ public class GameRoomActivity extends Activity implements
 
         GameConstant.NAME = Build.MANUFACTURER;
         GameConstant.PHONE = ((TelephonyManager) this.getSystemService(TELEPHONY_SERVICE)).getDeviceId();
+        DisplayMetrics dm = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        GameConstant.WIDTH = dm.widthPixels;
+        GameConstant.HEIGHT = dm.heightPixels;
         initNet();
         initViews();
         initEvent();
@@ -160,35 +170,26 @@ public class GameRoomActivity extends Activity implements
             case R.id.gameroom_start:
                 //进行游戏难度设置dialog
 
-                new AlertDialog.Builder(this).setTitle("游戏开始设置").setIcon(R.drawable.app_icon).setMessage("拼图模型选择").setCancelable(false)
-                        .setPositiveButton("矩形", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                GameModel gameModel = new GameModel(GameConstant.GAME_CUBE);
-                                MSGProtocol<GameModel> msgProtocol = new MSGProtocol<>(GameConstant.NAME, CmdConstant.START,gameModel);
-                                client.sendToServer(serializer.serialize(msgProtocol).getBytes());
-                            }
-                        })
-                        .setNeutralButton("不规则图形", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                GameModel gameModel = new GameModel(GameConstant.GAME_QUAD_PLANE);
-                                MSGProtocol<GameModel> msgProtocol = new MSGProtocol<>(GameConstant.NAME, CmdConstant.START,gameModel);
-                                client.sendToServer(serializer.serialize(msgProtocol).getBytes());
-                            }
-                        })
-                        .setNegativeButton("球", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                GameModel gameModel = new GameModel(GameConstant.GAME_SPHERE);
-                                MSGProtocol<GameModel> msgProtocol = new MSGProtocol<>(GameConstant.NAME, CmdConstant.START,gameModel);
-                                client.sendToServer(serializer.serialize(msgProtocol).getBytes());
-                            } 
-                        }).create().show();
 
-                //TODO 设置游戏设置界面,用来放入新界面
-                //msgProtocol = new MSGProtocol<>(GameConstant.NAME, CmdConstant.START);
-                //client.sendToServer(serializer.serialize(msgProtocol).getBytes());
+                GameSetDialog gameSetDialog = new GameSetDialog(this, new GameSetDialog.OnGameChangedListener() {
+                    @Override
+                    public void gameChanged(int mode, int num, Vector2f[] quadPoints) {
+                        GameModel gameModel = new GameModel(mode, num, quadPoints);
+                        MSGProtocol<GameModel> msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.START, gameModel);
+                        String s = SerializerFastJson.getInstance().serialize(msgProtocol);
+                        client.sendToServer(s.getBytes());
+                    }
+                }, 1);
+                Window dialogWindow = gameSetDialog.getWindow();
+                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+
+                int width = (int) (GameConstant.WIDTH * 0.9);
+                int height = (int) (GameConstant.HEIGHT * 0.8);
+                lp.width = width; // 宽度
+                lp.height = height; // 高度
+                dialogWindow.setAttributes(lp);
+
+                gameSetDialog.show();
 
                 break;
             case R.id.gameroom_create:
@@ -237,7 +238,9 @@ public class GameRoomActivity extends Activity implements
             case CmdConstant.START:
                 //把游戏模型类型初始化，在handler中启动activity
                 GameModel gameModel = (GameModel)msgProtocol.getAddObject();
-                GameConstant.GAME_MODEL = gameModel.getGameModel();
+                mode = gameModel.getGameModel();
+                num = gameModel.getNum();
+                points = gameModel.getPoints();
                 break;
         }
         handler.sendMessage(message);
@@ -258,10 +261,6 @@ public class GameRoomActivity extends Activity implements
                 List<String> names = server.getData("clients");
                 names.add(name);
                 msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.CONNECT, users);
-                break;
-            case CmdConstant.START:
-                GameModel gameModel = (GameModel)msgProtocol.getAddObject();
-                msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.START , gameModel);
                 break;
         }
         server.sendAllClient(serializer.serialize(msgProtocol).getBytes());
@@ -284,6 +283,10 @@ public class GameRoomActivity extends Activity implements
             case CmdConstant.START:
                 client.stopUdp();
                 Intent intent = new Intent(GameRoomActivity.this, GameActivity.class);
+                intent.putExtra("mode", mode);
+                intent.putExtra("num", num);
+                intent.putExtra("points", points);
+
                 if (server != null) {
                     intent.putExtra("isServer", true);
                 }

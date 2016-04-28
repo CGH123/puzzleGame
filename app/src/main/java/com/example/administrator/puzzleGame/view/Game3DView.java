@@ -8,7 +8,6 @@ import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.example.NetConstant;
 import com.example.administrator.puzzleGame.R;
 import com.example.administrator.puzzleGame.constant.CmdConstant;
 import com.example.administrator.puzzleGame.constant.GameConstant;
@@ -52,6 +51,7 @@ public class Game3DView extends GLSurfaceView {
     private float locationXEndP1, locationYEndP1;
     //三手down时两指向量
     private Vector2f Vector2fP01DownP3, Vector2fP02DownP3, Vector2fP12DownP3;
+    private Vector2f[] quadPoints;
     //单指操作模式:
     private int modeP1 = 0;
     private boolean hasLoad = false;//是否初始化完成
@@ -66,7 +66,7 @@ public class Game3DView extends GLSurfaceView {
     private SkyTree tree;
     private SkyCloud cloud;
 
-    public void setLoad(boolean hasLoad){
+    public void setLoad(boolean hasLoad) {
         this.hasLoad = hasLoad;
     }
 
@@ -84,10 +84,11 @@ public class Game3DView extends GLSurfaceView {
         MatrixState.setLightLocation(0, 0, 0);
     }
 
-    public void init(int cutNum, ObjectType objectType, Boolean canMoveCamera, MsgSender msgSender) {
+    public void init(int cutNum, ObjectType objectType, Vector2f[] quadPoints, Boolean canMoveCamera, MsgSender msgSender) {
         this.objectType = objectType;
         this.cutNum = cutNum;
         this.canMoveCamera = canMoveCamera;
+        this.quadPoints = quadPoints;
         this.msgSender = msgSender;
     }
 
@@ -98,7 +99,7 @@ public class Game3DView extends GLSurfaceView {
         float locationXBeginP1 = e.getX();    //记录每次touch时间触发开始时的Y坐标
         float locationYBeginP1 = e.getY();    //记录每次touch时间触发开始时的X坐标
 
-        switch (e.getAction() & MotionEvent.ACTION_MASK ) {
+        switch (e.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 mode = 1;//设置为单点模式
 
@@ -182,10 +183,10 @@ public class Game3DView extends GLSurfaceView {
                             if (progress == 1.0f) {
                                 // TODO: 2016/4/15 获胜UI
                                 GameProcess gameProcess = new GameProcess(progress);
-                                MSGProtocol<GameProcess> msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.FINISH,gameProcess);
+                                MSGProtocol<GameProcess> msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.FINISH, gameProcess);
                                 msgSender.sendMsgProtocol(msgProtocol);
                                 LogUtil.d(TAG, "win!");
-                            }else{
+                            } else {
                                 GameProcess gameProcess = new GameProcess(progress);
                                 MSGProtocol<GameProcess> msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.PROGRESS, gameProcess);
                                 msgSender.sendMsgProtocol(msgProtocol);
@@ -224,61 +225,45 @@ public class Game3DView extends GLSurfaceView {
         private boolean isBegin = true;
 
         //重新初始化，在里面重用了渲染管的onCreate方法
-        public void init_again(){
+        public void initAgain() {
             float cameraDistance = 15f;
             camera = new Camera(cameraDistance);
-
             //初始化变换矩阵
             MatrixState.setInitStack();
-
             Bitmap src;
-            Vector2f[] quadPositions;
             //初始化纹理
             waterId = TextureUtil.initTexture(context, R.drawable.water);
             treeId = TextureUtil.initTexture(context, R.drawable.sky_tree);
             cloudId = TextureUtil.initTexture(context, R.drawable.sky_cloud);
 
-
             switch (objectType) {
                 case CUBE:
                     int[] pictureIds = new int[]{
-                            R.mipmap.ic_launcher,
-                            R.mipmap.ic_launcher,
-                            R.mipmap.ic_launcher,
-                            R.mipmap.ic_launcher,
-                            R.mipmap.ic_launcher,
-                            R.mipmap.ic_launcher
+                            R.mipmap.quad,
+                            R.mipmap.quad,
+                            R.mipmap.quad,
+                            R.mipmap.quad,
+                            R.mipmap.quad,
+                            R.mipmap.quad
                     };
                     texIds = new int[pictureIds.length];
-                    quadPositions = new Vector2f[]{
-                            new Vector2f(0, 0),
-                            new Vector2f(1, 0),
-                            new Vector2f(1, 1),
-                            new Vector2f(0, 1),
-                    };
                     for (int i = 0; i < pictureIds.length; i++) {
                         src = TextureUtil.loadTexture(context, pictureIds[i]);//设置纹理图片
                         texIds[i] = TextureUtil.initTexture(src);//设置纹理ID
                     }
-                    points = BitmapUtil.cutBitmapToCubes(quadPositions, cutNum, cutNum);
+                    points = BitmapUtil.cutBitmapToCubes(quadPoints, cutNum, cutNum);
 
                     break;
                 case SPHERE:
-                    src = TextureUtil.loadTexture(context, R.mipmap.android_robot);//设置纹理图片
+                    src = TextureUtil.loadTexture(context, R.mipmap.sphere);//设置纹理图片
                     texIds = new int[1];
                     texIds[0] = TextureUtil.initTexture(src);//设置纹理ID
                     break;
                 case QUAD_PLANE:
-                    src = TextureUtil.loadTexture(context, R.mipmap.ic_launcher);//设置纹理图片
+                    src = TextureUtil.loadTexture(context, R.mipmap.quad);//设置纹理图片
                     texIds = new int[1];
                     texIds[0] = TextureUtil.initTexture(src);//设置纹理ID
-                    quadPositions = new Vector2f[]{
-                            new Vector2f(0.0f, 0.0f),
-                            new Vector2f(0.7f, 0.0f),
-                            new Vector2f(1.0f, 1.0f),
-                            new Vector2f(0.0f, 0.7f),
-                    };
-                    points = BitmapUtil.cutBitmapToQuads(quadPositions, cutNum, cutNum);
+                    points = BitmapUtil.cutBitmapToQuads(quadPoints, cutNum, cutNum);
                     break;
             }
         }
@@ -299,23 +284,24 @@ public class Game3DView extends GLSurfaceView {
                 case QUAD_PLANE:
                     object = new Quad(3, cutNum, points, texIds[0]);
                     break;
-            }/*
+            }
             //随机打乱初始开局
-            Random rand = new Random();
+
+            Random rand = new Random(10);
             int randTime = 200;
             int range = object.getPiecesSize();
             for (int i = 0; i < randTime; i++) {
                 int randNum1 = rand.nextInt(range);
                 int randNum2 = rand.nextInt(range);
                 object.swapPiece(randNum1, randNum2);
-            }*/
+            }
         }
 
 
         @Override
         public void onDrawFrame(GL10 gl) {
             if (!hasLoad) {
-                init_again(); //暂时用来开始新游戏时，把obejct全部清空使用的
+                initAgain(); //暂时用来开始新游戏时，把obejct全部清空使用的
                 initTaskReal();
                 hasLoad = true;
             } else {
@@ -517,12 +503,12 @@ public class Game3DView extends GLSurfaceView {
             switch (objectType) {
                 case CUBE:
                     int[] pictureIds = new int[]{
-                            R.mipmap.ic_launcher,
-                            R.mipmap.ic_launcher,
-                            R.mipmap.ic_launcher,
-                            R.mipmap.ic_launcher,
-                            R.mipmap.ic_launcher,
-                            R.mipmap.ic_launcher
+                            R.mipmap.quad,
+                            R.mipmap.quad,
+                            R.mipmap.quad,
+                            R.mipmap.quad,
+                            R.mipmap.quad,
+                            R.mipmap.quad
                     };
                     texIds = new int[pictureIds.length];
                     quadPositions = new Vector2f[]{
@@ -539,21 +525,15 @@ public class Game3DView extends GLSurfaceView {
 
                     break;
                 case SPHERE:
-                    src = TextureUtil.loadTexture(context, R.mipmap.android_robot);//设置纹理图片
+                    src = TextureUtil.loadTexture(context, R.mipmap.sphere);//设置纹理图片
                     texIds = new int[1];
                     texIds[0] = TextureUtil.initTexture(src);//设置纹理ID
                     break;
                 case QUAD_PLANE:
-                    src = TextureUtil.loadTexture(context, R.mipmap.ic_launcher);//设置纹理图片
+                    src = TextureUtil.loadTexture(context,R.mipmap.quad);//设置纹理图片
                     texIds = new int[1];
                     texIds[0] = TextureUtil.initTexture(src);//设置纹理ID
-                    quadPositions = new Vector2f[]{
-                            new Vector2f(0.0f, 0.0f),
-                            new Vector2f(0.7f, 0.0f),
-                            new Vector2f(1.0f, 1.0f),
-                            new Vector2f(0.0f, 0.7f),
-                    };
-                    points = BitmapUtil.cutBitmapToQuads(quadPositions, cutNum, cutNum);
+                    points = BitmapUtil.cutBitmapToQuads(quadPoints, cutNum, cutNum);
                     break;
             }
         }

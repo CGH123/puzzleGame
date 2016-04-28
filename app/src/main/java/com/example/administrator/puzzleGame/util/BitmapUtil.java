@@ -17,9 +17,9 @@ public class BitmapUtil {
         float xLength = Math.min(quadPositions[1].x - quadPositions[0].x, quadPositions[2].x - quadPositions[3].x);
         float yLength = Math.min(quadPositions[3].y - quadPositions[0].y, quadPositions[2].y - quadPositions[1].y);
         int row = (int) (colLength / yLength);
-        int col = (int) (rowLength / xLength);/*
-        row = (rowLength % 2 == 0) ? row : row + 1;
-        col = (colLength % 2 == 0) ? col : col + 1;*/
+        int col = (int) (rowLength / xLength);
+        row = row + 2;
+        col = col + 2;
         return buildQuads(quadPositions, row, col);
     }
 
