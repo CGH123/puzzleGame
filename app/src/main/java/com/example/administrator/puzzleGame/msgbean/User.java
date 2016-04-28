@@ -18,7 +18,7 @@ import java.util.List;
 public class User extends Entity {
     public String name;
 
-    User() {
+    public User() {
     }
 
     public User(String name) {
@@ -51,6 +51,8 @@ public class User extends Entity {
     public String getName() {
         return name;
     }
+
+
 
     public void setName(String name) {
         this.name = name;

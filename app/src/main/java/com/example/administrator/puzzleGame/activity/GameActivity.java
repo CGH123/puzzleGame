@@ -2,7 +2,12 @@ package com.example.administrator.puzzleGame.activity;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,9 +26,11 @@ import com.example.administrator.puzzleGame.adapter.GameProgressAdapter;
 import com.example.administrator.puzzleGame.base.BaseHandler;
 import com.example.administrator.puzzleGame.constant.CmdConstant;
 import com.example.administrator.puzzleGame.constant.GameConstant;
+import com.example.administrator.puzzleGame.msgbean.GameModel;
 import com.example.administrator.puzzleGame.msgbean.GameProcess;
 import com.example.administrator.puzzleGame.msgbean.User;
 import com.example.administrator.puzzleGame.util.DrawbalBuilderUtil;
+import com.example.administrator.puzzleGame.util.LogUtil;
 import com.example.administrator.puzzleGame.view.Game3DView;
 import com.example.nioFrame.NIOSocket;
 import com.example.protocol.MSGProtocol;
@@ -43,6 +50,7 @@ public class GameActivity extends Activity implements
     private Serializer serializer;
     private Client client;
     private Server server;
+    ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +79,13 @@ public class GameActivity extends Activity implements
             server.putData("processes", gameProcesses);
         }
         initNet();
-        initGmaeView();
+        initGameView();
         initProgressView();
 
         newGame();
     }
 
-    private void initGmaeView() {
+    private void initGameView() {
         //初始化GLSurfaceView
         mGLSurfaceView = (Game3DView) findViewById(R.id.game_3d_view);
         mGLSurfaceView.requestFocus();//获取焦点
@@ -85,11 +93,26 @@ public class GameActivity extends Activity implements
 
     }
 
-    private void newGame(){
+    private void newGame() {
         //TODO 初始化游戏模式
-        //mGLSurfaceView.init(5, Game3DView.ObjectType.QUAD_PLANE, false, this);
-        //mGLSurfaceView.init(5, Game3DView.ObjectType.CUBE, true, this);
-        mGLSurfaceView.init(8, Game3DView.ObjectType.SPHERE, true, this);
+        switch (GameConstant.GAME_MODEL) {
+            case GameConstant.GAME_CUBE:
+                mGLSurfaceView.init(5, Game3DView.ObjectType.CUBE, true, this);
+                break;
+            case GameConstant.GAME_QUAD_PLANE:
+                mGLSurfaceView.init(5, Game3DView.ObjectType.QUAD_PLANE, false, this);
+                break;
+            case GameConstant.GAME_SPHERE:
+                mGLSurfaceView.init(8, Game3DView.ObjectType.SPHERE, true, this);
+                break;
+        }
+        //设置SurfaceView中hasLoad为false,使渲染管重新初始化object
+        mGLSurfaceView.setLoad(false);
+        //把玩家进度清零
+        initProgressView();
+        /*mGLSurfaceView.init(5, Game3DView.ObjectType.QUAD_PLANE, false, this);
+        mGLSurfaceView.init(5, Game3DView.ObjectType.CUBE, true, this);
+        mGLSurfaceView.init(8, Game3DView.ObjectType.SPHERE, true, this);*/
     }
 
     private void initProgressView() {
@@ -128,6 +151,22 @@ public class GameActivity extends Activity implements
                         List<GameProcess> gameProcess = (ArrayList<GameProcess>) msgProtocol.getAddObjects();
                         client.putData("processes", gameProcess);
                         break;
+                    case CmdConstant.FINISH:
+                        //设置游戏结束,判断是否自己赢了
+                        boolean isWin;
+                        User user = (User) msgProtocol.getAddObject();
+                        if (GameConstant.PHONE.equals(user.getName())) {
+                            isWin = true;
+                        } else {
+                            isWin = false;
+                        }
+                        message.getData().putBoolean("isWin", isWin);
+                        break;
+                    case CmdConstant.START:
+                        //设置游戏模式，交给handle的Message去处理
+                        GameModel gameModel = (GameModel) msgProtocol.getAddObject();
+                        GameConstant.GAME_MODEL = gameModel.getGameModel();
+                        break;
                 }
                 handler.sendMessage(message);
             }
@@ -145,6 +184,17 @@ public class GameActivity extends Activity implements
                             List<GameProcess> gameProcesses = (List<GameProcess>) server.getData("processes");
                             gameProcesses.get(pos).setProgress(gameProcess.getProgress());
                             msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.PROGRESS, gameProcesses);
+                            break;
+                        case CmdConstant.FINISH:
+                            //客户端发送结束请求
+                            GameProcess gameProcess1 = (GameProcess) msgProtocol.getAddObject();
+                            if (gameProcess1.getProgress() == 1.0f) {
+                                //发送获胜的玩家给全部人
+                                User user = new User(msgProtocol.getSenderName());
+                                msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.FINISH, user);
+                            } else {
+                                LogUtil.d("GameActivity", "game finish error");
+                            }
                             break;
                     }
                     String s = serializer.serialize(msgProtocol);
@@ -178,7 +228,28 @@ public class GameActivity extends Activity implements
                 }
                 mAdapter.notifyDataSetChanged();
                 break;
+            case CmdConstant.START:
+                //关闭ProgressDialog，初始化开启新游戏
+                dialog.cancel();
+                newGame();
+                break;
+            case CmdConstant.FINISH:
+                //主线程调用UI设置成功
+                if (server != null)
+                    new SetTask().execute();
 
+                if (message.getData().getBoolean("isWin")) {
+                    //TODO 设置获胜dialog
+                    dialog = ProgressDialog.show(this, "游戏结束！你赢了！", "正在等待房主设置游戏难度", false, true);
+                    dialog.setCanceledOnTouchOutside(false);
+                    System.out.println("TCP Game over,I win");
+                } else {
+                    //TODO 设置失败dialog
+                    dialog = ProgressDialog.show(this, "游戏结束！你输了", "正在等待房主设置游戏难度", false, true);
+                    dialog.setCanceledOnTouchOutside(false);
+                    System.out.println("TCP Game over,I lose");
+                }
+                break;
         }
     }
 
@@ -186,4 +257,52 @@ public class GameActivity extends Activity implements
     public void sendMsgProtocol(MSGProtocol msgProtocol) {
         client.sendToServer(serializer.serialize(msgProtocol).getBytes());
     }
+
+    class SetTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            //让房主先停止2秒查看胜利信息
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            new AlertDialog.Builder(GameActivity.this).setTitle("游戏开始设置").setIcon(R.drawable.app_icon).setMessage("拼图模型选择").setCancelable(false)
+                    .setPositiveButton("矩形", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            GameModel gameModel = new GameModel(GameConstant.GAME_CUBE);
+                            MSGProtocol<GameModel> msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.START, gameModel);
+                            String s = SerializerFastJson.getInstance().serialize(msgProtocol);
+                            server.sendAllClient(s.getBytes());
+                        }
+                    })
+                    .setNeutralButton("不规则图形", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            GameModel gameModel = new GameModel(GameConstant.GAME_QUAD_PLANE);
+                            MSGProtocol<GameModel> msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.START,gameModel);
+                            String s = SerializerFastJson.getInstance().serialize(msgProtocol);
+                            server.sendAllClient(s.getBytes());
+                        }
+                    })
+                    .setNegativeButton("球", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            GameModel gameModel = new GameModel(GameConstant.GAME_SPHERE);
+                            MSGProtocol<GameModel> msgProtocol = new MSGProtocol(GameConstant.PHONE, CmdConstant.START,gameModel);
+                            String s = SerializerFastJson.getInstance().serialize(msgProtocol);
+                            server.sendAllClient(s.getBytes());
+                        }
+                    }).create().show();
+        }
+
+    }
+
 }

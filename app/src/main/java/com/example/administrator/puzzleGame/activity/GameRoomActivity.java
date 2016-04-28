@@ -1,8 +1,9 @@
 package com.example.administrator.puzzleGame.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com.example.administrator.puzzleGame.adapter.RoomAdapter;
 import com.example.administrator.puzzleGame.base.BaseHandler;
 import com.example.administrator.puzzleGame.constant.CmdConstant;
 import com.example.administrator.puzzleGame.constant.GameConstant;
+import com.example.administrator.puzzleGame.msgbean.GameModel;
 import com.example.administrator.puzzleGame.msgbean.User;
 import com.example.administrator.puzzleGame.util.DrawbalBuilderUtil;
 import com.example.administrator.puzzleGame.view.MultiListView;
@@ -156,8 +158,37 @@ public class GameRoomActivity extends Activity implements
         MSGProtocol<User> msgProtocol;
         switch (v.getId()) {
             case R.id.gameroom_start:
-                msgProtocol = new MSGProtocol<>(GameConstant.NAME, CmdConstant.START);
-                client.sendToServer(serializer.serialize(msgProtocol).getBytes());
+                //进行游戏难度设置dialog
+
+                new AlertDialog.Builder(this).setTitle("游戏开始设置").setIcon(R.drawable.app_icon).setMessage("拼图模型选择").setCancelable(false)
+                        .setPositiveButton("矩形", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                GameModel gameModel = new GameModel(GameConstant.GAME_CUBE);
+                                MSGProtocol<GameModel> msgProtocol = new MSGProtocol<>(GameConstant.NAME, CmdConstant.START,gameModel);
+                                client.sendToServer(serializer.serialize(msgProtocol).getBytes());
+                            }
+                        })
+                        .setNeutralButton("不规则图形", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                GameModel gameModel = new GameModel(GameConstant.GAME_QUAD_PLANE);
+                                MSGProtocol<GameModel> msgProtocol = new MSGProtocol<>(GameConstant.NAME, CmdConstant.START,gameModel);
+                                client.sendToServer(serializer.serialize(msgProtocol).getBytes());
+                            }
+                        })
+                        .setNegativeButton("球", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                GameModel gameModel = new GameModel(GameConstant.GAME_SPHERE);
+                                MSGProtocol<GameModel> msgProtocol = new MSGProtocol<>(GameConstant.NAME, CmdConstant.START,gameModel);
+                                client.sendToServer(serializer.serialize(msgProtocol).getBytes());
+                            } 
+                        }).create().show();
+
+                //TODO 设置游戏设置界面,用来放入新界面
+                //msgProtocol = new MSGProtocol<>(GameConstant.NAME, CmdConstant.START);
+                //client.sendToServer(serializer.serialize(msgProtocol).getBytes());
 
                 break;
             case R.id.gameroom_create:
@@ -175,8 +206,7 @@ public class GameRoomActivity extends Activity implements
     public void onRefresh() {
         if (server != null || isFind) {
             mListView.onRefreshComplete();
-        }
-        else {
+        } else {
             findServerTask = new FindServerTask();
             findServerTask.execute();
         }
@@ -205,7 +235,9 @@ public class GameRoomActivity extends Activity implements
                 mAdapter.setData(users); // Adapter加载List数据
                 break;
             case CmdConstant.START:
-                //不做任何事，在handler中启动activity
+                //把游戏模型类型初始化，在handler中启动activity
+                GameModel gameModel = (GameModel)msgProtocol.getAddObject();
+                GameConstant.GAME_MODEL = gameModel.getGameModel();
                 break;
         }
         handler.sendMessage(message);
@@ -228,7 +260,8 @@ public class GameRoomActivity extends Activity implements
                 msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.CONNECT, users);
                 break;
             case CmdConstant.START:
-                msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.START);
+                GameModel gameModel = (GameModel)msgProtocol.getAddObject();
+                msgProtocol = new MSGProtocol<>(GameConstant.PHONE, CmdConstant.START , gameModel);
                 break;
         }
         server.sendAllClient(serializer.serialize(msgProtocol).getBytes());
@@ -251,7 +284,7 @@ public class GameRoomActivity extends Activity implements
             case CmdConstant.START:
                 client.stopUdp();
                 Intent intent = new Intent(GameRoomActivity.this, GameActivity.class);
-                if(server != null) {
+                if (server != null) {
                     intent.putExtra("isServer", true);
                 }
                 startActivity(intent);

@@ -19,6 +19,16 @@ public class GameConstant {
     //水面换帧线程工作标志
     public static boolean threadFlag = true;
 
+    //游戏难度设置
+    public static int GAME_MODEL = -1;
+    //拼图游戏设置为CUBE
+    public static final int GAME_CUBE = 0;
+    //拼图游戏设置为QUAD_PLANE
+    public static final int GAME_QUAD_PLANE = 1;
+    //拼图游戏设置为SPHERE
+    public static final int GAME_SPHERE = 2;
+
+
     public static String NAME;
     public static String PHONE;
     public static String IP;
